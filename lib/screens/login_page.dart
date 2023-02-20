@@ -15,9 +15,9 @@ class loginpage extends StatelessWidget {
     return MaterialApp(
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.green,
-        ),
+        theme: ThemeData.dark(
+            //primarySwatch: Colors.green,
+            ),
         home: Scaffold(
             body: Center(
           child: Column(
