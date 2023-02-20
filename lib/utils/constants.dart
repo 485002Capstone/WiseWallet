@@ -4,7 +4,7 @@ import 'dart:ui';
 const Color primaryDark = Color(0xFF40ACA1);
 const Color primaryLight = Color(0xFF6CDAFF);
 
-const Color secondaryDark = Color(0xFF507DFF);
+const Color secondaryDark = Color.fromARGB(255, 4, 8, 5);
 const Color secondaryLight = Color(0xFF60A6FF);
 
 const Color fontDark = Color(0xFF5C6E8D);
@@ -20,4 +20,3 @@ const double defaultRadius = 12.0;
 const double fontSizeHeading = 18.0;
 const double fontSizeTitle = 16.0;
 const double fontSizeBody = 13.0;
-
