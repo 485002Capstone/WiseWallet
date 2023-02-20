@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:phixlab_money/screens/home_page.dart';
-import 'package:phixlab_money/screens/login_page.dart';
-import 'package:phixlab_money/screens/main_screen.dart';
+import 'screens/home_page.dart';
+import 'screens/login_page.dart';
+import 'screens/main_screen.dart';
 
 //Test
 void main() {
