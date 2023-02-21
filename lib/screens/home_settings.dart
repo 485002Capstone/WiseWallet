@@ -5,7 +5,17 @@ class homesettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text('Settings'));
-    
+    return Scaffold(
+      body: SafeArea(
+          child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: Column(children: [
+          Text(
+            'My Wisewallet',
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+          ),
+        ]),
+      )),
+    );
   }
 }
