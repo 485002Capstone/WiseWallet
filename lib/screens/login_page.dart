@@ -1,6 +1,8 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
-import 'package:phixlab_money/screens/main_screen.dart';
-import 'package:phixlab_money/screens/signup_screen.dart';
+import 'package:WiseWallet/screens/main_screen.dart';
+import 'package:WiseWallet/screens/signup_screen.dart';
 
 void main() {
   runApp(const loginpage());
@@ -13,7 +15,7 @@ class loginpage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter Demo',
+        title: 'WiseWallet',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.green,

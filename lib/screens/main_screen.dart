@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:phixlab_money/screens/home_page.dart';
-import 'package:phixlab_money/screens/home_settings.dart';
-import 'package:phixlab_money/screens/home_tips.dart';
-import 'package:phixlab_money/screens/home_wallet.dart';
-import 'package:phixlab_money/utils/constants.dart';
+import 'package:WiseWallet/screens/home_page.dart';
+import 'package:WiseWallet/screens/home_settings.dart';
+import 'package:WiseWallet/screens/home_tips.dart';
+import 'package:WiseWallet/screens/home_wallet.dart';
+import 'package:WiseWallet/utils/constants.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -24,7 +24,7 @@ class _MyWidgetState extends State<MainScreen> {
       case 2:
         return hometips();
       case 3:
-        return const homesettings();
+        return const HomeSettings();
       default:
         return const homepage();
     }
