@@ -2,13 +2,13 @@
 
 import 'package:WiseWallet/screens/settings/notifications.dart';
 import 'package:flutter/material.dart';
-import 'package:WiseWallet/screens/settings/currency.dart';
 import 'package:WiseWallet/screens/settings/accountsettings.dart';
 import 'package:WiseWallet/screens/settings/themes.dart';
 import 'package:WiseWallet/screens/settings/termsandconditions.dart';
 import 'package:WiseWallet/screens/settings/giveusfeedback.dart';
 import 'package:WiseWallet/screens/settings/aboutus.dart';
 import 'package:WiseWallet/screens/login_page.dart';
+import 'package:currency_picker/currency_picker.dart';
 
 class HomeSettings extends StatelessWidget {
   const HomeSettings({super.key});
@@ -93,8 +93,16 @@ class HomeSettings extends StatelessWidget {
               minWidth: double.infinity,
               height: 50,
               onPressed: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => currency()));
+                showCurrencyPicker(
+                  context: context,
+                  showFlag: true,
+                  showSearchField: true,
+                  showCurrencyName: true,
+                  showCurrencyCode: true,
+                  onSelect: (Currency currency) {
+                    print('Select currency: ${currency.name}');
+                  },
+                );
               },
               color: Color.fromARGB(255, 200, 199, 199),
               shape: RoundedRectangleBorder(
@@ -144,7 +152,7 @@ class HomeSettings extends StatelessWidget {
               height: 50,
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const termsandconditions()));
+                    builder: (context) => const TermsAndConditions()));
               },
               color: Color.fromARGB(255, 200, 199, 199),
               shape: RoundedRectangleBorder(
