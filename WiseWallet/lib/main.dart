@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'screens/home_page.dart';
 import 'screens/login_page.dart';
 import 'screens/main_screen.dart';
-import 'screens/home_settings.dart';
 
 //Test
 void main() {
@@ -21,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: const Loginpage(),
+      home: const LoginPage(),
     );
   }
 }

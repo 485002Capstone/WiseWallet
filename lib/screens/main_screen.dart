@@ -18,15 +18,15 @@ class _MyWidgetState extends State<MainScreen> {
   Widget buildTabContent(int index) {
     switch (index) {
       case 0:
-        return const homepage();
+        return const HomePage();
       case 1:
-        return homewallet();
+        return const HomeWallet();
       case 2:
-        return hometips();
+        return const HomeTips();
       case 3:
         return const HomeSettings();
       default:
-        return const homepage();
+        return const HomePage();
     }
   }
 
