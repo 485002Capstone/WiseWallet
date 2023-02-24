@@ -1,12 +1,45 @@
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:WiseWallet/screens/home_settings.dart';
+import 'package:currency_picker/currency_picker.dart';
+import 'package:flutter/material.dart';
 
-class Currency extends StatelessWidget {
-  const Currency({super.key});
+void main() => runApp(currency());
+
+class currency extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Demo for currency picker package',
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      home: const HomePage(),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(title: const Text('Demo for currency picker')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            showCurrencyPicker(
+              context: context,
+              showFlag: true,
+              showSearchField: true,
+              showCurrencyName: true,
+              showCurrencyCode: true,
+              onSelect: (Currency currency) {
+                print('Select currency: ${currency.name}');
+              },
+              favorite: ['SEK'],
+            );
+          },
+          child: const Text('Show currency picker'),
+        ),
+      ),
+    );
   }
 }
