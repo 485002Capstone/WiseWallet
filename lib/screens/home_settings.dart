@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:WiseWallet/screens/settings/notifications.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:WiseWallet/screens/settings/accountsettings.dart';
 import 'package:WiseWallet/screens/settings/themes.dart';
@@ -10,6 +11,7 @@ import 'package:WiseWallet/screens/settings/aboutus.dart';
 import 'package:WiseWallet/screens/login_page.dart';
 import 'package:currency_picker/currency_picker.dart';
 
+import 'package:url_launcher/url_launcher.dart';
 class HomeSettings extends StatelessWidget {
   const HomeSettings({super.key});
 
@@ -100,7 +102,7 @@ class HomeSettings extends StatelessWidget {
                   showCurrencyName: true,
                   showCurrencyCode: true,
                   onSelect: (Currency currency) {
-                    print('Select currency: ${currency.name}');
+                    print('Select currency: ${currency.flag}');
                   },
                 );
               },
@@ -151,8 +153,7 @@ class HomeSettings extends StatelessWidget {
               minWidth: double.infinity,
               height: 50,
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const TermsAndConditions()));
+                _launchUrl();
               },
               color: Color.fromARGB(255, 200, 199, 199),
               shape: RoundedRectangleBorder(
@@ -220,8 +221,7 @@ class HomeSettings extends StatelessWidget {
               minWidth: 50,
               height: 50,
               onPressed: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const loginpage()));
+                FirebaseAuth.instance.signOut();
               },
               color: Color.fromARGB(255, 241, 50, 36),
               shape: RoundedRectangleBorder(
@@ -248,5 +248,14 @@ class HomeSettings extends StatelessWidget {
         ]),
       )),
     );
+  }
+}
+
+
+final Uri _url = Uri.parse('https://sites.google.com/view/wisewallet1/overview');
+
+Future<void> _launchUrl() async {
+  if (!await launchUrl(_url)) {
+    throw Exception('Could not launch $_url');
   }
 }

@@ -20,6 +20,66 @@ class themes extends StatelessWidget {
                   fontSize: 25,
                   fontWeight: FontWeight.w800,
                   color: Colors.black))),
+      body: const Center(
+        child: ThemeSwitch(),
+      )
+    );
+  }
+}
+
+enum themeChoices { light, dark, system }
+
+class ThemeSwitch extends StatefulWidget {
+  const ThemeSwitch({super.key});
+
+  @override
+  State<ThemeSwitch> createState() => _MyStatefulWidgetState();
+}
+
+class _MyStatefulWidgetState extends State<ThemeSwitch> {
+  themeChoices? _character = themeChoices.light;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        ListTile(
+          title: const Text('Dark mode'),
+          leading: Radio<themeChoices>(
+            value: themeChoices.light,
+            groupValue: _character,
+            onChanged: (themeChoices? value) {
+              setState(() {
+                _character = value;
+              });
+            },
+          ),
+        ),
+        ListTile(
+          title: const Text('Light mode'),
+          leading: Radio<themeChoices>(
+            value: themeChoices.dark,
+            groupValue: _character,
+            onChanged: (themeChoices? value) {
+              setState(() {
+                _character = value;
+              });
+            },
+          ),
+        ),
+        ListTile(
+          title: const Text('System'),
+          leading: Radio<themeChoices>(
+            value: themeChoices.system,
+            groupValue: _character,
+            onChanged: (themeChoices? value) {
+              setState(() {
+                _character = value;
+              });
+            },
+          ),
+        ),
+      ],
     );
   }
 }

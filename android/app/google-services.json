@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "154566449427",
+    "project_id": "wisewallet-8ec7e",
+    "storage_bucket": "wisewallet-8ec7e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:154566449427:android:8477039c7cbd475749a2e6",
+        "android_client_info": {
+          "package_name": "com.phixlab.money.phixlab_money"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "154566449427-evmn8ko4g95h3t1av9p4suksg1p1i0os.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUCZIB9bD0XC8WeVNEkYxlO975MpqZ5hY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "154566449427-evmn8ko4g95h3t1av9p4suksg1p1i0os.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

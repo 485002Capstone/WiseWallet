@@ -3,9 +3,12 @@ import 'screens/home_page.dart';
 import 'screens/login_page.dart';
 import 'screens/main_screen.dart';
 import 'screens/home_settings.dart';
-
+import 'package:firebase_core/firebase_core.dart';
 //Test
-void main() {
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   runApp(const MyApp());
 }
 
@@ -21,7 +24,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: const loginpage(),
+      home: loginpage(),
     );
   }
 }
