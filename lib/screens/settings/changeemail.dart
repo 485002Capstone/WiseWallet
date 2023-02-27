@@ -1,7 +1,20 @@
+
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:WiseWallet/screens/settings/accountsettings.dart';
 import 'package:flutter/material.dart';
+
+import '../login_page.dart';
+
+
+final emailController = TextEditingController();
+final passwordController = TextEditingController();
+var user = FirebaseAuth.instance.currentUser!;
+
+
 
 class changeemail extends StatelessWidget {
   const changeemail({super.key});
@@ -39,7 +52,7 @@ class changeemail extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
                 child: TextField (
-                  obscureText: true,
+                  controller: emailController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder (
                       borderRadius: BorderRadius.circular(90.0),
@@ -63,6 +76,7 @@ class changeemail extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
                 child: TextField (
+                  controller: passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
                     border: OutlineInputBorder (
@@ -80,7 +94,30 @@ class changeemail extends StatelessWidget {
                 child: MaterialButton(
                   minWidth: double.infinity,
                   height: 50,
-                  onPressed: () {},
+                    onPressed: () => showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) => AlertDialog(
+                        title: const Text('Change email'),
+                        content: const Text('You will be logged out and an e-mail will be sent to the new address'),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, 'Cancel'),
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: ()   async {
+                              changeEmail();
+                              Navigator.pop(context, 'OK');
+
+                              if(FirebaseAuth.instance.currentUser?.uid == null) {
+                                Navigator.of(context).popUntil((route) => route.isFirst);
+                              }
+                            },
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      ),
+                    ),
                   color: const Color.fromARGB(255, 52, 98, 239),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
@@ -108,3 +145,26 @@ class changeemail extends StatelessWidget {
   }
 }
 
+
+Future changeEmail() async {
+
+  try {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: user.email!,
+      password: passwordController.text.trim(),
+    );
+  } on FirebaseAuthException catch(e) {
+    if (e.code == 'user-not-found') {
+      return print ('No user found for that email.');
+    } else if (e.code == 'wrong-password') {
+      return print('Wrong password provided for that user');
+    } else if (e.code == "firebase_auth/email-already-in-use"){
+      return print("Email already in use");
+    } else {
+      return print(e);
+    }
+  }
+  print(user.email);
+  FirebaseAuth.instance.currentUser?.verifyBeforeUpdateEmail(emailController.text.trim());
+  FirebaseAuth.instance.signOut();
+}
