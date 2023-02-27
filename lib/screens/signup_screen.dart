@@ -1,148 +1,126 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: camel_case_types
 
+import 'package:WiseWallet/screens/home_page.dart';
+import 'package:WiseWallet/screens/login_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-class SignUp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 0,
-        brightness: Brightness.light,
-        backgroundColor: Colors.white,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(
-              Icons.arrow_back_ios,
-              size: 20,
-              color: Colors.black,
-            )),
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            width: double.infinity,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(
-                          "Sign up",
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Text(
-                          "Create an Account. It's free",
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.grey[700],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 30,
-                        )
-                      ],
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 40),
-                      child: Column(
-                        children: [
-                          makeInput(label: "Email"),
-                          makeInput(label: "Password", obsureText: true),
-                          makeInput(label: "Confirm Pasword", obsureText: true)
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 40),
-                      child: Container(
-                        padding: EdgeInsets.only(top: 3, left: 3),
-                        child: MaterialButton(
-                          minWidth: double.infinity,
-                          height: 70,
-                          onPressed: () {},
-                          color: Colors.green,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25)),
-                          child: Text(
-                            "Sign Up",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 25,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      // ignore: prefer_const_literals_to_create_immutables
-                      children: [
-                        Text("Already have an account? "),
-                        Text(
-                          "Login",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600, fontSize: 15),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+import 'package:WiseWallet/screens/main_screen.dart';
+import 'package:WiseWallet/screens/signup_screen.dart';
+import 'package:WiseWallet/screens/login_page.dart';
+void main() {
+  runApp(SignUp());
 }
 
-Widget makeInput({label, obsureText = false}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        label,
-        style: TextStyle(
-            fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
-      ),
-      SizedBox(
-        height: 5,
-      ),
-      TextField(
-        obscureText: obsureText,
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: Color.fromARGB(255, 54, 173, 100),
-            ),
-          ),
-          border: OutlineInputBorder(
-              borderSide:
-                  BorderSide(color: Color.fromARGB(255, 142, 108, 108))),
-        ),
-      ),
-      SizedBox(
-        height: 30,
+
+class SignUp extends StatelessWidget {
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) => Scaffold (
+      body: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return MainScreen();
+          } else {
+            return LoginWidget();
+          }
+        },
       )
-    ],
   );
+}
+
+final emailController = TextEditingController();
+final passwordController = TextEditingController();
+class LoginWidget extends StatefulWidget {
+  const LoginWidget({super.key});
+
+
+  @override
+  _SignUpWidgetState createState() => _SignUpWidgetState();
+}
+
+class _SignUpWidgetState extends State<LoginWidget> {
+
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        title: 'WiseWallet',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.green,
+        ),
+        home: Scaffold(
+            body: Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 70),
+                      child: Image.asset("assets/icons/logowisewallet.png")),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                    child: TextField(
+                      controller: emailController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(90.0),
+                        ),
+                        labelText: 'Email',
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                    child: TextField(
+                      controller: passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(90.0),
+                        ),
+                        labelText: 'Password',
+                      ),
+                    ),
+                  ),
+                  Container(
+                      height: 80,
+                      padding: const EdgeInsets.all(20),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size.fromHeight(50),
+                        ),
+                        child: const Text('Sign Up'),
+                        onPressed: () {
+                          signUp();
+                        },
+                      )),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(MaterialPageRoute(
+                          builder: (context) => loginpage()));
+                    },
+                    child: Text(
+                      'Already have an account?',
+                      style: TextStyle(color: Colors.grey[600]),
+                    ),
+                  ),
+                ],
+              ),
+            )));
+
+  }
+
+}
+
+Future signUp() async {
+  try {
+  await FirebaseAuth.instance.createUserWithEmailAndPassword(
+    email: emailController.text.trim(),
+    password: passwordController.text.trim(),
+  );
+  }on FirebaseAuthException catch (e) {
+    print (e);
+  }
 }

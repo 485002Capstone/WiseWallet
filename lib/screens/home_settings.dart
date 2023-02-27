@@ -50,7 +50,7 @@ class HomeSettings extends StatelessWidget {
               height: 50,
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const accountsettings()));
+                    builder: (context) => accountsettings()));
               },
               color: Color.fromARGB(255, 200, 199, 199),
               shape: RoundedRectangleBorder(
