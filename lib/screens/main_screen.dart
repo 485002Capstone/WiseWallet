@@ -20,9 +20,9 @@ class _MyWidgetState extends State<MainScreen> {
       case 0:
         return const HomePage();
       case 1:
-        return const homewallet();
+        return const HomeWallet();
       case 2:
-        return const hometips();
+        return const HomeTips();
       case 3:
         return const HomeSettings();
       default:

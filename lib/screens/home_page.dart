@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
-
   Widget build(BuildContext context) {
     // My Wisewallet + logo
     return Scaffold(

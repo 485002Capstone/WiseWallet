@@ -1,11 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/material.dart';
 
-class hometips extends StatelessWidget {
-  const hometips({super.key});
+class HomeTips extends StatelessWidget {
+  const HomeTips({super.key});
 
   Widget build(BuildContext context) {
     // My Wisewallet + logo
