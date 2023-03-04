@@ -1,5 +1,7 @@
 import 'dart:async';
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -8,9 +10,12 @@ import 'package:WiseWallet/screens/settings/changeemail.dart';
 import 'package:WiseWallet/screens/settings/changepassword.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:page_transition/page_transition.dart';
 
 import '../login_page.dart';
 
+final _db = FirebaseFirestore.instance;
+final docRef = _db.collection("users").doc(FirebaseAuth.instance.currentUser?.uid);
 
 void main() {
   runApp(accountsettings());
@@ -43,12 +48,15 @@ class _accountsettingsState extends State<accountsettingsWidget> {
         user = FirebaseAuth.instance.currentUser!;
       });
     }
+
+
     @override
     Widget build(BuildContext context) {
       // My Wisewallet + logo
       return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
-            backgroundColor: Colors.transparent,
+            backgroundColor: Colors.white,
             elevation: 0,
             iconTheme: const IconThemeData(
               color: Colors.black,
@@ -56,14 +64,13 @@ class _accountsettingsState extends State<accountsettingsWidget> {
             title: const Text("Account Settings",
                 style: TextStyle(
                     fontSize: 25,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.bold,
                     color: Colors.black))),
         body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Column(children: [
+              child: ListView(children: [
                 const SizedBox(height: 20),
                 Text(
+
                   user.email!,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
@@ -74,83 +81,121 @@ class _accountsettingsState extends State<accountsettingsWidget> {
                 ),
                 //Account Setting button
                 const SizedBox(height: 50),
+                Divider(
+                  color: Colors.black12,
+                  height: 1,
+                  thickness: 1,
+                ),
                 Container(
-                  padding: const EdgeInsets.only(top: 3, left: 3),
                   child: MaterialButton(
-                    minWidth: double.infinity,
+                    minWidth: 50,
                     height: 50,
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.zero,
+                        side: BorderSide(
+                            width: 100,
+                            style: BorderStyle.none
+                        )),
                     onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const changeemail()));
-                      callBack;
+                      Navigator.push(context, PageTransition(
+                          type: PageTransitionType.rightToLeftWithFade,
+                          duration: Duration(milliseconds: 300),
+                          reverseDuration: Duration(milliseconds: 300),
+                          child: changeemail()));
                     },
-                    color: const Color.fromARGB(255, 200, 199, 199),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    child: const Text(
-                      "Change Email",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 40),
-                Container(
-                  padding: const EdgeInsets.only(top: 3, left: 3),
-                  child: MaterialButton(
-                    minWidth: double.infinity,
-                    height: 50,
-                      onPressed: () => showDialog<String>(
-                        context: context,
-                        builder: (BuildContext context) => AlertDialog(
-                          title: const Text('Change email'),
-                          content: const Text('You will be logged out and instructions to change your password will be sent to your e-mail'),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, 'Cancel'),
-                              child: const Text('Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () async {
-                                FirebaseAuth.instance.sendPasswordResetEmail(email: user.email!);
-                                FirebaseAuth.instance.signOut();
-                                Navigator.pop(context, 'OK');
-                                Navigator.pop(context, loginpage());
-                              },
-                              child: const Text('OK'),
-                            ),
-                          ],
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Change Email",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18,
+                          ),
                         ),
-                      ),
-
-                    color: const Color.fromARGB(255, 200, 199, 199),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    child: const Text(
-                      "Change Password",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
-                      ),
-                    ),
+                        Image.asset('assets/icons/right_chevron.png',
+                            width: 15, height: 15, alignment: Alignment.centerRight),
+                      ],),
                   ),
                 ),
-                const SizedBox(height: 400),
+                Divider(
+                  color: Colors.black12,
+                  height: 1,
+                  thickness: 1,
+                  indent: 45,
+                  endIndent: 45,
+                ),
                 Container(
-                  padding: const EdgeInsets.only(top: 3, left: 3),
+                  child: MaterialButton(
+                    minWidth: 50,
+                    height: 50,
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.zero,
+                        side: BorderSide(
+                            width: 100,
+                            color: Colors.blue,
+                            style: BorderStyle.none
+                        )),
+                    onPressed: ()  {
+                      Navigator.push(context, PageTransition(
+                          type: PageTransitionType.rightToLeftWithFade,
+                          duration: Duration(milliseconds: 300),
+                          reverseDuration: Duration(milliseconds: 300),
+                          child: changepassword()));
+                    },
+                    // => showDialog<String>(
+                    //   context: context,
+                    //   builder: (BuildContext context) => AlertDialog(
+                    //     title: const Text('Change password'),
+                    //     content: const Text('You will be logged out and instructions to change your password will be sent to your e-mail'),
+                    //     actions: <Widget>[
+                    //       TextButton(
+                    //         onPressed: () => Navigator.pop(context, 'Cancel'),
+                    //         child: const Text('Cancel'),
+                    //       ),
+                    //       TextButton(
+                    //         onPressed: () async {
+                    //           FirebaseAuth.instance.sendPasswordResetEmail(email: user.email!);
+                    //           FirebaseAuth.instance.signOut();
+                    //           Navigator.pop(context, 'OK');
+                    //           Navigator.pop(context, loginpage());
+                    //         },
+                    //         child: const Text('OK'),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Change Password",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18,
+                          ),
+                        ),
+                        Image.asset('assets/icons/right_chevron.png',
+                            width: 15, height: 15, alignment: Alignment.centerRight),
+                      ],),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.only(top: 50, bottom: 5),
                   child: MaterialButton(
                     minWidth: double.infinity,
                     height: 50,
                     onPressed: ()  {
                       FirebaseAuth.instance.currentUser?.delete();
                       FirebaseAuth.instance.signOut();
+                      FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser?.uid).delete();
                       Navigator.of(context).pop(loginpage());
                     },
-                    color: const Color.fromARGB(255, 211, 82, 82),
+                    color: Color.fromARGB(255, 241, 50, 36),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
+                        borderRadius: BorderRadius.zero),
                     child: const Text(
                       "Delete Account",
                       style: TextStyle(
@@ -161,7 +206,7 @@ class _accountsettingsState extends State<accountsettingsWidget> {
                   ),
                 ),
                 //Version Text
-                const SizedBox(height: 30),
+                const SizedBox(height: 8),
                 const Text(
                   'Version 9.20.0',
                   textAlign: TextAlign.center,
@@ -171,7 +216,7 @@ class _accountsettingsState extends State<accountsettingsWidget> {
                   ),
                 ),
               ]),
-            )),
+            ),
       );
     }
   }

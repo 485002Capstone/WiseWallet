@@ -49,10 +49,10 @@ class _LoginWidgetState extends State<LoginWidget> {
           primarySwatch: Colors.green,
         ),
         home: Scaffold(
+          resizeToAvoidBottomInset: false,
             body: Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: ListView(
+                physics: const NeverScrollableScrollPhysics(),
                 children: <Widget>[
                   Container(
                       padding: const EdgeInsets.fromLTRB(20, 20, 20, 70),
@@ -145,7 +145,5 @@ Future signIn() async {
       print('Wrong password provided for that user');
     }
     }
-
-
 }
 

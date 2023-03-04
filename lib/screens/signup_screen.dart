@@ -2,11 +2,13 @@
 
 import 'package:WiseWallet/screens/home_page.dart';
 import 'package:WiseWallet/screens/login_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:WiseWallet/screens/main_screen.dart';
 import 'package:WiseWallet/screens/signup_screen.dart';
 import 'package:WiseWallet/screens/login_page.dart';
+
 void main() {
   runApp(SignUp());
 }
@@ -30,7 +32,9 @@ class SignUp extends StatelessWidget {
 }
 
 final emailController = TextEditingController();
+final fullNameController = TextEditingController();
 final passwordController = TextEditingController();
+final passwordController2 = TextEditingController();
 class LoginWidget extends StatefulWidget {
   const LoginWidget({super.key});
 
@@ -51,10 +55,9 @@ class _SignUpWidgetState extends State<LoginWidget> {
           primarySwatch: Colors.green,
         ),
         home: Scaffold(
+          resizeToAvoidBottomInset: false,
             body: Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: ListView(
                 children: <Widget>[
                   Container(
                       padding: const EdgeInsets.fromLTRB(20, 20, 20, 70),
@@ -74,6 +77,18 @@ class _SignUpWidgetState extends State<LoginWidget> {
                   Container(
                     padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                     child: TextField(
+                      controller: fullNameController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(90.0),
+                        ),
+                        labelText: 'Full Name',
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                    child: TextField(
                       controller: passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
@@ -81,6 +96,20 @@ class _SignUpWidgetState extends State<LoginWidget> {
                           borderRadius: BorderRadius.circular(90.0),
                         ),
                         labelText: 'Password',
+                      ),
+                    ),
+                  ),
+
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                    child: TextField(
+                      controller: passwordController2,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(90.0),
+                        ),
+                        labelText: 'Confirm password',
                       ),
                     ),
                   ),
@@ -115,11 +144,20 @@ class _SignUpWidgetState extends State<LoginWidget> {
 }
 
 Future signUp() async {
+  final _db = FirebaseFirestore.instance;
   try {
-  await FirebaseAuth.instance.createUserWithEmailAndPassword(
-    email: emailController.text.trim(),
-    password: passwordController.text.trim(),
-  );
+    if (passwordController.text.trim() == passwordController2.text.trim()) {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+      return _db.collection("users").doc(FirebaseAuth.instance.currentUser?.uid).set({
+        'email': emailController.text.trim(),
+        'full name': fullNameController.text.trim()
+      });
+    } else {
+      print ("try again");
+    }
   }on FirebaseAuthException catch (e) {
     print (e);
   }

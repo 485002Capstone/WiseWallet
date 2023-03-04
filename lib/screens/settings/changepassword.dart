@@ -1,7 +1,15 @@
+import 'package:WiseWallet/screens/login_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:WiseWallet/screens/settings/accountsettings.dart';
 import 'package:flutter/material.dart';
+
+final oldPasswordController = TextEditingController();
+final newPasswordController = TextEditingController();
+final newPasswordController2 = TextEditingController();
+
+var user = FirebaseAuth.instance.currentUser!;
 
 class changepassword extends StatelessWidget {
   const changepassword({super.key});
@@ -39,6 +47,7 @@ class changepassword extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
                 child: TextField (
+                  controller: oldPasswordController,
                   obscureText: true,
                   decoration: InputDecoration(
                     border: OutlineInputBorder (
@@ -63,6 +72,7 @@ class changepassword extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
                 child: TextField (
+                  controller: newPasswordController,
                   obscureText: true,
                   decoration: InputDecoration(
                     border: OutlineInputBorder (
@@ -85,6 +95,7 @@ class changepassword extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
                 child: TextField (
+                  controller: newPasswordController2,
                   obscureText: true,
                   decoration: InputDecoration(
                     border: OutlineInputBorder (
@@ -101,7 +112,9 @@ class changepassword extends StatelessWidget {
                 child: MaterialButton(
                   minWidth: double.infinity,
                   height: 50,
-                  onPressed: () {},
+                  onPressed: () {
+                    changePassword();
+                  },
                   color: const Color.fromARGB(255, 52, 98, 239),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
@@ -129,3 +142,20 @@ class changepassword extends StatelessWidget {
   }
 }
 
+Future changePassword() async {
+  AuthCredential credential = EmailAuthProvider.credential(
+      email: user.email!, password: oldPasswordController.text.trim() );
+    if (newPasswordController2.text.trim() ==
+        newPasswordController.text.trim()) {
+      user.reauthenticateWithCredential(credential)
+          .whenComplete(() async {
+            await FirebaseAuth.instance.currentUser?.updatePassword(
+            newPasswordController.text.trim());
+      })
+          .catchError((e) {
+        print(e);
+      });
+    } else {
+      print("n-o mers");
+    }
+}

@@ -41,7 +41,7 @@ class _MyStatefulWidgetState extends State<ThemeSwitch> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return ListView(
       children: <Widget>[
         ListTile(
           title: const Text('Dark mode'),

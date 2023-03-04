@@ -23,21 +23,20 @@ class changeemail extends StatelessWidget {
   Widget build(BuildContext context) {
     // My Wisewallet + logo
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
           iconTheme: const IconThemeData(
             color: Colors.black,
           ),
-          title: const Text("Change password",
+          title: const Text("Change email",
               style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.w800,
                   color: Colors.black))),
       body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: Column(children: [
+            child: ListView(children: [
               const SizedBox(height: 30),
               //New Email
               const Text(
@@ -49,6 +48,7 @@ class changeemail extends StatelessWidget {
                 ),
 
               ),
+
               Container(
                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
                 child: TextField (
@@ -90,9 +90,8 @@ class changeemail extends StatelessWidget {
 
               const SizedBox(height: 40),
               Container(
-                padding: const EdgeInsets.only(top: 3, left: 3),
+                padding: const EdgeInsets.only(top: 3, left: 10, right: 10),
                 child: MaterialButton(
-                  minWidth: double.infinity,
                   height: 50,
                     onPressed: () => showDialog<String>(
                       context: context,
@@ -105,13 +104,12 @@ class changeemail extends StatelessWidget {
                             child: const Text('Cancel'),
                           ),
                           TextButton(
-                            onPressed: ()   async {
-                              changeEmail();
-                              Navigator.pop(context, 'OK');
-
+                            onPressed: ()  {
+                              changeEmail(context);
                               if(FirebaseAuth.instance.currentUser?.uid == null) {
                                 Navigator.of(context).popUntil((route) => route.isFirst);
                               }
+
                             },
                             child: const Text('OK'),
                           ),
@@ -139,32 +137,44 @@ class changeemail extends StatelessWidget {
                   fontSize: 12,
                 ),
               ),
-            ]),
-          )),
+              ]
+      ),
+          ),
     );
   }
 }
 
 
-Future changeEmail() async {
+void changeEmail(BuildContext context) async {
 
   try {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
+    final UserCredential value = await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: user.email!,
       password: passwordController.text.trim(),
     );
-  } on FirebaseAuthException catch(e) {
-    if (e.code == 'user-not-found') {
-      return print ('No user found for that email.');
-    } else if (e.code == 'wrong-password') {
-      return print('Wrong password provided for that user');
-    } else if (e.code == "firebase_auth/email-already-in-use"){
-      return print("Email already in use");
-    } else {
-      return print(e);
+    if (value.user != null) {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: user.email!,
+          password: passwordController.text.trim(),);
+      await value.user!.reload();
     }
+  } on FirebaseAuthException catch(error) {
+    if (error.code == 'email-already-in-use') {
+      return print ('No user found for that email.');
+    } else if (error.code == 'wrong-password') {
+      return print('Wrong password provided');
+    } else if (error.code == 'wrong-password'){
+      return print('Email already in use');
+    } else {
+      return print("Sunt prost $error");
+    }
+  }on FirebaseException catch (r) {
+    return print (r);
   }
-  print(user.email);
-  FirebaseAuth.instance.currentUser?.verifyBeforeUpdateEmail(emailController.text.trim());
-  FirebaseAuth.instance.signOut();
+  if (FirebaseAuth.instance.currentUser != null) {
+    print(user.email);
+    FirebaseAuth.instance.currentUser?.verifyBeforeUpdateEmail(
+        emailController.text.trim());
+    FirebaseAuth.instance.signOut();
+  }
 }

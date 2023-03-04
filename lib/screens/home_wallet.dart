@@ -167,32 +167,30 @@ class _HomePageState extends State<HomeWallet> {
               expense: GoogleSheetsAPI.calculateExpense().toString(),
             ),
             Expanded(
-              child: Container(
-                child: Center(
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Expanded(
-                        child: GoogleSheetsAPI.loading == true
-                            ? LoadingCircle()
-                            : ListView.builder(
-                                itemCount:
-                                    GoogleSheetsAPI.currentTransactions.length,
-                                itemBuilder: (context, index) {
-                                  return MyTransaction(
-                                    transactionName: GoogleSheetsAPI
-                                        .currentTransactions[index][0],
-                                    money: GoogleSheetsAPI
-                                        .currentTransactions[index][1],
-                                    expenseOrIncome: GoogleSheetsAPI
-                                        .currentTransactions[index][2],
-                                  );
-                                }),
-                      )
-                    ],
-                  ),
+              child: Center(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Expanded(
+                      child: GoogleSheetsAPI.loading == true
+                          ? LoadingCircle()
+                          : ListView.builder(
+                              itemCount:
+                                  GoogleSheetsAPI.currentTransactions.length,
+                              itemBuilder: (context, index) {
+                                return MyTransaction(
+                                  transactionName: GoogleSheetsAPI
+                                      .currentTransactions[index][0],
+                                  money: GoogleSheetsAPI
+                                      .currentTransactions[index][1],
+                                  expenseOrIncome: GoogleSheetsAPI
+                                      .currentTransactions[index][2],
+                                );
+                              }),
+                    )
+                  ],
                 ),
               ),
             ),

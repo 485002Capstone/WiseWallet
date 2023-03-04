@@ -6,7 +6,7 @@ import 'screens/main_screen.dart';
 import 'screens/home_settings.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:gsheets/gsheets.dart';
-
+import 'package:firebase_core/firebase_core.dart';
 //Test
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
