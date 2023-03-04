@@ -105,13 +105,9 @@ class changeemail extends StatelessWidget {
                             child: const Text('Cancel'),
                           ),
                           TextButton(
-                            onPressed: ()   async {
-                              changeEmail();
-                              Navigator.pop(context, 'OK');
+                            onPressed: ()  {
+                              changeEmail(context);
 
-                              if(FirebaseAuth.instance.currentUser?.uid == null) {
-                                Navigator.of(context).popUntil((route) => route.isFirst);
-                              }
                             },
                             child: const Text('OK'),
                           ),
@@ -146,25 +142,41 @@ class changeemail extends StatelessWidget {
 }
 
 
-Future changeEmail() async {
+void changeEmail(BuildContext context) async {
 
   try {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
+    final UserCredential value = await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: user.email!,
       password: passwordController.text.trim(),
     );
-  } on FirebaseAuthException catch(e) {
-    if (e.code == 'user-not-found') {
+    if (value.user != null) {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: user.email!,
+          password: passwordController.text.trim(),);
+      await value.user!.reload();
+    }
+  } on FirebaseAuthException catch(error) {
+    if (error.code == 'email-already-in-use') {
       return print ('No user found for that email.');
-    } else if (e.code == 'wrong-password') {
-      return print('Wrong password provided for that user');
-    } else if (e.code == "firebase_auth/email-already-in-use"){
-      return print("Email already in use");
+    } else if (error.code == 'wrong-password') {
+      return print('Wrong password provided');
+    } else if (error.code == 'wrong-password'){
+      return print('Email already in use');
     } else {
-      return print(e);
+      return print("Sunt prost $error");
+    }
+  }on FirebaseException catch (r) {
+    return print (r);
+  }
+  if (FirebaseAuth.instance.currentUser != null) {
+    print(user.email);
+    FirebaseAuth.instance.currentUser?.verifyBeforeUpdateEmail(
+        emailController.text.trim());
+    FirebaseAuth.instance.signOut();
+    Navigator.pop(context, 'OK');
+
+    if(FirebaseAuth.instance.currentUser?.uid == null) {
+      Navigator.of(context).popUntil((route) => route.isFirst);
     }
   }
-  print(user.email);
-  FirebaseAuth.instance.currentUser?.verifyBeforeUpdateEmail(emailController.text.trim());
-  FirebaseAuth.instance.signOut();
 }

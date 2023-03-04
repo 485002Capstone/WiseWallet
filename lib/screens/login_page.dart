@@ -145,7 +145,5 @@ Future signIn() async {
       print('Wrong password provided for that user');
     }
     }
-
-
 }
 
