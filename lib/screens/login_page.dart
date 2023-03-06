@@ -128,8 +128,14 @@ class _LoginWidgetState extends State<LoginWidget> {
                         ScaffoldMessenger.of(context)
                             .showSnackBar(SnackBar(content: Text("Instructions sent to your email")));
                       }on FirebaseAuthException catch (e){
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(SnackBar(content: Text(e.message!)));
+                        if (e.code == 'unknown') {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(content: Text("Enter an email address")));
+                        }else {
+                           ScaffoldMessenger.of(context)
+                               .showSnackBar(SnackBar(content: Text(e.message!)));
+
+                        }
                       }
 
                     },

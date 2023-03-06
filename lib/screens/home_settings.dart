@@ -331,9 +331,28 @@ class HomeSettings extends StatelessWidget {
 
               minWidth: 50,
               height: 50,
-              onPressed: () {
-                FirebaseAuth.instance.signOut();
-              },
+              onPressed: () => showDialog<String>(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                  title: const Text('Log out'),
+                  content: const Text('Are you sure you want to log out?'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, 'Cancel'),
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: ()  {
+                        FirebaseAuth.instance.signOut();
+                          Navigator.pop(context, "OK");
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(content: Text("Signed out!")));
+                      },
+                      child: const Text('OK'),
+                    ),
+                  ],
+                ),
+              ),
               color: Color.fromARGB(255, 241, 50, 36),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.zero),

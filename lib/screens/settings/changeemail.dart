@@ -160,10 +160,10 @@ class changeemail extends StatelessWidget {
 
 
 Future changeEmail(BuildContext context) async {
-    AuthCredential credential = EmailAuthProvider.credential(
-        email: user.email!, password: passwordController.text.trim());
-    await user.reauthenticateWithCredential(credential);
     try {
+      AuthCredential credential = EmailAuthProvider.credential(
+          email: user.email!, password: passwordController.text.trim());
+      await user.reauthenticateWithCredential(credential);
       await FirebaseAuth.instance.currentUser?.verifyBeforeUpdateEmail(
           emailController.text.trim());
       ScaffoldMessenger.of(context)
@@ -177,9 +177,16 @@ Future changeEmail(BuildContext context) async {
       emailController.clear();
       passwordController.clear();
     }on FirebaseAuthException catch (e){
-      Navigator.pop(context, 'OK');
-  ScaffoldMessenger.of(context)
-      .showSnackBar(SnackBar(content: Text(e.message!)));
+      if (e.code == 'unknown') {
+        Navigator.pop(context, 'OK');
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Enter an email address")));
+      } else {
+        Navigator.pop(context, 'OK');
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.message!)));
+
+      }
     }
 
 
