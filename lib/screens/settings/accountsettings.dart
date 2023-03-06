@@ -15,7 +15,9 @@ import 'package:page_transition/page_transition.dart';
 import '../login_page.dart';
 
 final _db = FirebaseFirestore.instance;
+var user = FirebaseAuth.instance.currentUser!;
 final docRef = _db.collection("users").doc(FirebaseAuth.instance.currentUser?.uid);
+final passwordController = TextEditingController();
 
 void main() {
   runApp(accountsettings());
@@ -145,6 +147,7 @@ class _accountsettingsState extends State<accountsettingsWidget> {
                           reverseDuration: Duration(milliseconds: 300),
                           child: changepassword()));
                     },
+                    //## Old password change. Leave it here for now please
                     // => showDialog<String>(
                     //   context: context,
                     //   builder: (BuildContext context) => AlertDialog(
@@ -187,12 +190,36 @@ class _accountsettingsState extends State<accountsettingsWidget> {
                   child: MaterialButton(
                     minWidth: double.infinity,
                     height: 50,
-                    onPressed: ()  {
-                      FirebaseAuth.instance.currentUser?.delete();
-                      FirebaseAuth.instance.signOut();
-                      FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser?.uid).delete();
-                      Navigator.of(context).pop(loginpage());
-                    },
+
+                    onPressed: () => showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) => AlertDialog(
+                        title: const Text('Change email'),
+                        content: const Text('Introduce your password'),
+                        actions: <Widget>[
+                          TextField (
+                            controller: passwordController,
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder (
+                                borderRadius: BorderRadius.circular(90.0),
+                              ),
+                              labelText: 'Password',
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, 'Cancel'),
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: ()  {
+                              deleteAccount(context);
+                            },
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      ),
+                    ),
                     color: Color.fromARGB(255, 241, 50, 36),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.zero),
@@ -220,3 +247,32 @@ class _accountsettingsState extends State<accountsettingsWidget> {
       );
     }
   }
+
+Future deleteAccount(BuildContext context) async {
+  try {
+    AuthCredential credential = EmailAuthProvider.credential(
+        email: user.email!, password: passwordController.text.trim());
+    await user.reauthenticateWithCredential(credential);
+    FirebaseAuth.instance.currentUser?.delete();
+    FirebaseAuth.instance.signOut();
+    FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser?.uid).delete();
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text("Account deleted!")));
+    passwordController.clear();
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (BuildContext context) => loginpage()),
+          (Route<dynamic> route) => false,
+    );
+  }on FirebaseAuthException catch (e){
+    if (e.code == "wrong-password") {
+      Navigator.pop(context, 'OK');
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Wrong password")));
+    }else {
+      Navigator.pop(context, 'OK');
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.message!)));
+    }
+  }
+}

@@ -12,8 +12,9 @@ final newPasswordController2 = TextEditingController();
 var user = FirebaseAuth.instance.currentUser!;
 
 class changepassword extends StatelessWidget {
-  const changepassword({super.key});
+  changepassword({super.key});
 
+  final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     // My Wisewallet + logo
@@ -29,10 +30,10 @@ class changepassword extends StatelessWidget {
                   fontSize: 25,
                   fontWeight: FontWeight.w800,
                   color: Colors.black))),
-      body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: Column(children: [
+      body: Form(
+        key: formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+            child: ListView(children: [
               const SizedBox(height: 30),
               //Old Password
               const Text(
@@ -46,7 +47,7 @@ class changepassword extends StatelessWidget {
               ),
               Container(
                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                child: TextField (
+                child: TextFormField (
                   controller: oldPasswordController,
                   obscureText: true,
                   decoration: InputDecoration(
@@ -71,7 +72,7 @@ class changepassword extends StatelessWidget {
               ),
               Container(
                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                child: TextField (
+                child: TextFormField (
                   controller: newPasswordController,
                   obscureText: true,
                   decoration: InputDecoration(
@@ -80,6 +81,13 @@ class changepassword extends StatelessWidget {
                     ),
                     labelText: 'New password',
                   ),
+                  validator: (value) {
+                    if (value != null && value.length < 6 && value.isNotEmpty) {
+                      return 'Enter min 6 characters!';
+                    }else {
+                      return null; //form is valid
+                    }
+                  },
                 ),
               ),
               //Verify New Password
@@ -94,7 +102,7 @@ class changepassword extends StatelessWidget {
               ),
               Container(
                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                child: TextField (
+                child: TextFormField (
                   controller: newPasswordController2,
                   obscureText: true,
                   decoration: InputDecoration(
@@ -103,6 +111,15 @@ class changepassword extends StatelessWidget {
                     ),
                     labelText: 'Verify new password',
                   ),
+                  validator: (value) {
+                    if (value != null && value.length < 6 && value.isNotEmpty) {
+                      return 'Enter min 6 characters!';
+                    }else if(value != null && value.isNotEmpty && value != newPasswordController.text.trim() && value.length != newPasswordController.text.length) {
+                      return 'Passwords do not match!'; //form is valid
+                    }else {
+                      return null;
+                    }
+                  },
                 ),
               ),
 
@@ -113,7 +130,13 @@ class changepassword extends StatelessWidget {
                   minWidth: double.infinity,
                   height: 50,
                   onPressed: () {
-                    changePassword();
+                    final isValidForm = formKey.currentState!.validate();
+                    if (isValidForm) {
+                      changePassword(context);
+                    } else {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(const SnackBar(content: Text("Invalid input. Try again!")));
+                    }
                   },
                   color: const Color.fromARGB(255, 52, 98, 239),
                   shape: RoundedRectangleBorder(
@@ -137,25 +160,32 @@ class changepassword extends StatelessWidget {
                 ),
               ),
             ]),
-          )),
+          ),
     );
   }
 }
 
-Future changePassword() async {
-  AuthCredential credential = EmailAuthProvider.credential(
-      email: user.email!, password: oldPasswordController.text.trim() );
-    if (newPasswordController2.text.trim() ==
-        newPasswordController.text.trim()) {
-      user.reauthenticateWithCredential(credential)
-          .whenComplete(() async {
-            await FirebaseAuth.instance.currentUser?.updatePassword(
-            newPasswordController.text.trim());
-      })
-          .catchError((e) {
-        print(e);
-      });
-    } else {
-      print("n-o mers");
+Future changePassword(BuildContext context) async {
+  try {
+    AuthCredential credential = EmailAuthProvider.credential(
+        email: user.email!, password: oldPasswordController.text.trim());
+    await user.reauthenticateWithCredential(credential);
+    await FirebaseAuth.instance.currentUser?.updatePassword(
+        newPasswordController2.text.trim());
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text("Password changed!")));
+    newPasswordController.clear();
+    newPasswordController2.clear();
+    oldPasswordController.clear();
+  }on FirebaseAuthException catch (e){
+    if (e.code == "wrong-password") {
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Wrong password")));
+    }else {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(e.message!)));
+
     }
+  }
 }

@@ -1,5 +1,6 @@
 
 
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -17,8 +18,9 @@ var user = FirebaseAuth.instance.currentUser!;
 
 
 class changeemail extends StatelessWidget {
-  const changeemail({super.key});
+  changeemail({super.key});
 
+  final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     // My Wisewallet + logo
@@ -35,7 +37,9 @@ class changeemail extends StatelessWidget {
                   fontSize: 25,
                   fontWeight: FontWeight.w800,
                   color: Colors.black))),
-      body: SafeArea(
+      body: Form(
+        key: formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
             child: ListView(children: [
               const SizedBox(height: 30),
               //New Email
@@ -51,7 +55,7 @@ class changeemail extends StatelessWidget {
 
               Container(
                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                child: TextField (
+                child: TextFormField (
                   controller: emailController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder (
@@ -59,6 +63,13 @@ class changeemail extends StatelessWidget {
                     ),
                     labelText: 'New Email',
                   ),
+                  validator: (email) {
+                    if (email != null && !EmailValidator.validate(email) && email.isNotEmpty) {
+                      return 'Enter a valid email!';
+                    }else {
+                      return null;
+                    }
+                  },
                 ),
               ),
               //Enter New Password
@@ -105,11 +116,14 @@ class changeemail extends StatelessWidget {
                           ),
                           TextButton(
                             onPressed: ()  {
-                              changeEmail(context);
-                              if(FirebaseAuth.instance.currentUser?.uid == null) {
-                                Navigator.of(context).popUntil((route) => route.isFirst);
+                              final isValidForm = formKey.currentState!.validate();
+                              if (isValidForm) {
+                                changeEmail(context);
+                              } else {
+                                Navigator.pop(context, "OK");
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(const SnackBar(content: Text("Invalid input. Try again!")));
                               }
-
                             },
                             child: const Text('OK'),
                           ),
@@ -145,36 +159,34 @@ class changeemail extends StatelessWidget {
 }
 
 
-void changeEmail(BuildContext context) async {
+Future changeEmail(BuildContext context) async {
+    AuthCredential credential = EmailAuthProvider.credential(
+        email: user.email!, password: passwordController.text.trim());
+    await user.reauthenticateWithCredential(credential);
+    try {
+      await FirebaseAuth.instance.currentUser?.verifyBeforeUpdateEmail(
+          emailController.text.trim());
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Email verification was sent to the new email")));
+      FirebaseAuth.instance.signOut();
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (BuildContext context) => loginpage()),
+            (Route<dynamic> route) => false,
+      );
+      emailController.clear();
+      passwordController.clear();
+    }on FirebaseAuthException catch (e){
+      Navigator.pop(context, 'OK');
+  ScaffoldMessenger.of(context)
+      .showSnackBar(SnackBar(content: Text(e.message!)));
+    }
 
-  try {
-    final UserCredential value = await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: user.email!,
-      password: passwordController.text.trim(),
-    );
-    if (value.user != null) {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: user.email!,
-          password: passwordController.text.trim(),);
-      await value.user!.reload();
-    }
-  } on FirebaseAuthException catch(error) {
-    if (error.code == 'email-already-in-use') {
-      return print ('No user found for that email.');
-    } else if (error.code == 'wrong-password') {
-      return print('Wrong password provided');
-    } else if (error.code == 'wrong-password'){
-      return print('Email already in use');
-    } else {
-      return print("Sunt prost $error");
-    }
-  }on FirebaseException catch (r) {
-    return print (r);
-  }
-  if (FirebaseAuth.instance.currentUser != null) {
-    print(user.email);
-    FirebaseAuth.instance.currentUser?.verifyBeforeUpdateEmail(
-        emailController.text.trim());
-    FirebaseAuth.instance.signOut();
-  }
+
+  // if (FirebaseAuth.instance.currentUser?.uid != null) {
+  //   print(user.email);
+  //   FirebaseAuth.instance.currentUser?.verifyBeforeUpdateEmail(
+  //       emailController.text.trim());
+  //   FirebaseAuth.instance.signOut();
+  // }
 }

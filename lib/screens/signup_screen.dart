@@ -1,8 +1,11 @@
 // ignore_for_file: camel_case_types
-
+// ignore_for_file: camel_case_types
+// ignore_for_file: prefer_const_constructors
 import 'package:WiseWallet/screens/home_page.dart';
 import 'package:WiseWallet/screens/login_page.dart';
+import 'package:WiseWallet/screens/settings/changepassword.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:WiseWallet/screens/main_screen.dart';
@@ -44,6 +47,7 @@ class LoginWidget extends StatefulWidget {
 }
 
 class _SignUpWidgetState extends State<LoginWidget> {
+  final formKey = GlobalKey<FormState>();
 
 
   @override
@@ -56,7 +60,9 @@ class _SignUpWidgetState extends State<LoginWidget> {
         ),
         home: Scaffold(
           resizeToAvoidBottomInset: false,
-            body: Center(
+            body: Form(
+              key: formKey,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               child: ListView(
                 children: <Widget>[
                   Container(
@@ -64,7 +70,7 @@ class _SignUpWidgetState extends State<LoginWidget> {
                       child: Image.asset("assets/icons/logowisewallet.png")),
                   Container(
                     padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                    child: TextField(
+                    child: TextFormField(
                       controller: emailController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -72,11 +78,18 @@ class _SignUpWidgetState extends State<LoginWidget> {
                         ),
                         labelText: 'Email',
                       ),
+                      validator: (email) {
+                        if (email != null && !EmailValidator.validate(email) && email.isNotEmpty) {
+                          return 'Enter a valid email!';
+                        }else {
+                          return null;
+                        }
+                      },
                     ),
                   ),
                   Container(
                     padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                    child: TextField(
+                    child: TextFormField(
                       controller: fullNameController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -84,11 +97,20 @@ class _SignUpWidgetState extends State<LoginWidget> {
                         ),
                         labelText: 'Full Name',
                       ),
+                        validator: (value) {
+                          const valExpression = r'^((\b[a-zA-Z]{2,40}\b)\s*){2,}$';
+                          final regExp = RegExp(valExpression);
+                          if (!regExp.hasMatch(value!) && value.isNotEmpty) {
+                            return "Name must have at least two words";
+                          }else {
+                            return null;
+                          }
+                        }
                     ),
                   ),
                   Container(
                     padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                    child: TextField(
+                    child: TextFormField(
                       controller: passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
@@ -97,12 +119,19 @@ class _SignUpWidgetState extends State<LoginWidget> {
                         ),
                         labelText: 'Password',
                       ),
+                      validator: (value) {
+                        if (value != null && value.length < 6 && value.isNotEmpty) {
+                          return 'Enter min 6 characters!';
+                        }else {
+                          return null; //form is valid
+                        }
+                      },
                     ),
                   ),
 
                   Container(
                     padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                    child: TextField(
+                    child: TextFormField(
                       controller: passwordController2,
                       obscureText: true,
                       decoration: InputDecoration(
@@ -111,6 +140,15 @@ class _SignUpWidgetState extends State<LoginWidget> {
                         ),
                         labelText: 'Confirm password',
                       ),
+                      validator: (value) {
+                        if (value != null && value.length < 6 && value.isNotEmpty) {
+                          return 'Enter min 6 characters!';
+                        }else if(value != null && value != passwordController.text.trim() && value.isNotEmpty) {
+                          return 'Passwords do not match!'; //form is valid
+                        }else {
+                          return null;
+                        }
+                      },
                     ),
                   ),
                   Container(
@@ -122,7 +160,13 @@ class _SignUpWidgetState extends State<LoginWidget> {
                         ),
                         child: const Text('Sign Up'),
                         onPressed: () {
-                          signUp();
+                          final isValidForm = formKey.currentState!.validate();
+                          if (isValidForm) {
+                            signUp(context);
+                          } else {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(content: Text("Invalid input. Try again!")));
+                          }
                         },
                       )),
                   TextButton(
@@ -143,22 +187,25 @@ class _SignUpWidgetState extends State<LoginWidget> {
 
 }
 
-Future signUp() async {
+Future signUp(BuildContext context) async {
   final _db = FirebaseFirestore.instance;
   try {
-    if (passwordController.text.trim() == passwordController2.text.trim()) {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
+      emailController.clear();
+      passwordController.clear();
+      passwordController2.clear();
+      fullNameController.clear();
+      Navigator.pop(context, "SignUp");
       return _db.collection("users").doc(FirebaseAuth.instance.currentUser?.uid).set({
         'email': emailController.text.trim(),
         'full name': fullNameController.text.trim()
       });
-    } else {
-      print ("try again");
-    }
+
   }on FirebaseAuthException catch (e) {
-    print (e);
+    return ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(e.message!)));
   }
 }

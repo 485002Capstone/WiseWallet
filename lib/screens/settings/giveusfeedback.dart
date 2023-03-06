@@ -60,8 +60,12 @@ class feedback extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: ()  {
+                        try {
                           sendFeedback(context);
-                          Navigator.pop(context);
+                        }
+                        catch (e) {
+                          print (e);
+                        }
                       },
                       child: const Text('OK'),
                     ),
@@ -99,8 +103,11 @@ class feedback extends StatelessWidget {
 Future sendFeedback(BuildContext context) async {
    var userDocRef = FirebaseFirestore.instance.collection('Feedback').doc(FirebaseAuth.instance.currentUser?.uid);
    var doc = await userDocRef.get();
+   Navigator.pop(context, "OK");
   try {
     if(!doc.exists) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Your feedback has been sent!")));
     return _db.collection("Feedback").doc(FirebaseAuth.instance.currentUser?.uid).set(
         {
           "Time stamp": FieldValue.serverTimestamp(),
@@ -112,6 +119,7 @@ Future sendFeedback(BuildContext context) async {
     }
   }
   catch (e) {
-    print ("n-o mers");
+     ScaffoldMessenger.of(context)
+         .showSnackBar(SnackBar(content: Text("Something went wrong. Try again later!")));
   }
 }

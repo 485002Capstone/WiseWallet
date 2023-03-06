@@ -22,7 +22,6 @@ class HomePage extends StatelessWidget {
                       Text(
                         'WISEWALLET',
                         textAlign: TextAlign.center,
-                        // ignore: prefer_const_constructors
                         style: TextStyle(
                             fontSize: 35,
                             fontWeight: FontWeight.w800,
@@ -32,7 +31,6 @@ class HomePage extends StatelessWidget {
                           width: 70, height: 45, alignment: Alignment.topRight),
                     ],
                   ),
-                  // ignore: prefer_const_constructors
                   Divider(
                     color: Colors.black,
                   ),
