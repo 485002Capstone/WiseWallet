@@ -8,6 +8,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:WiseWallet/screens/main_screen.dart';
 import 'package:WiseWallet/screens/signup_screen.dart';
+
+import '../theme_provider.dart';
 void main() {
   runApp(loginpage());
 }
@@ -16,16 +18,16 @@ class loginpage extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) => Scaffold (
-    body: StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return MainScreen();
-        } else {
-          return LoginWidget();
-        }
-      },
-    )
+      body: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return MainScreen();
+          } else {
+            return LoginWidget();
+          }
+        },
+      )
   );
 }
 
@@ -45,13 +47,33 @@ class _LoginWidgetState extends State<LoginWidget> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        theme: ThemeData(
+          appBarTheme: const AppBarTheme(color: Colors.transparent),
+          inputDecorationTheme: InputDecorationTheme(enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.green)),
+              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.green))),
+
+          colorScheme: ColorScheme(
+            brightness: Brightness.light,
+            primary: Colors.green,
+            onPrimary: Colors.black,
+            background: Colors.transparent,
+            onBackground: Colors.black,
+            error: Colors.black,
+            onError: const Color(0xFFBA1A1A),
+            secondary: Colors.black,
+            onSecondary: Colors.green,
+            surface: Colors.black,
+            onSurface: Colors.green,
+
+
+
+          ),
+        ),
         title: 'WiseWallet',
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.green,
-        ),
         home: Scaffold(
-          resizeToAvoidBottomInset: false,
+            resizeToAvoidBottomInset: false,
             body: Form(
               key: formKey,
               autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -103,7 +125,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                   Container(
                       height: 80,
                       padding: const EdgeInsets.all(20),
-                      child: ElevatedButton(
+                      child:ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           minimumSize: const Size.fromHeight(50),
                         ),
@@ -118,7 +140,9 @@ class _LoginWidgetState extends State<LoginWidget> {
                                 .showSnackBar(SnackBar(content: Text("Invalid input!")));
                           }
                         },
-                      )),
+                      ),
+
+                  ),
                   TextButton(
                     onPressed: () async {
                       try {
@@ -132,8 +156,8 @@ class _LoginWidgetState extends State<LoginWidget> {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(SnackBar(content: Text("Enter an email address")));
                         }else {
-                           ScaffoldMessenger.of(context)
-                               .showSnackBar(SnackBar(content: Text(e.message!)));
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(content: Text(e.message!)));
 
                         }
                       }
@@ -141,7 +165,6 @@ class _LoginWidgetState extends State<LoginWidget> {
                     },
                     child: Text(
                       'Forgot Password?',
-                      style: TextStyle(color: Colors.grey[600]),
                     ),
                   ),
                   TextButton(
@@ -154,7 +177,6 @@ class _LoginWidgetState extends State<LoginWidget> {
                       },
                       child: Text(
                         'New around here? Sign up',
-                        style: TextStyle(color: Colors.grey[600]),
                       )),
                 ],
               ),
@@ -184,9 +206,8 @@ Future signIn(BuildContext context) async {
       return ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Enter email")));
     }
-    } catch (e) {
+  } catch (e) {
     return ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text("Something went wrong. Try again!")));
   }
 }
-

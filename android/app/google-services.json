@@ -29,6 +29,13 @@
             {
               "client_id": "154566449427-evmn8ko4g95h3t1av9p4suksg1p1i0os.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "154566449427-cdqa7j82d59fplllj9jgoosa7aqs0lmo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.phixlab.money.phixlabMoney"
+              }
             }
           ]
         }

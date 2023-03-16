@@ -1,4 +1,5 @@
 
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,6 +16,9 @@ final emailController = TextEditingController();
 final passwordController = TextEditingController();
 var user = FirebaseAuth.instance.currentUser!;
 
+void main() {
+  runApp(changeemail());
+}
 
 
 class changeemail extends StatelessWidget {
@@ -25,18 +29,22 @@ class changeemail extends StatelessWidget {
   Widget build(BuildContext context) {
     // My Wisewallet + logo
     return Scaffold(
-      backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
-          backgroundColor: Colors.transparent,
           elevation: 0,
-          iconTheme: const IconThemeData(
-            color: Colors.black,
-          ),
           title: const Text("Change email",
               style: TextStyle(
                   fontSize: 25,
-                  fontWeight: FontWeight.w800,
-                  color: Colors.black))),
+                  fontWeight: FontWeight.w800,)),
+        leading: IconButton (
+          icon: Icon(Icons.arrow_back_ios_new),
+          iconSize: 20.0,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+
+      ),
       body: Form(
         key: formKey,
         autovalidateMode: AutovalidateMode.onUserInteraction,

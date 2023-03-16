@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 
+import 'package:WiseWallet/screens/settings/PlaidScreen.dart';
 import 'package:WiseWallet/screens/settings/notifications.dart';
 import 'package:WiseWallet/utils/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,52 +12,52 @@ import 'package:WiseWallet/screens/settings/giveusfeedback.dart';
 import 'package:WiseWallet/screens/login_page.dart';
 import 'package:currency_picker/currency_picker.dart';
 import 'package:page_transition/page_transition.dart';
-
 import 'package:url_launcher/url_launcher.dart';
+
+import '../theme_provider.dart';
+
+
+
+
+
+
+
 class HomeSettings extends StatelessWidget {
-  const HomeSettings({super.key});
 
   @override
   Widget build(BuildContext context) {
+
     // My Wisewallet + logo
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar (
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: Row(
-          children: <Widget> [
-            Image.asset('assets/images/logofinal.png',
-                width: 70, height: 45, alignment: Alignment.topLeft),
-            Text(
-              'My Wisewallet',
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 30,
-                fontWeight: FontWeight.bold
-                ,
+          automaticallyImplyLeading: false,
+          elevation: 0,
+          title: Row(
+            children: <Widget> [
+              Image.asset('assets/images/logofinal.png',
+                  width: 70, height: 45, alignment: Alignment.topLeft),
+              Text(
+                'My Wisewallet',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold
+                  ,
+                ),
               ),
-            ),
-          ],
-        )
-
-
+            ],
+          )
       ),
-
       body: SafeArea(
         child: ListView(
             children: [
           MaterialButton(
             minWidth: 50,
             height: 50,
-            color: Colors.white,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.zero,
                 side: BorderSide(
                     width: 100,
-                    color: Colors.blue,
                     style: BorderStyle.none
                 )),
             onPressed: () {
@@ -76,13 +77,13 @@ class HomeSettings extends StatelessWidget {
                     fontSize: 18,
                   ),
                 ),
-                Image.asset('assets/icons/right_chevron.png',
-                    width: 15, height: 15, alignment: Alignment.centerRight),
+                Icon(
+                    Icons.chevron_right
+                )
               ],),
 
           ),
               Divider(
-                color: Colors.black12,
                 height: 1,
                 thickness: 1,
                 indent: 45,
@@ -92,13 +93,10 @@ class HomeSettings extends StatelessWidget {
           MaterialButton(
             minWidth: 50,
             height: 50,
-            color: Colors.white,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.zero,
                 side: BorderSide(
                     width: 100,
-                    color: Colors.blue,
-                    style: BorderStyle.none
                 )),
             onPressed: () {
               Navigator.push(context, PageTransition(
@@ -117,28 +115,26 @@ class HomeSettings extends StatelessWidget {
                     fontSize: 18,
                   ),
                 ),
-                Image.asset('assets/icons/right_chevron.png',
-                    width: 15, height: 15, alignment: Alignment.centerRight),
+                Icon(
+                    Icons.chevron_right
+                )
               ],),
           ),
-          Divider(
-            color: Colors.black12,
-            height: 1,
-            thickness: 1,
-            indent: 45,
-            endIndent: 45,
-          ),
+              Divider(
+                height: 1,
+                thickness: 1,
+                indent: 45,
+                endIndent: 45,
+              ),
           //Theme
           MaterialButton(
             minWidth: 50,
             height: 50,
-            color: Colors.white,
 
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.zero,
                 side: BorderSide(
                     width: 100,
-                    color: Colors.blue,
                     style: BorderStyle.none
                 )),
             onPressed: () {
@@ -158,12 +154,12 @@ class HomeSettings extends StatelessWidget {
                     fontSize: 18,
                   ),
                 ),
-                Image.asset('assets/icons/right_chevron.png',
-                    width: 15, height: 15, alignment: Alignment.centerRight),
+                Icon(
+                    Icons.chevron_right
+                )
               ],),
           ),
               Divider(
-                color: Colors.black12,
                 height: 1,
                 thickness: 1,
                 indent: 45,
@@ -173,12 +169,10 @@ class HomeSettings extends StatelessWidget {
           MaterialButton(
             minWidth: 50,
             height: 50,
-            color: Colors.white,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.zero,
                 side: BorderSide(
                     width: 100,
-                    color: Colors.blue,
                     style: BorderStyle.none
                 )),
             onPressed: () {
@@ -199,12 +193,12 @@ class HomeSettings extends StatelessWidget {
                   ),
 
                 ),
-                Image.asset('assets/icons/right_chevron.png',
-                    width: 15, height: 15, alignment: Alignment.centerRight),
+                Icon(
+                    Icons.chevron_right
+                )
               ],),
           ),
               Divider(
-                color: Colors.black12,
                 height: 1,
                 thickness: 1,
                 indent: 45,
@@ -214,12 +208,10 @@ class HomeSettings extends StatelessWidget {
           MaterialButton(
             minWidth: 50,
             height: 50,
-            color: Colors.white,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.zero,
                 side: BorderSide(
                     width: 100,
-                    color: Colors.white,
                     style: BorderStyle.none
                 )),
             onPressed: () {
@@ -244,13 +236,13 @@ class HomeSettings extends StatelessWidget {
                     fontSize: 18,
                   ),
                 ),
-                Image.asset('assets/icons/popup_icon.png',
-                    width: 15, height: 15, alignment: Alignment.centerRight),
+                Icon(
+                    Icons.menu_book
+                )
               ],),
           ),
 
               Divider(
-                color: Colors.black12,
                 height: 1,
                 thickness: 1,
                 indent: 45,
@@ -260,12 +252,10 @@ class HomeSettings extends StatelessWidget {
          MaterialButton(
             minWidth: 50,
             height: 50,
-            color: Colors.white,
            shape: RoundedRectangleBorder(
                borderRadius: BorderRadius.zero,
                side: BorderSide(
                    width: 100,
-                   color: Colors.blue,
                    style: BorderStyle.none
                )),
             onPressed: () {
@@ -281,13 +271,13 @@ class HomeSettings extends StatelessWidget {
                     fontSize: 18,
                   ),
                 ),
-                Image.asset('assets/icons/external_link2.png',
-                    width: 15, height: 15, alignment: Alignment.centerRight),
+                Icon(
+                    Icons.link
+                )
               ],),
 
           ),
               Divider(
-                color: Colors.black12,
                 height: 1,
                 thickness: 1,
                 indent: 45,
@@ -295,15 +285,12 @@ class HomeSettings extends StatelessWidget {
               ),
           //About Us Button
           MaterialButton(
-
             minWidth: 50,
             height: 50,
-            color: Colors.white,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.zero,
             side: BorderSide(
               width: 100,
-              color: Colors.blue,
               style: BorderStyle.none
             )),
               onPressed: () {
@@ -320,13 +307,20 @@ class HomeSettings extends StatelessWidget {
                   fontSize: 18,
                 ),
               ),
-              Image.asset('assets/icons/external_link2.png',
-                  width: 15, height: 15, alignment: Alignment.centerRight),
+                Icon(
+                    Icons.link
+                )
             ],),
           ),
+              Divider(
+                height: 1,
+                thickness: 1,
+                indent: 45,
+                endIndent: 45,
+              ),
           // Log out - Sync with firebase
           Container(
-            padding: EdgeInsets.only(top: 50, bottom: 5),
+            padding: EdgeInsets.only(top: 250, bottom: 3),
             child: MaterialButton(
 
               minWidth: 50,

@@ -19,17 +19,14 @@ class changepassword extends StatelessWidget {
   Widget build(BuildContext context) {
     // My Wisewallet + logo
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
-          backgroundColor: Colors.transparent,
           elevation: 0,
-          iconTheme: const IconThemeData(
-            color: Colors.black,
-          ),
           title: const Text("Change password",
               style: TextStyle(
                   fontSize: 25,
-                  fontWeight: FontWeight.w800,
-                  color: Colors.black))),
+                  fontWeight: FontWeight.w800))
+      ),
       body: Form(
         key: formKey,
         autovalidateMode: AutovalidateMode.onUserInteraction,

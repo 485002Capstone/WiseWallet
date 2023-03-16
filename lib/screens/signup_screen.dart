@@ -59,7 +59,7 @@ class _SignUpWidgetState extends State<LoginWidget> {
           primarySwatch: Colors.green,
         ),
         home: Scaffold(
-          resizeToAvoidBottomInset: false,
+            resizeToAvoidBottomInset: false,
             body: Form(
               key: formKey,
               autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -90,13 +90,13 @@ class _SignUpWidgetState extends State<LoginWidget> {
                   Container(
                     padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                     child: TextFormField(
-                      controller: fullNameController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(90.0),
+                        controller: fullNameController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(90.0),
+                          ),
+                          labelText: 'Full Name',
                         ),
-                        labelText: 'Full Name',
-                      ),
                         validator: (value) {
                           const valExpression = r'^((\b[a-zA-Z]{2,40}\b)\s*){2,}$';
                           final regExp = RegExp(valExpression);
@@ -176,7 +176,6 @@ class _SignUpWidgetState extends State<LoginWidget> {
                     },
                     child: Text(
                       'Already have an account?',
-                      style: TextStyle(color: Colors.grey[600]),
                     ),
                   ),
                 ],
@@ -188,24 +187,49 @@ class _SignUpWidgetState extends State<LoginWidget> {
 }
 
 Future signUp(BuildContext context) async {
+
   final _db = FirebaseFirestore.instance;
+
   try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-      emailController.clear();
-      passwordController.clear();
-      passwordController2.clear();
-      fullNameController.clear();
-      Navigator.pop(context, "SignUp");
-      return _db.collection("users").doc(FirebaseAuth.instance.currentUser?.uid).set({
-        'email': emailController.text.trim(),
-        'full name': fullNameController.text.trim()
-      });
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+
+    );
+    FirebaseAuth.instance.currentUser?.updateDisplayName(fullNameController.text.trim());
+    emailController.clear();
+    passwordController.clear();
+    passwordController2.clear();
+    fullNameController.clear();
+    Navigator.pop(context, "SignUp");
+    return _db.collection("users").doc(FirebaseAuth.instance.currentUser?.uid).set({
+      'email': emailController.text.trim(),
+      'full name': fullNameController.text.trim()
+    });
 
   }on FirebaseAuthException catch (e) {
     return ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(e.message!)));
   }
-}
+  }
+
+  // final _db = FirebaseFirestore.instance;
+  // try {
+  //   await FirebaseAuth.instance.createUserWithEmailAndPassword(
+  //     email: emailController.text.trim(),
+  //     password: passwordController.text.trim(),
+  //   );
+  //   emailController.clear();
+  //   passwordController.clear();
+  //   passwordController2.clear();
+  //   fullNameController.clear();
+  //   Navigator.pop(context, "SignUp");
+  //   return _db.collection("users").doc(FirebaseAuth.instance.currentUser?.uid).set({
+  //     'email': emailController.text.trim(),
+  //     'full name': fullNameController.text.trim()
+  //   });
+  //
+  // }on FirebaseAuthException catch (e) {
+  //   return ScaffoldMessenger.of(context)
+  //       .showSnackBar(SnackBar(content: Text(e.message!)));
+  // }

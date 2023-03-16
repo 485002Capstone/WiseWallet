@@ -13,10 +13,10 @@ class HomeWallet extends StatefulWidget {
   const HomeWallet({Key? key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomeWalletState createState() => _HomeWalletState();
 }
 
-class _HomePageState extends State<HomeWallet> {
+class _HomeWalletState extends State<HomeWallet> {
   // collect user input
   final _textcontrollerAMOUNT = TextEditingController();
   final _textcontrollerITEM = TextEditingController();
@@ -107,16 +107,14 @@ class _HomePageState extends State<HomeWallet> {
                 ),
                 actions: <Widget>[
                   MaterialButton(
-                    color: Colors.grey[600],
                     child:
-                        Text('Cancel', style: TextStyle(color: Colors.white)),
+                        Text('Cancel'),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
                   ),
                   MaterialButton(
-                    color: Colors.grey[600],
-                    child: Text('Enter', style: TextStyle(color: Colors.white)),
+                    child: Text('Enter'),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         _enterTransaction();
@@ -151,7 +149,6 @@ class _HomePageState extends State<HomeWallet> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.grey[300],
       body: Padding(
         padding: const EdgeInsets.all(25.0),
         child: Column(

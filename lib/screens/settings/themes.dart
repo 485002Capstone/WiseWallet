@@ -10,16 +10,19 @@ class themes extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Colors.transparent,
           elevation: 0,
-          iconTheme: const IconThemeData(
-            color: Colors.black,
-          ),
           title: const Text("Themes",
               style: TextStyle(
                   fontSize: 25,
-                  fontWeight: FontWeight.w800,
-                  color: Colors.black))),
+                  fontWeight: FontWeight.w800)),
+        leading: IconButton (
+          icon: Icon(Icons.arrow_back_ios_new),
+          iconSize: 20.0,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: const Center(
         child: ThemeSwitch(),
       )
