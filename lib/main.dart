@@ -1,18 +1,24 @@
-import 'package:WiseWallet/screens/wallet/google_sheets_api.dart';
+import 'package:WiseWallet/utils/theme_provider.dart';
+import 'package:WiseWallet/screens/settings/themes.dart';
 import 'package:flutter/material.dart';
-import 'screens/home_page.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
 import 'screens/login_page.dart';
-import 'screens/main_screen.dart';
-import 'screens/home_settings.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:gsheets/gsheets.dart';
-import 'package:firebase_core/firebase_core.dart';
-//Test
+import 'package:WiseWallet/app_theme.dart';
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+// ignore_for_file: camel_case_types
+
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   await Firebase.initializeApp();
-  GoogleSheetsAPI().init();
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ThemeProvider(),
+      child: MyApp(),
+    ),
+  );
 }
 
 // Test Comment - SP
@@ -21,13 +27,86 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'WiseWallet Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
+    return ChangeNotifierProvider(
+      create: (_) => ThemeProvider(),
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            themeMode: themeProvider.themeMode,
+            theme: ThemeData(
+              // General
+              brightness: Brightness.light,
+              primaryColor: Colors.lightBlue,
+              primarySwatch: Colors.green,
+              accentColor: Colors.green,
+              canvasColor: Colors.purple,
+              backgroundColor: Colors.white,
+              scaffoldBackgroundColor: Colors.white,
+              errorColor: Colors.lightBlue,
+              fontFamily: 'Roboto',
+
+              // AppBar
+              appBarTheme: AppBarTheme(
+                color: Colors.purple,
+                textTheme: TextTheme(
+                  headline6: TextStyle(fontSize: 20, color: Colors.white),
+                ),
+                iconTheme: IconThemeData(color: Colors.white),
+              ),
+
+              // FloatingActionButton
+              floatingActionButtonTheme: FloatingActionButtonThemeData(
+                backgroundColor: Colors.green,
+                foregroundColor: Colors.white,
+              ),
+
+              // Text
+              textTheme: const TextTheme(
+                headline1: TextStyle(fontSize: 96, fontWeight: FontWeight.bold),
+                headline2: TextStyle(fontSize: 60, fontWeight: FontWeight.bold),
+                headline3: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+                headline4: TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
+                headline5: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                headline6: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                subtitle1: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                subtitle2: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                bodyText1: TextStyle(fontSize: 16),
+                bodyText2: TextStyle(fontSize: 14),
+                caption: TextStyle(fontSize: 12),
+                button: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                overline: TextStyle(fontSize: 10),
+              ),
+
+              // Button
+              buttonTheme: ButtonThemeData(
+                buttonColor: Colors.green,
+                textTheme: ButtonTextTheme.primary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+
+              ),
+
+              // TextField
+              inputDecorationTheme: InputDecorationTheme(
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.red),
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue),
+                  borderRadius: BorderRadius.circular(30),
+                ),
+
+              ),
+            ),
+            darkTheme: AppThemes.DarkTheme,
+            home: loginpage(),
+          );
+        },
       ),
-      home: loginpage(),
     );
   }
+
 }

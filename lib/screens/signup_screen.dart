@@ -1,6 +1,6 @@
+
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 // ignore_for_file: camel_case_types
-// ignore_for_file: camel_case_types
-// ignore_for_file: prefer_const_constructors
 import 'package:WiseWallet/screens/home_page.dart';
 import 'package:WiseWallet/screens/login_page.dart';
 import 'package:WiseWallet/screens/settings/changepassword.dart';
@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:WiseWallet/screens/main_screen.dart';
 import 'package:WiseWallet/screens/signup_screen.dart';
 import 'package:WiseWallet/screens/login_page.dart';
+import 'package:get/get.dart';
 
 void main() {
   runApp(SignUp());
@@ -52,13 +53,7 @@ class _SignUpWidgetState extends State<LoginWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'WiseWallet',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.green,
-        ),
-        home: Scaffold(
+    return Scaffold(
             resizeToAvoidBottomInset: false,
             body: Form(
               key: formKey,
@@ -73,9 +68,6 @@ class _SignUpWidgetState extends State<LoginWidget> {
                     child: TextFormField(
                       controller: emailController,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(90.0),
-                        ),
                         labelText: 'Email',
                       ),
                       validator: (email) {
@@ -92,9 +84,6 @@ class _SignUpWidgetState extends State<LoginWidget> {
                     child: TextFormField(
                         controller: fullNameController,
                         decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(90.0),
-                          ),
                           labelText: 'Full Name',
                         ),
                         validator: (value) {
@@ -114,9 +103,6 @@ class _SignUpWidgetState extends State<LoginWidget> {
                       controller: passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(90.0),
-                        ),
                         labelText: 'Password',
                       ),
                       validator: (value) {
@@ -135,9 +121,6 @@ class _SignUpWidgetState extends State<LoginWidget> {
                       controller: passwordController2,
                       obscureText: true,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(90.0),
-                        ),
                         labelText: 'Confirm password',
                       ),
                       validator: (value) {
@@ -180,7 +163,7 @@ class _SignUpWidgetState extends State<LoginWidget> {
                   ),
                 ],
               ),
-            )));
+            ));
 
   }
 
@@ -188,48 +171,28 @@ class _SignUpWidgetState extends State<LoginWidget> {
 
 Future signUp(BuildContext context) async {
 
-  final _db = FirebaseFirestore.instance;
+  final db = FirebaseFirestore.instance;
 
   try {
     await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: emailController.text.trim(),
       password: passwordController.text.trim(),
-
     );
     FirebaseAuth.instance.currentUser?.updateDisplayName(fullNameController.text.trim());
-    emailController.clear();
-    passwordController.clear();
-    passwordController2.clear();
-    fullNameController.clear();
     Navigator.pop(context, "SignUp");
-    return _db.collection("users").doc(FirebaseAuth.instance.currentUser?.uid).set({
+    db.collection("users").doc(FirebaseAuth.instance.currentUser?.uid).set({
       'email': emailController.text.trim(),
       'full name': fullNameController.text.trim()
     });
 
+    emailController.clear();
+    passwordController.clear();
+    passwordController2.clear();
+    fullNameController.clear();
   }on FirebaseAuthException catch (e) {
     return ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(e.message!)));
   }
-  }
+}
 
-  // final _db = FirebaseFirestore.instance;
-  // try {
-  //   await FirebaseAuth.instance.createUserWithEmailAndPassword(
-  //     email: emailController.text.trim(),
-  //     password: passwordController.text.trim(),
-  //   );
-  //   emailController.clear();
-  //   passwordController.clear();
-  //   passwordController2.clear();
-  //   fullNameController.clear();
-  //   Navigator.pop(context, "SignUp");
-  //   return _db.collection("users").doc(FirebaseAuth.instance.currentUser?.uid).set({
-  //     'email': emailController.text.trim(),
-  //     'full name': fullNameController.text.trim()
-  //   });
-  //
-  // }on FirebaseAuthException catch (e) {
-  //   return ScaffoldMessenger.of(context)
-  //       .showSnackBar(SnackBar(content: Text(e.message!)));
-  // }
+

@@ -1,4 +1,6 @@
-// ignore_for_file: prefer_const_constructors
+
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+// ignore_for_file: camel_case_types
 
 import 'package:flutter/material.dart';
 
@@ -8,31 +10,28 @@ class HomeTips extends StatelessWidget {
   Widget build(BuildContext context) {
     // My Wisewallet + logo
     return Scaffold(
+        appBar: AppBar (
+            automaticallyImplyLeading: false,
+            elevation: 0,
+            title: Row(
+              children: <Widget> [
+                Image.asset('assets/images/logofinal.png',
+                    width: 70, height: 45, alignment: Alignment.topLeft),
+                Text(
+                  'Wisewallet',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            )
+        ),
         body: SafeArea(
-            child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Column(children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'WISEWALLET',
-                        textAlign: TextAlign.center,
-                        // ignore: prefer_const_constructors
-                        style: TextStyle(
-                            fontSize: 35,
-                            fontWeight: FontWeight.w800,
-                            color: Color.fromARGB(255, 26, 95, 28)),
-                      ),
-                      Image.asset('assets/images/logofinal.png',
-                          width: 70, height: 45, alignment: Alignment.topRight),
-                    ],
-                  ),
-                  // ignore: prefer_const_constructors
-                  Divider(
-                    color: Colors.black,
-                  ),
-                ]))));
+          child: ListView(
+            children: const [],
+          ),
+        ));
   }
 }

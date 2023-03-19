@@ -1,33 +1,26 @@
+
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+// ignore_for_file: camel_case_types
 
-
-import 'package:WiseWallet/screens/settings/PlaidScreen.dart';
 import 'package:WiseWallet/screens/settings/notifications.dart';
-import 'package:WiseWallet/utils/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:WiseWallet/screens/settings/accountsettings.dart';
 import 'package:WiseWallet/screens/settings/themes.dart';
 import 'package:WiseWallet/screens/settings/giveusfeedback.dart';
-import 'package:WiseWallet/screens/login_page.dart';
 import 'package:currency_picker/currency_picker.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../theme_provider.dart';
-
-
-
-
-
+import 'package:WiseWallet/screens/home_wallet.dart';
 
 
 class HomeSettings extends StatelessWidget {
+  const HomeSettings({super.key});
 
   @override
   Widget build(BuildContext context) {
-
-    // My Wisewallet + logo
     return Scaffold(
       appBar: AppBar (
           automaticallyImplyLeading: false,
@@ -48,9 +41,39 @@ class HomeSettings extends StatelessWidget {
             ],
           )
       ),
-      body: SafeArea(
+      body: Settings(),
+    );
+  }
+}
+
+class Settings extends StatefulWidget {
+  const Settings({Key? key}) : super(key: key);
+
+  @override
+  _HomeSettingsState createState() => _HomeSettingsState();
+}
+
+
+class _HomeSettingsState extends State<Settings> {
+
+  void setAccessTokenToNull() {
+    setState(() {
+      accessToken = '';
+      isConnected = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    // My Wisewallet + logo
+    return SafeArea(
         child: ListView(
             children: [
+              Divider(
+                height: 1,
+                thickness: 1,
+              ),
           MaterialButton(
             minWidth: 50,
             height: 50,
@@ -86,7 +109,6 @@ class HomeSettings extends StatelessWidget {
               Divider(
                 height: 1,
                 thickness: 1,
-                indent: 45,
                 endIndent: 45,
               ),
           //Notifications
@@ -123,7 +145,6 @@ class HomeSettings extends StatelessWidget {
               Divider(
                 height: 1,
                 thickness: 1,
-                indent: 45,
                 endIndent: 45,
               ),
           //Theme
@@ -155,14 +176,13 @@ class HomeSettings extends StatelessWidget {
                   ),
                 ),
                 Icon(
-                    Icons.chevron_right
+                    Icons.chevron_right,
                 )
               ],),
           ),
               Divider(
                 height: 1,
                 thickness: 1,
-                indent: 45,
                 endIndent: 45,
               ),
           //Give us Feedback button
@@ -201,51 +221,6 @@ class HomeSettings extends StatelessWidget {
               Divider(
                 height: 1,
                 thickness: 1,
-                indent: 45,
-                endIndent: 45,
-              ),
-          //Currency
-          MaterialButton(
-            minWidth: 50,
-            height: 50,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.zero,
-                side: BorderSide(
-                    width: 100,
-                    style: BorderStyle.none
-                )),
-            onPressed: () {
-              showCurrencyPicker(
-                context: context,
-                showFlag: true,
-                showSearchField: true,
-                showCurrencyName: true,
-                showCurrencyCode: true,
-                onSelect: (Currency currency) {
-                  print('Select currency: ${currency.flag}');
-                },
-              );
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Currency",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 18,
-                  ),
-                ),
-                Icon(
-                    Icons.menu_book
-                )
-              ],),
-          ),
-
-              Divider(
-                height: 1,
-                thickness: 1,
-                indent: 45,
                 endIndent: 45,
               ),
           //Terms and Conditions button
@@ -280,7 +255,6 @@ class HomeSettings extends StatelessWidget {
               Divider(
                 height: 1,
                 thickness: 1,
-                indent: 45,
                 endIndent: 45,
               ),
           //About Us Button
@@ -315,8 +289,6 @@ class HomeSettings extends StatelessWidget {
               Divider(
                 height: 1,
                 thickness: 1,
-                indent: 45,
-                endIndent: 45,
               ),
           // Log out - Sync with firebase
           Container(
@@ -338,6 +310,7 @@ class HomeSettings extends StatelessWidget {
                     TextButton(
                       onPressed: ()  {
                         FirebaseAuth.instance.signOut();
+                        setAccessTokenToNull();
                           Navigator.pop(context, "OK");
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(content: Text("Signed out!")));
@@ -371,7 +344,7 @@ class HomeSettings extends StatelessWidget {
             ),
           ),
         ]),
-      ),
+
     );
   }
 }

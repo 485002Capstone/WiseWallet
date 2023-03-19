@@ -1,53 +1,27 @@
 import 'dart:async';
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+// ignore_for_file: camel_case_types
+import 'package:WiseWallet/screens/settings/bankaccounts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:WiseWallet/screens/home_settings.dart';
 import 'package:WiseWallet/screens/settings/changeemail.dart';
 import 'package:WiseWallet/screens/settings/changepassword.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:page_transition/page_transition.dart';
 
-import '../../theme_provider.dart';
 import '../login_page.dart';
 
 final _db = FirebaseFirestore.instance;
-var user = FirebaseAuth.instance.currentUser!;
-final docRef = _db.collection("users").doc(FirebaseAuth.instance.currentUser?.uid);
-final passwordController = TextEditingController();
-
-void main() {
-  runApp(accountsettings());
-}
-
-
-// class accountsettings extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) => MaterialApp (
-//       theme: ThemeData(useMaterial3: true, colorScheme: MyThemes.darkColorScheme),
-//       debugShowCheckedModeBanner: false,
-//       home: accountsettingsWidget()
-//   );
-//
-// }
-//
-// class accountsettingsWidget extends StatefulWidget {
-//   const accountsettingsWidget({super.key});
-//
-//   @override
-//   // ignore: library_private_types_in_public_api
-//   _accountsettingsState createState() => _accountsettingsState();
-// }
-
 
 class accountsettings extends StatelessWidget {
 
   var user = FirebaseAuth.instance.currentUser!;
 
+  accountsettings({super.key});
+
+  final docRef = _db.collection("users").doc(FirebaseAuth.instance.currentUser?.uid);
+  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -87,8 +61,6 @@ class accountsettings extends StatelessWidget {
             color: Colors.black12,
             height: 1,
             thickness: 1,
-            indent: 45,
-            endIndent: 45,
           ),
           Container(
             child: MaterialButton(
@@ -127,7 +99,6 @@ class accountsettings extends StatelessWidget {
             color: Colors.black12,
             height: 1,
             thickness: 1,
-            indent: 45,
             endIndent: 45,
           ),
           Container(
@@ -147,28 +118,6 @@ class accountsettings extends StatelessWidget {
                     reverseDuration: Duration(milliseconds: 300),
                     child: changepassword()));
               },
-              //## Old password change. Leave it here for now please
-              // => showDialog<String>(
-              //   context: context,
-              //   builder: (BuildContext context) => AlertDialog(
-              //     title: const Text('Change password'),
-              //     content: const Text('You will be logged out and instructions to change your password will be sent to your e-mail'),
-              //     actions: <Widget>[
-              //       TextButton(
-              //         onPressed: () => Navigator.pop(context, 'Cancel'),
-              //         child: const Text('Cancel'),
-              //       ),
-              //       TextButton(
-              //         onPressed: () async {
-              //           FirebaseAuth.instance.sendPasswordResetEmail(email: user.email!);
-              //           FirebaseAuth.instance.signOut();
-              //           Navigator.pop(context, 'OK');
-              //           Navigator.pop(context, loginpage());
-              //         },
-              //         child: const Text('OK'),
-              //       ),
-              //     ],
-              //   ),
               // ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -190,8 +139,46 @@ class accountsettings extends StatelessWidget {
             color: Colors.black12,
             height: 1,
             thickness: 1,
-            indent: 45,
             endIndent: 45,
+          ),
+          Container(
+            child: MaterialButton(
+              minWidth: 50,
+              height: 50,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.zero,
+                  side: BorderSide(
+                      width: 100,
+                      style: BorderStyle.none
+                  )),
+              onPressed: ()  {
+                Navigator.push(context, PageTransition(
+                    type: PageTransitionType.rightToLeftWithFade,
+                    duration: Duration(milliseconds: 300),
+                    reverseDuration: Duration(milliseconds: 300),
+                    child: bankaccounts()));
+              },
+              // ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Bank Accounts",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 18,
+                    ),
+                  ),
+                  Icon(
+                      Icons.chevron_right
+                  )
+                ],),
+            ),
+          ),
+          Divider(
+            color: Colors.black12,
+            height: 1,
+            thickness: 1,
           ),
           Container(
             padding: EdgeInsets.only(top: 50, bottom: 5),
@@ -259,14 +246,14 @@ class accountsettings extends StatelessWidget {
 Future deleteAccount(BuildContext context) async {
   try {
     AuthCredential credential = EmailAuthProvider.credential(
-        email: user.email!, password: passwordController.text.trim());
-    await user.reauthenticateWithCredential(credential);
+        email: accountsettings().user.email!, password: accountsettings().passwordController.text.trim());
+    await accountsettings().user.reauthenticateWithCredential(credential);
     FirebaseAuth.instance.currentUser?.delete();
     FirebaseAuth.instance.signOut();
     FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser?.uid).delete();
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text("Account deleted!")));
-    passwordController.clear();
+    accountsettings().passwordController.clear();
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (BuildContext context) => loginpage()),

@@ -1,7 +1,7 @@
+
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+// ignore_for_file: camel_case_types
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:WiseWallet/screens/home_settings.dart';
 
 class Notifications extends StatelessWidget {
   const Notifications({super.key});
@@ -11,7 +11,7 @@ class Notifications extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
           elevation: 0,
-          title: const Text("Account Settings",
+          title: const Text("Notifications",
               style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.w800)),

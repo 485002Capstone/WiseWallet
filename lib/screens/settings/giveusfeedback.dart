@@ -1,10 +1,9 @@
+
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+// ignore_for_file: camel_case_types
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:WiseWallet/screens/home_settings.dart';
 import 'package:flutter/material.dart';
 
 
@@ -12,6 +11,7 @@ final messageController = TextEditingController();
 final _db = FirebaseFirestore.instance;
 class feedback extends StatelessWidget {
   const feedback({super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -56,19 +56,21 @@ class feedback extends StatelessWidget {
                 context: context,
                 builder: (BuildContext context) => AlertDialog(
                   title: const Text('Send feedback'),
-                  content: const Text('Are you sure you want to send it boy?'),
+                  content: const Text('Are you sure you want to send the feedback?'),
                   actions: <Widget>[
                     TextButton(
                       onPressed: () => Navigator.pop(context, 'Cancel'),
                       child: const Text('Cancel'),
                     ),
                     TextButton(
-                      onPressed: ()  {
+                      onPressed: ()   async {
                         try {
-                          sendFeedback(context);
+                          await sendFeedback(context);
+                          messageController.clear();
                         }
                         catch (e) {
-                          print (e);
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(content: Text("Something went wrong. Try again later!")));
                         }
                       },
                       child: const Text('OK'),

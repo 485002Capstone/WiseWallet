@@ -1,19 +1,15 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 // ignore_for_file: camel_case_types
-// ignore_for_file: prefer_const_constructors
-
-
-import 'package:WiseWallet/screens/home_page.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:WiseWallet/screens/main_screen.dart';
 import 'package:WiseWallet/screens/signup_screen.dart';
+import 'package:get/get.dart';
 
-import '../theme_provider.dart';
 void main() {
   runApp(loginpage());
 }
-
 class loginpage extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -30,49 +26,20 @@ class loginpage extends StatelessWidget {
       )
   );
 }
-
 final emailController = TextEditingController();
 final passwordController = TextEditingController();
 
 class LoginWidget extends StatefulWidget {
   const LoginWidget({super.key});
 
-
   @override
   _LoginWidgetState createState() => _LoginWidgetState();
 }
-
 class _LoginWidgetState extends State<LoginWidget> {
   final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        theme: ThemeData(
-          appBarTheme: const AppBarTheme(color: Colors.transparent),
-          inputDecorationTheme: InputDecorationTheme(enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.green)),
-              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.green))),
-
-          colorScheme: ColorScheme(
-            brightness: Brightness.light,
-            primary: Colors.green,
-            onPrimary: Colors.black,
-            background: Colors.transparent,
-            onBackground: Colors.black,
-            error: Colors.black,
-            onError: const Color(0xFFBA1A1A),
-            secondary: Colors.black,
-            onSecondary: Colors.green,
-            surface: Colors.black,
-            onSurface: Colors.green,
-
-
-
-          ),
-        ),
-        title: 'WiseWallet',
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
+    return Scaffold(
             resizeToAvoidBottomInset: false,
             body: Form(
               key: formKey,
@@ -88,9 +55,6 @@ class _LoginWidgetState extends State<LoginWidget> {
                     child: TextFormField(
                       controller: emailController,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(90.0),
-                        ),
                         labelText: 'Email',
                       ),
                       validator: (email) {
@@ -108,9 +72,6 @@ class _LoginWidgetState extends State<LoginWidget> {
                       controller: passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(90.0),
-                        ),
                         labelText: 'Password',
                       ),
                       validator: (value) {
@@ -131,6 +92,8 @@ class _LoginWidgetState extends State<LoginWidget> {
                         ),
                         child: const Text('Log In'),
                         onPressed: () {
+
+                          Get.changeTheme(Get.isDarkMode? ThemeData.light(): ThemeData.dark());
                           final isValidForm = formKey.currentState!.validate();
                           if (isValidForm) {
                             signIn(context);
@@ -141,7 +104,6 @@ class _LoginWidgetState extends State<LoginWidget> {
                           }
                         },
                       ),
-
                   ),
                   TextButton(
                     onPressed: () async {
@@ -158,10 +120,8 @@ class _LoginWidgetState extends State<LoginWidget> {
                         }else {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(SnackBar(content: Text(e.message!)));
-
                         }
                       }
-
                     },
                     child: Text(
                       'Forgot Password?',
@@ -180,7 +140,8 @@ class _LoginWidgetState extends State<LoginWidget> {
                       )),
                 ],
               ),
-            )));
+            )
+    );
 
   }
 

@@ -1,88 +1,64 @@
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:WiseWallet/screens/home_settings.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../utils/theme_provider.dart';
 
 class themes extends StatelessWidget {
-  const themes({super.key});
-
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
-          elevation: 0,
-          title: const Text("Themes",
-              style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.w800)),
-        leading: IconButton (
-          icon: Icon(Icons.arrow_back_ios_new),
-          iconSize: 20.0,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        title: const Text('Theme Selection'),
       ),
-      body: const Center(
-        child: ThemeSwitch(),
-      )
+      body: ListView(
+        children: [
+          ListTile(
+            title: const Text('Light Theme'),
+            leading: Radio<ThemeModeOption>(
+              value: ThemeModeOption.light,
+              groupValue: themeProvider.themeMode.toThemeModeOption(),
+              onChanged: (ThemeModeOption? value) {
+                themeProvider.setThemeMode(value!);
+              },
+            ),
+          ),
+          ListTile(
+            title: const Text('Dark Theme'),
+            leading: Radio<ThemeModeOption>(
+              value: ThemeModeOption.dark,
+              groupValue: themeProvider.themeMode.toThemeModeOption(),
+              onChanged: (ThemeModeOption? value) {
+                themeProvider.setThemeMode(value!);
+              },
+            ),
+          ),
+          ListTile(
+            title: const Text('System Theme'),
+            leading: Radio<ThemeModeOption>(
+              value: ThemeModeOption.system,
+              groupValue: themeProvider.themeMode.toThemeModeOption(),
+              onChanged: (ThemeModeOption? value) {
+                themeProvider.setThemeMode(value!);
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
 
-enum themeChoices { light, dark, system }
-
-class ThemeSwitch extends StatefulWidget {
-  const ThemeSwitch({super.key});
-
-  @override
-  State<ThemeSwitch> createState() => _MyStatefulWidgetState();
-}
-
-class _MyStatefulWidgetState extends State<ThemeSwitch> {
-  themeChoices? _character = themeChoices.light;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      children: <Widget>[
-        ListTile(
-          title: const Text('Dark mode'),
-          leading: Radio<themeChoices>(
-            value: themeChoices.light,
-            groupValue: _character,
-            onChanged: (themeChoices? value) {
-              setState(() {
-                _character = value;
-              });
-            },
-          ),
-        ),
-        ListTile(
-          title: const Text('Light mode'),
-          leading: Radio<themeChoices>(
-            value: themeChoices.dark,
-            groupValue: _character,
-            onChanged: (themeChoices? value) {
-              setState(() {
-                _character = value;
-              });
-            },
-          ),
-        ),
-        ListTile(
-          title: const Text('System'),
-          leading: Radio<themeChoices>(
-            value: themeChoices.system,
-            groupValue: _character,
-            onChanged: (themeChoices? value) {
-              setState(() {
-                _character = value;
-              });
-            },
-          ),
-        ),
-      ],
-    );
+extension on ThemeMode {
+  ThemeModeOption toThemeModeOption() {
+    switch (this) {
+      case ThemeMode.light:
+        return ThemeModeOption.light;
+      case ThemeMode.dark:
+        return ThemeModeOption.dark;
+      case ThemeMode.system:
+      default:
+        return ThemeModeOption.system;
+    }
   }
 }

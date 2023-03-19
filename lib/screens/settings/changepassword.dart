@@ -1,8 +1,8 @@
-import 'package:WiseWallet/screens/login_page.dart';
+
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+// ignore_for_file: camel_case_types
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:WiseWallet/screens/settings/accountsettings.dart';
 import 'package:flutter/material.dart';
 
 final oldPasswordController = TextEditingController();
@@ -47,10 +47,7 @@ class changepassword extends StatelessWidget {
                 child: TextFormField (
                   controller: oldPasswordController,
                   obscureText: true,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder (
-                      borderRadius: BorderRadius.circular(90.0),
-                    ),
+                  decoration: const InputDecoration(
                     labelText: 'Old password',
                   ),
                 ),
@@ -72,10 +69,7 @@ class changepassword extends StatelessWidget {
                 child: TextFormField (
                   controller: newPasswordController,
                   obscureText: true,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder (
-                      borderRadius: BorderRadius.circular(90.0),
-                    ),
+                  decoration: const InputDecoration(
                     labelText: 'New password',
                   ),
                   validator: (value) {
@@ -102,10 +96,7 @@ class changepassword extends StatelessWidget {
                 child: TextFormField (
                   controller: newPasswordController2,
                   obscureText: true,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder (
-                      borderRadius: BorderRadius.circular(90.0),
-                    ),
+                  decoration: const InputDecoration(
                     labelText: 'Verify new password',
                   ),
                   validator: (value) {
@@ -122,7 +113,7 @@ class changepassword extends StatelessWidget {
 
               const SizedBox(height: 40),
               Container(
-                padding: const EdgeInsets.only(top: 3, left: 3),
+                padding: const EdgeInsets.only(top: 3, left: 10, right: 10),
                 child: MaterialButton(
                   minWidth: double.infinity,
                   height: 50,
@@ -136,8 +127,6 @@ class changepassword extends StatelessWidget {
                     }
                   },
                   color: const Color.fromARGB(255, 52, 98, 239),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
                   child: const Text(
                     "Submit",
                     style: TextStyle(

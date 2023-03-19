@@ -1,6 +1,7 @@
 
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+// ignore_for_file: camel_case_types
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -66,9 +67,6 @@ class changeemail extends StatelessWidget {
                 child: TextFormField (
                   controller: emailController,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder (
-                      borderRadius: BorderRadius.circular(90.0),
-                    ),
                     labelText: 'New Email',
                   ),
                   validator: (email) {
@@ -98,9 +96,6 @@ class changeemail extends StatelessWidget {
                   controller: passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder (
-                      borderRadius: BorderRadius.circular(90.0),
-                    ),
                     labelText: 'Password',
                   ),
                 ),
@@ -139,8 +134,6 @@ class changeemail extends StatelessWidget {
                       ),
                     ),
                   color: const Color.fromARGB(255, 52, 98, 239),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
                   child: const Text(
                     "Submit",
                     style: TextStyle(
