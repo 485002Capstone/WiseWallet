@@ -1,8 +1,11 @@
 import 'package:WiseWallet/plaidService/plaid_api_service.dart';
 import 'package:flutter/material.dart';
 import '../screens/home_wallet.dart';
+
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 // ignore_for_file: camel_case_types
+late Future<List<dynamic>> _transactionsFuture;
+
 class detailedAccount extends StatefulWidget {
   final Map<String, dynamic> account;
 
@@ -13,8 +16,6 @@ class detailedAccount extends StatefulWidget {
 }
 
 class _DetailedAccountPageState extends State<detailedAccount> {
-  late Future<List<dynamic>> _transactionsFuture;
-
   @override
   void initState() {
     super.initState();
@@ -79,9 +80,37 @@ class _DetailedAccountPageState extends State<detailedAccount> {
                         title: Text(transactions[index]['name']),
                         subtitle: Text(transactions[index]['date']),
                         trailing: Text('\$${transactions[index]['amount']}'),
-                        onTap: () {
-                          // Navigate to the transaction details page
-                        },
+                        onTap: () => showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                                  title: Text('Transaction Details'),
+                                  content: SingleChildScrollView(
+                                    child: ListBody(
+                                      children: [
+                                        Text(
+                                            'Name: ${transactions[index]['name']}'),
+                                        Text(
+                                            'Amount: \$${transactions[index]['amount']}'),
+                                        Text(
+                                            'Date: ${transactions[index]['date']}'),
+                                        Text(
+                                            'Category: ${transactions[index]['category'].join(' > ')}'),
+                                        Text(
+                                            'Merchant Name: ${transactions[index]['merchant_name']}'),
+                                        Text(
+                                            'Authorized Date: ${transactions[index]['authorized_date']}'),
+                                      ],
+                                    ),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text('Close'),
+                                    ),
+                                  ],
+                                )),
                       );
                     },
                   );

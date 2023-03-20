@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'screens/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:WiseWallet/app_theme.dart';
+
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 // ignore_for_file: camel_case_types
 
@@ -40,41 +41,37 @@ class MyApp extends StatelessWidget {
               primaryColor: Colors.lightBlue,
               primarySwatch: Colors.green,
               accentColor: Colors.green,
-              canvasColor: Colors.purple,
+              canvasColor: Colors.green,
               backgroundColor: Colors.white,
               scaffoldBackgroundColor: Colors.white,
               errorColor: Colors.lightBlue,
-              fontFamily: 'Roboto',
-
               // AppBar
               appBarTheme: AppBarTheme(
-                color: Colors.purple,
+                color: Colors.green,
                 textTheme: TextTheme(
                   headline6: TextStyle(fontSize: 20, color: Colors.white),
                 ),
                 iconTheme: IconThemeData(color: Colors.white),
               ),
-
               // FloatingActionButton
               floatingActionButtonTheme: FloatingActionButtonThemeData(
                 backgroundColor: Colors.green,
                 foregroundColor: Colors.white,
               ),
-
               // Text
               textTheme: const TextTheme(
-                headline1: TextStyle(fontSize: 96, fontWeight: FontWeight.bold),
-                headline2: TextStyle(fontSize: 60, fontWeight: FontWeight.bold),
-                headline3: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
-                headline4: TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
-                headline5: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                headline6: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                subtitle1: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                subtitle2: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                headline1: TextStyle(fontSize: 96, fontWeight: FontWeight.w400),
+                headline2: TextStyle(fontSize: 60, fontWeight: FontWeight.w400),
+                headline3: TextStyle(fontSize: 48, fontWeight: FontWeight.w400),
+                headline4: TextStyle(fontSize: 34, fontWeight: FontWeight.w400),
+                headline5: TextStyle(fontSize: 24, fontWeight: FontWeight.w400),
+                headline6: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+                subtitle1: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+                subtitle2: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
                 bodyText1: TextStyle(fontSize: 16),
                 bodyText2: TextStyle(fontSize: 14),
                 caption: TextStyle(fontSize: 12),
-                button: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                button: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
                 overline: TextStyle(fontSize: 10),
               ),
 
@@ -82,23 +79,16 @@ class MyApp extends StatelessWidget {
               buttonTheme: ButtonThemeData(
                 buttonColor: Colors.green,
                 textTheme: ButtonTextTheme.primary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-
               ),
 
               // TextField
               inputDecorationTheme: InputDecorationTheme(
                 border: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.red),
-                  borderRadius: BorderRadius.circular(30),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.blue),
-                  borderRadius: BorderRadius.circular(30),
                 ),
-
               ),
             ),
             darkTheme: AppThemes.DarkTheme,
@@ -108,5 +98,4 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
-
 }

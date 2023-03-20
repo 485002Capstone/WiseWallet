@@ -61,8 +61,8 @@ class _SignUpWidgetState extends State<LoginWidget> {
               child: ListView(
                 children: <Widget>[
                   Container(
-                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 70),
-                      child: Image.asset("assets/icons/logowisewallet.png")),
+                      padding: const EdgeInsets.fromLTRB(5, 20, 5, 15),
+                      child: Image.asset("assets/images/wisewallettext.png")),
                   Container(
                     padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                     child: TextFormField(
@@ -180,7 +180,8 @@ Future signUp(BuildContext context) async {
     );
     FirebaseAuth.instance.currentUser?.updateDisplayName(fullNameController.text.trim());
     Navigator.pop(context, "SignUp");
-    db.collection("users").doc(FirebaseAuth.instance.currentUser?.uid).set({
+
+    await db.collection("users").doc(FirebaseAuth.instance.currentUser?.uid).set({
       'email': emailController.text.trim(),
       'full name': fullNameController.text.trim()
     });

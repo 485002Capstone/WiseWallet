@@ -8,12 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:WiseWallet/screens/settings/accountsettings.dart';
 import 'package:WiseWallet/screens/settings/themes.dart';
 import 'package:WiseWallet/screens/settings/giveusfeedback.dart';
-import 'package:currency_picker/currency_picker.dart';
+import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:WiseWallet/screens/home_wallet.dart';
+import 'package:WiseWallet/plaidService/TransactionList.dart';
+import '../plaidService/plaid_api_service.dart';
 
 
 class HomeSettings extends StatelessWidget {
@@ -27,8 +27,8 @@ class HomeSettings extends StatelessWidget {
           elevation: 0,
           title: Row(
             children: <Widget> [
-              Image.asset('assets/images/logofinal.png',
-                  width: 70, height: 45, alignment: Alignment.topLeft),
+              Image.asset('assets/images/test_2.png',
+                  width: 80, height: 64, alignment: Alignment.topLeft),
               Text(
                 'My Wisewallet',
                 textAlign: TextAlign.left,

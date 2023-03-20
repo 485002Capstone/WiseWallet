@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
 import 'package:WiseWallet/plaidService/plaid_api_service.dart';
 
+import 'main_screen.dart';
+
 
 bool isConnected = false;
 String accessToken = '';
@@ -115,6 +117,7 @@ class _HomeWalletState extends State<HomeWallet> {
 
     await PlaidApiService.getAccessToken(publicToken);
     await fetchAccessToken();
+    data = PlaidApiService().fetchAccountDetailsAndTransactions(accessToken);
 
     List<String> accountIds = event.metadata.accounts.map((account) => account.id).toList();
     await PlaidApiService().storeAccountIds(accountIds);
@@ -195,11 +198,12 @@ class _HomeWalletState extends State<HomeWallet> {
     await PlaidLink.open(configuration: _configuration!);
 
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: isConnected
-          ? TransactionList()
+          ? TransactionListPage()
           : Center(
         child: ElevatedButton(
           onPressed: () async {
