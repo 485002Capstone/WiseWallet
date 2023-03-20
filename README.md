@@ -1,6 +1,6 @@
 WiseWallet
 
-A new Flutter project.
+Budgeting App for Students.
 
 ## Getting Started
 
