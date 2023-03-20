@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
-
-import 'package:WiseWallet/screens/settings/PlaidScreen.dart';
+//import 'package:WiseWallet/screens/settings/PlaidScreen.dart';
 import 'package:WiseWallet/screens/settings/notifications.dart';
 import 'package:WiseWallet/utils/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,24 +15,16 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../theme_provider.dart';
 
-
-
-
-
-
-
 class HomeSettings extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
-
     // My Wisewallet + logo
     return Scaffold(
-      appBar: AppBar (
+      appBar: AppBar(
           automaticallyImplyLeading: false,
           elevation: 0,
           title: Row(
-            children: <Widget> [
+            children: <Widget>[
               Image.asset('assets/images/logofinal.png',
                   width: 70, height: 45, alignment: Alignment.topLeft),
               Text(
@@ -41,31 +32,27 @@ class HomeSettings extends StatelessWidget {
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   fontSize: 30,
-                  fontWeight: FontWeight.bold
-                  ,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ],
-          )
-      ),
+          )),
       body: SafeArea(
-        child: ListView(
-            children: [
+        child: ListView(children: [
           MaterialButton(
             minWidth: 50,
             height: 50,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.zero,
-                side: BorderSide(
-                    width: 100,
-                    style: BorderStyle.none
-                )),
+                side: BorderSide(width: 100, style: BorderStyle.none)),
             onPressed: () {
-              Navigator.push(context, PageTransition(
-                  type: PageTransitionType.rightToLeftWithFade,
-                  duration: Duration(milliseconds: 300),
-                  reverseDuration: Duration(milliseconds: 300),
-                  child: accountsettings()));
+              Navigator.push(
+                  context,
+                  PageTransition(
+                      type: PageTransitionType.rightToLeftWithFade,
+                      duration: Duration(milliseconds: 300),
+                      reverseDuration: Duration(milliseconds: 300),
+                      child: accountsettings()));
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -77,18 +64,16 @@ class HomeSettings extends StatelessWidget {
                     fontSize: 18,
                   ),
                 ),
-                Icon(
-                    Icons.chevron_right
-                )
-              ],),
-
+                Icon(Icons.chevron_right)
+              ],
+            ),
           ),
-              Divider(
-                height: 1,
-                thickness: 1,
-                indent: 45,
-                endIndent: 45,
-              ),
+          Divider(
+            height: 1,
+            thickness: 1,
+            indent: 45,
+            endIndent: 45,
+          ),
           //Notifications
           MaterialButton(
             minWidth: 50,
@@ -96,14 +81,16 @@ class HomeSettings extends StatelessWidget {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.zero,
                 side: BorderSide(
-                    width: 100,
+                  width: 100,
                 )),
             onPressed: () {
-              Navigator.push(context, PageTransition(
-                  type: PageTransitionType.rightToLeftWithFade,
-                  duration: Duration(milliseconds: 300),
-                  reverseDuration: Duration(milliseconds: 300),
-                  child: Notifications()));
+              Navigator.push(
+                  context,
+                  PageTransition(
+                      type: PageTransitionType.rightToLeftWithFade,
+                      duration: Duration(milliseconds: 300),
+                      reverseDuration: Duration(milliseconds: 300),
+                      child: Notifications()));
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -115,34 +102,31 @@ class HomeSettings extends StatelessWidget {
                     fontSize: 18,
                   ),
                 ),
-                Icon(
-                    Icons.chevron_right
-                )
-              ],),
+                Icon(Icons.chevron_right)
+              ],
+            ),
           ),
-              Divider(
-                height: 1,
-                thickness: 1,
-                indent: 45,
-                endIndent: 45,
-              ),
+          Divider(
+            height: 1,
+            thickness: 1,
+            indent: 45,
+            endIndent: 45,
+          ),
           //Theme
           MaterialButton(
             minWidth: 50,
             height: 50,
-
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.zero,
-                side: BorderSide(
-                    width: 100,
-                    style: BorderStyle.none
-                )),
+                side: BorderSide(width: 100, style: BorderStyle.none)),
             onPressed: () {
-              Navigator.push(context, PageTransition(
-                  type: PageTransitionType.rightToLeftWithFade,
-                  duration: Duration(milliseconds: 300),
-                  reverseDuration: Duration(milliseconds: 300),
-                  child: themes()));
+              Navigator.push(
+                  context,
+                  PageTransition(
+                      type: PageTransitionType.rightToLeftWithFade,
+                      duration: Duration(milliseconds: 300),
+                      reverseDuration: Duration(milliseconds: 300),
+                      child: themes()));
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -154,33 +138,31 @@ class HomeSettings extends StatelessWidget {
                     fontSize: 18,
                   ),
                 ),
-                Icon(
-                    Icons.chevron_right
-                )
-              ],),
+                Icon(Icons.chevron_right)
+              ],
+            ),
           ),
-              Divider(
-                height: 1,
-                thickness: 1,
-                indent: 45,
-                endIndent: 45,
-              ),
+          Divider(
+            height: 1,
+            thickness: 1,
+            indent: 45,
+            endIndent: 45,
+          ),
           //Give us Feedback button
           MaterialButton(
             minWidth: 50,
             height: 50,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.zero,
-                side: BorderSide(
-                    width: 100,
-                    style: BorderStyle.none
-                )),
+                side: BorderSide(width: 100, style: BorderStyle.none)),
             onPressed: () {
-              Navigator.push(context, PageTransition(
-                  type: PageTransitionType.rightToLeftWithFade,
-                  duration: Duration(milliseconds: 300),
-                  reverseDuration: Duration(milliseconds: 300),
-                  child: feedback()));
+              Navigator.push(
+                  context,
+                  PageTransition(
+                      type: PageTransitionType.rightToLeftWithFade,
+                      duration: Duration(milliseconds: 300),
+                      reverseDuration: Duration(milliseconds: 300),
+                      child: feedback()));
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -191,29 +173,24 @@ class HomeSettings extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                     fontSize: 18,
                   ),
-
                 ),
-                Icon(
-                    Icons.chevron_right
-                )
-              ],),
+                Icon(Icons.chevron_right)
+              ],
+            ),
           ),
-              Divider(
-                height: 1,
-                thickness: 1,
-                indent: 45,
-                endIndent: 45,
-              ),
+          Divider(
+            height: 1,
+            thickness: 1,
+            indent: 45,
+            endIndent: 45,
+          ),
           //Currency
           MaterialButton(
             minWidth: 50,
             height: 50,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.zero,
-                side: BorderSide(
-                    width: 100,
-                    style: BorderStyle.none
-                )),
+                side: BorderSide(width: 100, style: BorderStyle.none)),
             onPressed: () {
               showCurrencyPicker(
                 context: context,
@@ -236,28 +213,24 @@ class HomeSettings extends StatelessWidget {
                     fontSize: 18,
                   ),
                 ),
-                Icon(
-                    Icons.menu_book
-                )
-              ],),
+                Icon(Icons.menu_book)
+              ],
+            ),
           ),
 
-              Divider(
-                height: 1,
-                thickness: 1,
-                indent: 45,
-                endIndent: 45,
-              ),
+          Divider(
+            height: 1,
+            thickness: 1,
+            indent: 45,
+            endIndent: 45,
+          ),
           //Terms and Conditions button
-         MaterialButton(
+          MaterialButton(
             minWidth: 50,
             height: 50,
-           shape: RoundedRectangleBorder(
-               borderRadius: BorderRadius.zero,
-               side: BorderSide(
-                   width: 100,
-                   style: BorderStyle.none
-               )),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.zero,
+                side: BorderSide(width: 100, style: BorderStyle.none)),
             onPressed: () {
               _launchUrl2();
             },
@@ -271,58 +244,50 @@ class HomeSettings extends StatelessWidget {
                     fontSize: 18,
                   ),
                 ),
-                Icon(
-                    Icons.link
-                )
-              ],),
-
+                Icon(Icons.link)
+              ],
+            ),
           ),
-              Divider(
-                height: 1,
-                thickness: 1,
-                indent: 45,
-                endIndent: 45,
-              ),
+          Divider(
+            height: 1,
+            thickness: 1,
+            indent: 45,
+            endIndent: 45,
+          ),
           //About Us Button
           MaterialButton(
             minWidth: 50,
             height: 50,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.zero,
-            side: BorderSide(
-              width: 100,
-              style: BorderStyle.none
-            )),
-              onPressed: () {
-
-                _launchUrl();
-              },
+                side: BorderSide(width: 100, style: BorderStyle.none)),
+            onPressed: () {
+              _launchUrl();
+            },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-              Text(
-                "About Us",
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 18,
+                Text(
+                  "About Us",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 18,
+                  ),
                 ),
-              ),
-                Icon(
-                    Icons.link
-                )
-            ],),
+                Icon(Icons.link)
+              ],
+            ),
           ),
-              Divider(
-                height: 1,
-                thickness: 1,
-                indent: 45,
-                endIndent: 45,
-              ),
+          Divider(
+            height: 1,
+            thickness: 1,
+            indent: 45,
+            endIndent: 45,
+          ),
           // Log out - Sync with firebase
           Container(
             padding: EdgeInsets.only(top: 250, bottom: 3),
             child: MaterialButton(
-
               minWidth: 50,
               height: 50,
               onPressed: () => showDialog<String>(
@@ -336,11 +301,11 @@ class HomeSettings extends StatelessWidget {
                       child: const Text('Cancel'),
                     ),
                     TextButton(
-                      onPressed: ()  {
+                      onPressed: () {
                         FirebaseAuth.instance.signOut();
-                          Navigator.pop(context, "OK");
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(content: Text("Signed out!")));
+                        Navigator.pop(context, "OK");
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Signed out!")));
                       },
                       child: const Text('OK'),
                     ),
@@ -348,15 +313,13 @@ class HomeSettings extends StatelessWidget {
                 ),
               ),
               color: Color.fromARGB(255, 241, 50, 36),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.zero),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
               child: Text(
                 "Sign Out",
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 20,
-
                 ),
               ),
             ),
@@ -376,15 +339,17 @@ class HomeSettings extends StatelessWidget {
   }
 }
 
-
-final Uri _url = Uri.parse('https://sites.google.com/view/wisewallet1/overview');
+final Uri _url =
+    Uri.parse('https://sites.google.com/view/wisewallet1/overview');
 
 Future<void> _launchUrl() async {
   if (!await launchUrl(_url)) {
     throw Exception('Could not launch $_url');
   }
 }
-final Uri _url2 = Uri.parse('https://sites.google.com/view/wisewallet1/terms-and-conditions');
+
+final Uri _url2 =
+    Uri.parse('https://sites.google.com/view/wisewallet1/terms-and-conditions');
 
 Future<void> _launchUrl2() async {
   if (!await launchUrl(_url2)) {
