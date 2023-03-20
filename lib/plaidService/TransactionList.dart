@@ -27,6 +27,10 @@ class TransactionListPage extends StatelessWidget {
 
             return Column(
               children: [
+                Divider(
+                  height: 1,
+                  thickness: 1,
+                ),
                 SizedBox(height: 10),
                 Container(
                   height: 100,
@@ -79,7 +83,6 @@ class TransactionListPage extends StatelessWidget {
                 Divider(
                   height: 1,
                   thickness: 1,
-                  endIndent: 45,
                 ),
                 Expanded(
                   child: ListView.builder(

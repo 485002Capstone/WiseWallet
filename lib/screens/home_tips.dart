@@ -14,23 +14,30 @@ class HomeTips extends StatelessWidget {
             automaticallyImplyLeading: false,
             elevation: 0,
             title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget> [
-                Image.asset('assets/images/logofinal.png',
-                    width: 70, height: 45, alignment: Alignment.topLeft),
                 Text(
-                  'Wisewallet',
+                  'WISEWALLET',
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     fontSize: 30,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w800,
                   ),
                 ),
+                Image.asset('assets/images/test_2.png',
+                    width: 80, height: 64, alignment: Alignment.centerRight),
               ],
             )
         ),
         body: SafeArea(
           child: ListView(
-            children: const [],
+            children: const [
+
+              Divider(
+                height: 1,
+                thickness: 1,
+              ),
+            ],
           ),
         ));
   }

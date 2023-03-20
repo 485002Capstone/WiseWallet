@@ -41,13 +41,14 @@ class MyApp extends StatelessWidget {
               primaryColor: Colors.lightBlue,
               primarySwatch: Colors.green,
               accentColor: Colors.green,
-              canvasColor: Colors.green,
+              canvasColor: Colors.white,
               backgroundColor: Colors.white,
               scaffoldBackgroundColor: Colors.white,
               errorColor: Colors.lightBlue,
               // AppBar
               appBarTheme: AppBarTheme(
-                color: Colors.green,
+                color: Colors.transparent,
+                titleTextStyle: TextStyle(color: Colors.green,),
                 textTheme: TextTheme(
                   headline6: TextStyle(fontSize: 20, color: Colors.white),
                 ),

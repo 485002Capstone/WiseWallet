@@ -79,5 +79,5 @@ class AppThemes {
   );
 }
 
-const Color fontDark = Color(0xFFFFFFFF);
+const Color fontDark = Color(0xFF502929);
 const Color fontLight = Color(0xFF0053E8);
