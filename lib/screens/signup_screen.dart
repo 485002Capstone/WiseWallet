@@ -62,7 +62,7 @@ class _SignUpWidgetState extends State<LoginWidget> {
                 children: <Widget>[
                   Container(
                       padding: const EdgeInsets.fromLTRB(5, 20, 5, 15),
-                      child: Image.asset("assets/images/wisewallettext.png")),
+                      child: Image.asset("assets/images/wisewalletmain.png")),
                   Container(
                     padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                     child: TextFormField(

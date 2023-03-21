@@ -27,12 +27,8 @@ class TransactionListPage extends StatelessWidget {
 
             return Column(
               children: [
-                Divider(
-                  height: 1,
-                  thickness: 1,
-                ),
-                SizedBox(height: 10),
                 Container(
+                  padding: EdgeInsets.symmetric(vertical: 10),
                   height: 100,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,

@@ -11,6 +11,13 @@ class HomeTips extends StatelessWidget {
     // My Wisewallet + logo
     return Scaffold(
         appBar: AppBar (
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(4.0),
+              child: Divider(
+                height: 1,
+                thickness: 1,
+              ),
+            ),
             automaticallyImplyLeading: false,
             elevation: 0,
             title: Row(

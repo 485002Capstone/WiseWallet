@@ -47,12 +47,14 @@ class MyApp extends StatelessWidget {
               errorColor: Colors.lightBlue,
               // AppBar
               appBarTheme: AppBarTheme(
-                color: Colors.transparent,
-                titleTextStyle: TextStyle(color: Colors.green,),
+                color: Colors.white,
+                titleTextStyle: TextStyle(color: Colors.green,
+                ),
                 textTheme: TextTheme(
                   headline6: TextStyle(fontSize: 20, color: Colors.white),
                 ),
-                iconTheme: IconThemeData(color: Colors.white),
+                toolbarTextStyle: TextStyle(color: Colors.green),
+                iconTheme: IconThemeData(color: Colors.orange),
               ),
               // FloatingActionButton
               floatingActionButtonTheme: FloatingActionButtonThemeData(

@@ -1,5 +1,5 @@
-
 import 'dart:async';
+
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 // ignore_for_file: camel_case_types
 
@@ -13,31 +13,36 @@ import 'package:WiseWallet/plaidService/plaid_api_service.dart';
 
 import 'main_screen.dart';
 
-
 bool isConnected = false;
 String accessToken = '';
 late var token;
-var userDocRef = FirebaseFirestore.instance.collection('accessToken').doc(FirebaseAuth.instance.currentUser?.uid);
-Future main() async {
+var userDocRef = FirebaseFirestore.instance
+    .collection('accessToken')
+    .doc(FirebaseAuth.instance.currentUser?.uid);
 
+Future main() async {
   runApp(const WalletPage());
 }
 
 class WalletPage extends StatelessWidget {
   const WalletPage({super.key});
 
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar (
+      appBar: AppBar(
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(4.0),
+            child: Divider(
+              height: 1,
+              thickness: 1,
+            ),
+          ),
           automaticallyImplyLeading: false,
           elevation: 0,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget> [
+            children: <Widget>[
               Text(
                 'WISEWALLET',
                 textAlign: TextAlign.left,
@@ -49,13 +54,10 @@ class WalletPage extends StatelessWidget {
               Image.asset('assets/images/test_2.png',
                   width: 80, height: 64, alignment: Alignment.centerRight),
             ],
-          )
-      ),
+          )),
       body: HomeWallet(),
     );
   }
-
-
 }
 
 class HomeWallet extends StatefulWidget {
@@ -66,7 +68,6 @@ class HomeWallet extends StatefulWidget {
 }
 
 class _HomeWalletState extends State<HomeWallet> {
-
   late String linkToken;
 
   LinkConfiguration? _configuration;
@@ -74,7 +75,6 @@ class _HomeWalletState extends State<HomeWallet> {
   StreamSubscription<LinkExit>? _streamExit;
   StreamSubscription<LinkSuccess>? _streamSuccess;
   LinkObject? _successObject;
-
 
   @override
   void initState() {
@@ -84,8 +84,6 @@ class _HomeWalletState extends State<HomeWallet> {
     super.initState();
   }
 
-
-
   @override
   void dispose() {
     _streamEvent?.cancel();
@@ -93,7 +91,6 @@ class _HomeWalletState extends State<HomeWallet> {
     _streamSuccess?.cancel();
     super.dispose();
   }
-
 
   void _onEvent(LinkEvent event) {
     final name = event.name;
@@ -105,7 +102,7 @@ class _HomeWalletState extends State<HomeWallet> {
 
   late String publicToken;
 
-  void _onSuccess(LinkSuccess event) async{
+  void _onSuccess(LinkSuccess event) async {
     token = event.publicToken;
     final metadata = event.metadata.description();
     if (kDebugMode) {
@@ -120,13 +117,12 @@ class _HomeWalletState extends State<HomeWallet> {
     await fetchAccessToken();
     data = PlaidApiService().fetchAccountDetailsAndTransactions(accessToken);
 
-    List<String> accountIds = event.metadata.accounts.map((account) => account.id).toList();
+    List<String> accountIds =
+        event.metadata.accounts.map((account) => account.id).toList();
     await PlaidApiService().storeAccountIds(accountIds);
     if (accessToken == '') {
       _onBankAccountConnected(accessToken);
     }
-
-
   }
 
   void _onExit(LinkExit event) {
@@ -137,11 +133,9 @@ class _HomeWalletState extends State<HomeWallet> {
     }
   }
 
-
   Future<void> setLinkToken() async {
     String linkToken2 = '';
     try {
-
       linkToken2 = await PlaidApiService.getLinkToken();
 
       if (kDebugMode) {
@@ -165,25 +159,24 @@ class _HomeWalletState extends State<HomeWallet> {
     });
   }
 
-
-
   void _onBankAccountConnected(String accessToken) async {
-
     setState(() {
       isConnected = true;
       accessToken = accessToken;
     });
   }
 
-
   Future<void> fetchAccessToken() async {
-    var userDocRef = FirebaseFirestore.instance.collection('accessToken').doc(FirebaseAuth.instance.currentUser?.uid);
+    var userDocRef = FirebaseFirestore.instance
+        .collection('accessToken')
+        .doc(FirebaseAuth.instance.currentUser?.uid);
     DocumentSnapshot userDocSnapshot = await userDocRef.get();
 
     if (userDocSnapshot.exists) {
-      Map<String, dynamic> userData = userDocSnapshot.data() as Map<String, dynamic>;
+      Map<String, dynamic> userData =
+          userDocSnapshot.data() as Map<String, dynamic>;
       if (userData.containsKey('AccessToken')) {
-        if(mounted) {
+        if (mounted) {
           setState(() {
             isConnected = true;
             accessToken = userData['AccessToken'];
@@ -197,7 +190,6 @@ class _HomeWalletState extends State<HomeWallet> {
     await setLinkToken();
     await _createLinkTokenConfiguration();
     await PlaidLink.open(configuration: _configuration!);
-
   }
 
   @override
@@ -206,16 +198,13 @@ class _HomeWalletState extends State<HomeWallet> {
       body: isConnected
           ? TransactionListPage()
           : Center(
-        child: ElevatedButton(
-          onPressed: () async {
-            await connectBankAccount();
-
-          },
-          child: Text('Connect Bank Account'),
-        ),
-      ),
+              child: ElevatedButton(
+                onPressed: () async {
+                  await connectBankAccount();
+                },
+                child: Text('Connect Bank Account'),
+              ),
+            ),
     );
   }
-
-
 }

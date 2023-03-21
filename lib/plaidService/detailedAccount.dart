@@ -28,8 +28,21 @@ class _DetailedAccountPageState extends State<detailedAccount> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Account Details'),
+      appBar: AppBar (
+          elevation: 0,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget> [
+              Text(
+                'Transaction Details',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          )
       ),
       body: CustomScrollView(
         slivers: [

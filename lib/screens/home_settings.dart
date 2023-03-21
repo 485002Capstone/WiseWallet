@@ -151,7 +151,6 @@ class _HomeSettingsState extends State<Settings> {
           MaterialButton(
             minWidth: 50,
             height: 50,
-
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.zero,
                 side: BorderSide(

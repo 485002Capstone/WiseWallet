@@ -9,7 +9,16 @@ class themes extends StatelessWidget {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Theme Selection'),
+        elevation: 0,
+        title: const Text("Notifications",
+            style: TextStyle(fontSize: 25, fontWeight: FontWeight.w800)),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new),
+          iconSize: 20.0,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: ListView(
         children: [
