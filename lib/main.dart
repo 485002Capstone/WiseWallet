@@ -66,7 +66,8 @@ class _MyAppState extends State<MyApp> {
                   headline6: TextStyle(fontSize: 20, color: Colors.white),
                 ).bodyText2,
                 titleTextStyle: TextTheme(
-                  headline6: TextStyle(fontSize: 20, color: Color.fromARGB(255, 52, 114, 93)),
+                  headline6: TextStyle(
+                      fontSize: 20, color: Color.fromARGB(255, 52, 114, 93)),
                 ).headline6,
               ),
               // FloatingActionButton

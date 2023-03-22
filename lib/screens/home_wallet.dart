@@ -31,15 +31,8 @@ class WalletPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          bottom: PreferredSize(
-            preferredSize: Size.fromHeight(4.0),
-            child: Divider(
-              height: 1,
-              thickness: 1,
-            ),
-          ),
           automaticallyImplyLeading: false,
-          elevation: 0,
+          elevation: 1,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[

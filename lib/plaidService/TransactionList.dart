@@ -52,7 +52,7 @@ class TransactionListPage extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 0),
                           child: Card(
                             child: SizedBox(
-                              width: 400,
+                              width: 300,
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Column(
@@ -75,55 +75,73 @@ class TransactionListPage extends StatelessWidget {
                     },
                   ),
                 ),
-                const SizedBox(height: 10),
-                Divider(
-                  height: 1,
-                  thickness: 1,
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: transactions.length,
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        onTap: () => showDialog<String>(
-                            context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                                  title: Text('Transaction Details'),
-                                  content: SingleChildScrollView(
-                                    child: ListBody(
-                                      children: [
-                                        Text(
-                                            'Name: ${transactions[index]['name']}'),
-                                        Text(
-                                            'Amount: \$${transactions[index]['amount']}'),
-                                        Text(
-                                            'Date: ${transactions[index]['date']}'),
-                                        Text(
-                                            'Category: ${transactions[index]['category'].join(' > ')}'),
-                                        Text(
-                                            'Merchant Name: ${transactions[index]['merchant_name']}'),
-                                        Text(
-                                            'Authorized Date: ${transactions[index]['authorized_date']}'),
-                                      ],
-                                    ),
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text('Close'),
-                                    ),
-                                  ],
-                                )),
-                        child: ListTile(
-                          title: Text(transactions[index]['name']),
-                          subtitle:
-                              Text('Date: ${transactions[index]['date']}'),
-                          trailing: Text('\$${transactions[index]['amount']}'),
+                Card(
+                  elevation: 4,
+                  margin: EdgeInsets.all(16),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Transactions',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      );
-                    },
+                        SizedBox(height: 8),
+                        SizedBox(
+                          height: 300,
+                          child: ListView.builder(
+                            itemCount: transactions.length,
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                onTap: () => showDialog<String>(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        AlertDialog(
+                                          title: Text('Transaction Details'),
+                                          content: SingleChildScrollView(
+                                            child: ListBody(
+                                              children: [
+                                                Text(
+                                                    'Name: ${transactions[index]['name']}'),
+                                                Text(
+                                                    'Amount: \$${transactions[index]['amount']}'),
+                                                Text(
+                                                    'Date: ${transactions[index]['date']}'),
+                                                Text(
+                                                    'Category: ${transactions[index]['category'].join(' > ')}'),
+                                                Text(
+                                                    'Merchant Name: ${transactions[index]['merchant_name']}'),
+                                                Text(
+                                                    'Authorized Date: ${transactions[index]['authorized_date']}'),
+                                              ],
+                                            ),
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text('Close'),
+                                            ),
+                                          ],
+                                        )),
+                                child: ListTile(
+                                  title: Text(transactions[index]['name']),
+                                  subtitle: Text(
+                                      'Date: ${transactions[index]['date']}'),
+                                  trailing: Text(
+                                      '\$${transactions[index]['amount']}'),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

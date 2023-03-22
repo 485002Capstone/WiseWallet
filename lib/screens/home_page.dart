@@ -1,7 +1,5 @@
-
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 // ignore_for_file: camel_case_types
-
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -11,13 +9,10 @@ import 'package:flutter/material.dart';
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
-
-
-
   Widget build(BuildContext context) {
     // My Wisewallet + logo
     return Scaffold(
-        appBar: AppBar (
+        appBar: AppBar(
             bottom: PreferredSize(
               preferredSize: Size.fromHeight(4.0),
               child: Divider(
@@ -29,7 +24,7 @@ class HomePage extends StatelessWidget {
             elevation: 0,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget> [
+              children: <Widget>[
                 Text(
                   'WISEWALLET',
                   textAlign: TextAlign.left,
@@ -41,16 +36,26 @@ class HomePage extends StatelessWidget {
                 Image.asset('assets/images/logofinal.png',
                     width: 60, height: 50, alignment: Alignment.centerRight),
               ],
-            )
-        ),
-        body: SafeArea(
-          child: ListView(
-            children: const [
-              Divider(
-                height: 1,
-                thickness: 1,
-              ),],
-          ),
+            )),
+        body: CustomScrollView(
+          physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics()),
+          slivers: [
+            SliverToBoxAdapter(
+              child: Column(children: const [
+                SizedBox(height: 20),
+                Text(
+                  'Main page',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 22,
+                  ),
+                ),
+                //Version Text
+              ]),
+            ),
+          ],
         ));
   }
 }

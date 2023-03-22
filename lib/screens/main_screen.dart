@@ -57,7 +57,8 @@ class _MyWidgetState extends State<MainScreen> {
             currentIndex = index;
           });
         },
-        selectedItemColor: isDarkMode ? Colors.orangeAccent : Colors.blue,
+        selectedItemColor:
+            isDarkMode ? Colors.orangeAccent : Color.fromARGB(255, 52, 114, 93),
         unselectedItemColor: isDarkMode ? Colors.orange[200] : Colors.grey,
         items: [
           BottomNavigationBarItem(
@@ -73,26 +74,26 @@ class _MyWidgetState extends State<MainScreen> {
       ),
     );
   }
-    Future<void> initializeWalletVariables() async {
-      var userDocRef = FirebaseFirestore.instance
-          .collection('accessToken')
-          .doc(FirebaseAuth.instance.currentUser?.uid);
-      DocumentSnapshot userDocSnapshot = await userDocRef.get();
 
-      if (userDocSnapshot.exists) {
-        Map<String, dynamic> userData =
-        userDocSnapshot.data() as Map<String, dynamic>;
-        if (userData.containsKey('AccessToken')) {
-          if (mounted) {
-            setState(() {
-              isConnected = true;
-              accessToken = userData['AccessToken'];
-              data = PlaidApiService()
-                  .fetchAccountDetailsAndTransactions(accessToken);
-            });
-          }
+  Future<void> initializeWalletVariables() async {
+    var userDocRef = FirebaseFirestore.instance
+        .collection('accessToken')
+        .doc(FirebaseAuth.instance.currentUser?.uid);
+    DocumentSnapshot userDocSnapshot = await userDocRef.get();
+
+    if (userDocSnapshot.exists) {
+      Map<String, dynamic> userData =
+          userDocSnapshot.data() as Map<String, dynamic>;
+      if (userData.containsKey('AccessToken')) {
+        if (mounted) {
+          setState(() {
+            isConnected = true;
+            accessToken = userData['AccessToken'];
+            data = PlaidApiService()
+                .fetchAccountDetailsAndTransactions(accessToken);
+          });
         }
       }
     }
-
+  }
 }

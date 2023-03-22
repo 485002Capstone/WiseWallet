@@ -27,19 +27,18 @@ class _ThemesState extends State<themesPage> {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
+      appBar: AppBar(
+        elevation: 1,
+        title: Text("Themes",
+            style: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+            )),
+      ),
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(
             parent: AlwaysScrollableScrollPhysics()),
         slivers: [
-          const SliverAppBar(
-            pinned: false,
-            scrolledUnderElevation: 100,
-            title: Text("Themes",
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.w800,
-                )),
-          ),
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(16.0),

@@ -21,37 +21,33 @@ class bankaccounts extends StatelessWidget {
   Widget build(BuildContext context) {
     // My Wisewallet + logo
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        elevation: 0,
-        title: const Text("Change email",
-            style: TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.w800,
-            )),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new),
-          iconSize: 20.0,
-          onPressed: () {
-            Navigator.pop(context);
-          },
+        appBar: AppBar(
+          elevation: 1,
+          title: Text("Bank Accounts",
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              )),
         ),
-      ),
-      body: Form(
-        key: formKey,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        child: ListView(children: [
-          //Version Text
-          const Text(
-            'Version 9.20.0',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 12,
+        body: CustomScrollView(
+          physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics()),
+          slivers: [
+            SliverToBoxAdapter(
+              child: Column(children: const [
+                SizedBox(height: 20),
+                Text(
+                  'Email@gmail.com',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 22,
+                  ),
+                ),
+                //Version Text
+              ]),
             ),
-          ),
-        ]),
-      ),
-    );
+          ],
+        ));
   }
 }
