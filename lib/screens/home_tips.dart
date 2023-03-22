@@ -31,8 +31,8 @@ class HomeTips extends StatelessWidget {
                     fontWeight: FontWeight.w800,
                   ),
                 ),
-                Image.asset('assets/images/test_2.png',
-                    width: 80, height: 64, alignment: Alignment.centerRight),
+                Image.asset('assets/images/logofinal.png',
+                    width: 60, height: 50, alignment: Alignment.centerRight),
               ],
             )
         ),

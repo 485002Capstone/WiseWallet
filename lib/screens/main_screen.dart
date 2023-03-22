@@ -45,50 +45,54 @@ class _MyWidgetState extends State<MainScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: buildTabContent(currentIndex),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: currentIndex,
-          onTap: (index) {
-            setState(() {
-              currentIndex = index;
-            });
-          },
-          selectedItemColor: fontDark,
-          unselectedItemColor: fontLight,
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: "Home",
-            ),
-            BottomNavigationBarItem(icon: Icon(Icons.wallet), label: "Wallet"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.tips_and_updates), label: "Tips"),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.settings), label: "Settings"),
-          ],
-        ),
-      );
+  Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-  Future<void> initializeWalletVariables() async {
-    var userDocRef = FirebaseFirestore.instance
-        .collection('accessToken')
-        .doc(FirebaseAuth.instance.currentUser?.uid);
-    DocumentSnapshot userDocSnapshot = await userDocRef.get();
-
-    if (userDocSnapshot.exists) {
-      Map<String, dynamic> userData =
-          userDocSnapshot.data() as Map<String, dynamic>;
-      if (userData.containsKey('AccessToken')) {
-        if (mounted) {
+    return Scaffold(
+      body: buildTabContent(currentIndex),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: currentIndex,
+        onTap: (index) {
           setState(() {
-            isConnected = true;
-            accessToken = userData['AccessToken'];
-            data = PlaidApiService()
-                .fetchAccountDetailsAndTransactions(accessToken);
+            currentIndex = index;
           });
+        },
+        selectedItemColor: isDarkMode ? Colors.orangeAccent : Colors.blue,
+        unselectedItemColor: isDarkMode ? Colors.orange[200] : Colors.grey,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: "Home",
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.wallet), label: "Wallet"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.tips_and_updates), label: "Tips"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings), label: "Settings"),
+        ],
+      ),
+    );
+  }
+    Future<void> initializeWalletVariables() async {
+      var userDocRef = FirebaseFirestore.instance
+          .collection('accessToken')
+          .doc(FirebaseAuth.instance.currentUser?.uid);
+      DocumentSnapshot userDocSnapshot = await userDocRef.get();
+
+      if (userDocSnapshot.exists) {
+        Map<String, dynamic> userData =
+        userDocSnapshot.data() as Map<String, dynamic>;
+        if (userData.containsKey('AccessToken')) {
+          if (mounted) {
+            setState(() {
+              isConnected = true;
+              accessToken = userData['AccessToken'];
+              data = PlaidApiService()
+                  .fetchAccountDetailsAndTransactions(accessToken);
+            });
+          }
         }
       }
     }
-  }
+
 }

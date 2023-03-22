@@ -17,6 +17,8 @@ void main() {
 }
 
 class loginpage extends StatelessWidget {
+  const loginpage({super.key});
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -57,7 +59,7 @@ class _LoginWidgetState extends State<LoginWidget> {
             children: <Widget>[
               Container(
                   padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
-                  child: Image.asset("assets/images/wisewalletv2.png")),
+                  child: Image.asset("assets/icons/logowisewallet.png")),
               Container(
                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                 child: TextFormField(

@@ -1,5 +1,7 @@
 import 'package:WiseWallet/utils/theme_provider.dart';
 import 'package:WiseWallet/screens/settings/themes.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +16,9 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
   await Firebase.initializeApp();
+  //Auto signout when the app is initialized. Uncomment once app is done ba sebi prostu
+  // FirebaseAuth auth = FirebaseAuth.instance;
+  // await auth.signOut();
   runApp(
     ChangeNotifierProvider(
       create: (_) => ThemeProvider(),
@@ -22,9 +27,17 @@ Future main() async {
   );
 }
 
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
 // Test Comment - SP
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,13 +61,13 @@ class MyApp extends StatelessWidget {
               // AppBar
               appBarTheme: AppBarTheme(
                 color: Colors.white,
-                titleTextStyle: TextStyle(color: Colors.green,
-                ),
-                textTheme: TextTheme(
-                  headline6: TextStyle(fontSize: 20, color: Colors.white),
-                ),
-                toolbarTextStyle: TextStyle(color: Colors.green),
                 iconTheme: IconThemeData(color: Colors.orange),
+                toolbarTextStyle: TextTheme(
+                  headline6: TextStyle(fontSize: 20, color: Colors.white),
+                ).bodyText2,
+                titleTextStyle: TextTheme(
+                  headline6: TextStyle(fontSize: 20, color: Color.fromARGB(255, 52, 114, 93)),
+                ).headline6,
               ),
               // FloatingActionButton
               floatingActionButtonTheme: FloatingActionButtonThemeData(

@@ -61,7 +61,7 @@ class _SignUpWidgetState extends State<LoginWidget> {
               child: ListView(
                 children: <Widget>[
                   Container(
-                      padding: const EdgeInsets.fromLTRB(5, 20, 5, 15),
+                      padding: const EdgeInsets.fromLTRB(5, 30, 5, 15),
                       child: Image.asset("assets/images/wisewalletmain.png")),
                   Container(
                     padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
