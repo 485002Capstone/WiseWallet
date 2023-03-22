@@ -1,7 +1,6 @@
 import 'dart:async';
 
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
-// ignore_for_file: camel_case_types
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, camel_case_types
 import 'package:WiseWallet/screens/settings/bankaccounts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:WiseWallet/screens/settings/changeemail.dart';

@@ -3,8 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../utils/theme_provider.dart';
 
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
-// ignore_for_file: camel_case_types
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, camel_case_types
 
 class themes extends StatelessWidget {
   @override

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, camel_case_types
 enum ThemeModeOption { light, dark, system }
 
 class ThemeProvider extends ChangeNotifier {

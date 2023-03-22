@@ -1,5 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
-// ignore_for_file: camel_case_types
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, camel_case_types
 import 'dart:convert';
 import 'package:WiseWallet/plaidService/TransactionList.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,8 +11,8 @@ import '../screens/main_screen.dart';
 
 final _db = FirebaseFirestore.instance;
 
-
 const _baseUrl = 'https://sandbox.plaid.com';
+
 class PlaidApiService {
   var userDocRef = FirebaseFirestore.instance
       .collection('accessToken')
@@ -78,7 +77,8 @@ class PlaidApiService {
     return;
   }
 
-  static Future<List<dynamic>> getTransactions(String accessToken, int days) async {
+  static Future<List<dynamic>> getTransactions(
+      String accessToken, int days) async {
     final startDate = DateTime.now()
         .subtract(Duration(days: days))
         .toIso8601String()
@@ -96,12 +96,41 @@ class PlaidApiService {
         'end_date': endDate,
       }),
     );
-
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       return data['transactions'];
     } else {
       throw Exception('Failed to fetch transactions');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> fetchTransactions() async {
+    final startDate = DateTime.now()
+        .subtract(Duration(days: 250))
+        .toIso8601String()
+        .substring(0, 10);
+    final endDate = DateTime.now().toIso8601String().substring(0, 10);
+    final response = await http.post(
+      Uri.parse('$_baseUrl/transactions/get'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'client_id': dotenv.env['PLAID_CLIENT_ID'],
+        'secret': dotenv.env['PLAID_SECRET'],
+        'access_token': accessToken,
+        'start_date': startDate,
+        'end_date': endDate,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      final transactions =
+          List<Map<String, dynamic>>.from(jsonResponse['transactions']);
+
+      return transactions;
+    } else {
+      throw Exception(
+          'Failed to fetch transactions. Status code: ${response.statusCode}, Body: ${response.body}');
     }
   }
 
@@ -255,6 +284,54 @@ class PlaidApiService {
     }
     return categoryCounts;
   }
+
+  // Future<List<CategoryAmount>> fetchCategoriesFromPlaid() async {
+  //   final startDate = DateTime.now()
+  //       .subtract(const Duration(days:700))
+  //       .toIso8601String()
+  //       .substring(0, 10);
+  //   final endDate = DateTime.now().toIso8601String().substring(0, 10);
+  //   try {
+  //     final response = await http.post(
+  //       Uri.parse('$_baseUrl/transactions/get'),
+  //       headers: {'Content-Type': 'application/json'},
+  //       body: jsonEncode({
+  //         'client_id': dotenv.env['PLAID_CLIENT_ID'],
+  //         'secret': dotenv.env['PLAID_SECRET'],
+  //         'access_token': accessToken,
+  //         'start_date': startDate,
+  //         'end_date': endDate,
+  //       }),
+  //     );
+  //
+  //     if (response.statusCode == 200) {
+  //       final jsonResponse = jsonDecode(response.body);
+  //       final transactions = jsonResponse['transactions'];
+  //       final Map<String, double> categoryAmountMap = {};
+  //
+  //       for (final transaction in transactions) {
+  //         final String category = transaction['category'][0];
+  //         final double amount = double.tryParse(transaction['amount'].toString()) ?? 0;
+  //
+  //         categoryAmountMap.update(
+  //           category,
+  //               (existingAmount) => existingAmount + amount,
+  //           ifAbsent: () => amount,
+  //         );
+  //       }
+  //
+  //       final List<CategoryAmount> categories = categoryAmountMap.entries
+  //           .map((entry) => CategoryAmount(entry.key, entry.value))
+  //           .toList();
+  //
+  //       return categories;
+  //     } else {
+  //       throw Exception('Failed to fetch transactions. Status code: ${response.statusCode}, Body: ${response.body}');
+  //     }
+  //   } catch (e) {
+  //     throw Exception('Failed to fetch transactions: $e');
+  //   }
+  // }
 
   Map<String, double> countSpentPerCategory(
       List<Map<String, dynamic>> transactions) {

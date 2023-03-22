@@ -1,5 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
-// ignore_for_file: camel_case_types
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, camel_case_types
 import 'package:WiseWallet/screens/home_page.dart';
 import 'package:WiseWallet/screens/login_page.dart';
 import 'package:WiseWallet/screens/settings/changepassword.dart';
