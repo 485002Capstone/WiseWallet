@@ -32,7 +32,7 @@ class HomeSettings extends StatelessWidget {
                 ),
               ),
               Image.asset('assets/images/logofinal.png',
-                  width: 60, height: 50, alignment: Alignment.centerRight),
+                  width: 50, height: 40, alignment: Alignment.centerRight),
             ],
           )),
       body: Settings(),
