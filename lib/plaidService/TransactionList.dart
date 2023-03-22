@@ -1,16 +1,33 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:page_transition/page_transition.dart';
 import '../screens/home_wallet.dart';
 import 'detailedAccount.dart';
 import 'plaid_api_service.dart';
+import 'package:http/http.dart' as http;
 import 'package:WiseWallet/screens/main_screen.dart';
 
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 // ignore_for_file: camel_case_types
 
-class TransactionListPage extends StatelessWidget {
-  TransactionListPage({super.key});
+const _baseUrl = 'https://sandbox.plaid.com';
+const List<String> list = <String>['7', '30', '60', '420'];
 
+String? transactionDuration;
+int days = 30;
+
+List<dynamic> _transactions = [];
+
+class TransactionListPage extends StatefulWidget {
+  const TransactionListPage({Key? key}) : super(key: key);
+
+  @override
+  _TransactionListPageState createState() => _TransactionListPageState();
+}
+
+class _TransactionListPageState extends State<TransactionListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,18 +100,52 @@ class TransactionListPage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Transactions',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Transactions',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            DropdownButton<String>(
+                              hint: Text('Select duration'),
+                              value: transactionDuration,
+                              items: [
+                                DropdownMenuItem(
+                                  value: '30',
+                                  child: Text('30 days'),
+                                ),
+                                DropdownMenuItem(
+                                  value: '60',
+                                  child: Text('60 days'),
+                                ),
+                                DropdownMenuItem(
+                                  value: '90',
+                                  child: Text('90 days'),
+                                ),
+                                DropdownMenuItem(
+                                  value: '420',
+                                  child: Text('420 days'),
+                                ),
+                              ],
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  transactionDuration = newValue;
+                                });
+                                days = int.parse(newValue!);
+                                getTransactions(accessToken, days);
+                              },
+                            )
+                          ],
                         ),
                         SizedBox(height: 8),
                         SizedBox(
                           height: 300,
                           child: ListView.builder(
-                            itemCount: transactions.length,
+                            itemCount: _transactions.length,
                             itemBuilder: (context, index) {
                               return InkWell(
                                 onTap: () => showDialog<String>(
@@ -106,17 +157,17 @@ class TransactionListPage extends StatelessWidget {
                                             child: ListBody(
                                               children: [
                                                 Text(
-                                                    'Name: ${transactions[index]['name']}'),
+                                                    'Name: ${_transactions[index]['name']}'),
                                                 Text(
-                                                    'Amount: \$${transactions[index]['amount']}'),
+                                                    'Amount: \$${_transactions[index]['amount']}'),
                                                 Text(
-                                                    'Date: ${transactions[index]['date']}'),
+                                                    'Date: ${_transactions[index]['date']}'),
                                                 Text(
-                                                    'Category: ${transactions[index]['category'].join(' > ')}'),
+                                                    'Category: ${_transactions[index]['category'].join(' > ')}'),
                                                 Text(
-                                                    'Merchant Name: ${transactions[index]['merchant_name']}'),
+                                                    'Merchant Name: ${_transactions[index]['merchant_name']}'),
                                                 Text(
-                                                    'Authorized Date: ${transactions[index]['authorized_date']}'),
+                                                    'Authorized Date: ${_transactions[index]['authorized_date']}'),
                                               ],
                                             ),
                                           ),
@@ -130,11 +181,11 @@ class TransactionListPage extends StatelessWidget {
                                           ],
                                         )),
                                 child: ListTile(
-                                  title: Text(transactions[index]['name']),
+                                  title: Text(_transactions[index]['name']),
                                   subtitle: Text(
-                                      'Date: ${transactions[index]['date']}'),
+                                      'Date: ${_transactions[index]['date']}'),
                                   trailing: Text(
-                                      '\$${transactions[index]['amount']}'),
+                                      '\$${_transactions[index]['amount']}'),
                                 ),
                               );
                             },
@@ -150,6 +201,35 @@ class TransactionListPage extends StatelessWidget {
         },
       ),
     );
+  }
+
+  Future<void> getTransactions(String accessToken, int days) async {
+    final startDate = DateTime.now()
+        .subtract(Duration(days: days))
+        .toIso8601String()
+        .substring(0, 10);
+    final endDate = DateTime.now().toIso8601String().substring(0, 10);
+
+    final response = await http.post(
+      Uri.parse('$_baseUrl/transactions/get'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'client_id': dotenv.env['PLAID_CLIENT_ID'],
+        'secret': dotenv.env['PLAID_SECRET'],
+        'access_token': accessToken,
+        'start_date': startDate,
+        'end_date': endDate,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final transactionsList = json.decode(response.body);
+      setState(() {
+        _transactions = transactionsList['transactions'];
+      });
+    } else {
+      throw Exception('Failed to fetch transactions');
+    }
   }
 }
 

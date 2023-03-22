@@ -34,7 +34,7 @@ class _DetailedAccountPageState extends State<detailedAccount> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                'Transaction Details',
+                'Account Details',
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   fontSize: 25,
@@ -53,22 +53,30 @@ class _DetailedAccountPageState extends State<detailedAccount> {
               child: Card(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         widget.account['name'],
                         style: TextStyle(fontSize: 18),
                       ),
                       SizedBox(height: 4),
-                      Text(
-                        'Available: \$${widget.account['balances']['available']}',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      Text(
-                        'Current: \$${widget.account['balances']['current']}',
-                        style: TextStyle(fontSize: 16),
-                      ),
+                      Column(children: [
+                        Text(
+                          'Available',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        Text(
+                          '\$${widget.account['balances']['available']}',
+                          style: TextStyle(fontSize: 16),
+                        ),
+
+                      ],)
+                      // Text(
+                      //   'Current: \$${widget.account['balances']['current']}',
+                      //   style: TextStyle(fontSize: 16),
+                      // ),
                     ],
                   ),
                 ),

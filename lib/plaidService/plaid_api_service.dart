@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 // ignore_for_file: camel_case_types
 import 'dart:convert';
+import 'package:WiseWallet/plaidService/TransactionList.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
@@ -13,8 +14,8 @@ final _db = FirebaseFirestore.instance;
 
 late int durationInDays;
 
+const _baseUrl = 'https://sandbox.plaid.com';
 class PlaidApiService {
-  static const _baseUrl = 'https://sandbox.plaid.com';
   var userDocRef = FirebaseFirestore.instance
       .collection('accessToken')
       .doc(FirebaseAuth.instance.currentUser?.uid);
@@ -78,9 +79,9 @@ class PlaidApiService {
     return;
   }
 
-  static Future<List<dynamic>> getTransactions(String accessToken) async {
+  static Future<List<dynamic>> getTransactions(String accessToken, int days) async {
     final startDate = DateTime.now()
-        .subtract(const Duration(days: 700))
+        .subtract(Duration(days: days))
         .toIso8601String()
         .substring(0, 10);
     final endDate = DateTime.now().toIso8601String().substring(0, 10);
@@ -185,7 +186,7 @@ class PlaidApiService {
     List<dynamic> accounts =
         await PlaidApiService.getAccountBalances(accessToken);
     List<dynamic> transactions =
-        await PlaidApiService.getTransactions(accessToken);
+        await PlaidApiService.getTransactions(accessToken, days);
     return {'accounts': accounts, 'transactions': transactions};
   }
 
