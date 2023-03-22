@@ -12,7 +12,6 @@ import '../screens/main_screen.dart';
 
 final _db = FirebaseFirestore.instance;
 
-late int durationInDays;
 
 const _baseUrl = 'https://sandbox.plaid.com';
 class PlaidApiService {

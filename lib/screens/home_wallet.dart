@@ -8,6 +8,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
 import 'package:WiseWallet/plaidService/plaid_api_service.dart';
 
@@ -188,16 +190,131 @@ class _HomeWalletState extends State<HomeWallet> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: isConnected
-          ? TransactionListPage()
-          : Center(
-              child: ElevatedButton(
-                onPressed: () async {
-                  await connectBankAccount();
-                },
-                child: Text('Connect Bank Account'),
-              ),
-            ),
+        body: isConnected
+            ? TransactionListPage()
+            : Scaffold(
+                body:  Column(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            height: 100,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: 2,
+                              itemBuilder: (context, index) {
+                                return InkWell(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 0),
+                                    child: Card(
+                                      child: SizedBox(
+                                          width: 350,
+                                          child: Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 20, right: 20),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  'Account name',
+                                                  style:
+                                                      TextStyle(fontSize: 16),
+                                                ),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      'Available',
+                                                      style: TextStyle(
+                                                          fontSize: 16),
+                                                    ),
+                                                    Text(
+                                                      'Balance',
+                                                      style: TextStyle(
+                                                          fontSize: 16),
+                                                    ),
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                          )),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          Card(
+                            elevation: 4,
+                            margin: EdgeInsets.all(16),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Transactions',
+                                        style: TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          await connectBankAccount();
+                                        },
+                                        child: Text('Connect Bank Account'),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 8),
+                                  SizedBox(
+                                      height: 300,
+                                      child: Column(
+                                        children: [
+                                          ListTile(
+                                            title: Text('Transaction name'),
+                                            subtitle: Text('Date'),
+                                            trailing: Text('Price'),
+                                          ),
+                                          ListTile(
+                                            title: Text('Transaction name'),
+                                            subtitle: Text('Date'),
+                                            trailing: Text('Price'),
+                                          ),
+                                          ListTile(
+                                            title: Text('Transaction name'),
+                                            subtitle: Text('Date'),
+                                            trailing: Text('Price'),
+                                          ),
+                                          ListTile(
+                                            title: Text('Transaction name'),
+                                            subtitle: Text('Date'),
+                                            trailing: Text('Price'),
+                                          )
+                                        ],
+                                      )),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+
+
+
+    )
     );
-  }
+}
 }

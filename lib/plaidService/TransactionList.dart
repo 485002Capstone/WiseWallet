@@ -13,10 +13,10 @@ import 'package:WiseWallet/screens/main_screen.dart';
 // ignore_for_file: camel_case_types
 
 const _baseUrl = 'https://sandbox.plaid.com';
-const List<String> list = <String>['7', '30', '60', '420'];
+const List<String> list = <String>['7', '30', '60','90', '420'];
 
-String? transactionDuration;
-int days = 30;
+String? transactionDuration = '7';
+int days = 7;
 
 List<dynamic> _transactions = [];
 
@@ -40,8 +40,6 @@ class _TransactionListPageState extends State<TransactionListPage> {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
             List<dynamic> accounts = snapshot.data!['accounts'];
-            List<dynamic> transactions = snapshot.data!['transactions'];
-
             return Column(
               children: [
                 Container(
@@ -69,23 +67,38 @@ class _TransactionListPageState extends State<TransactionListPage> {
                           padding: const EdgeInsets.symmetric(horizontal: 0),
                           child: Card(
                             child: SizedBox(
-                              width: 300,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Text(
-                                      'Account Name: ${accounts[index]['name']}',
-                                    ),
-                                    Text(
-                                        'Available Balance: ${accounts[index]['balances']['available']}'),
-                                  ],
-                                ),
-                              ),
-                            ),
+                                width: 350,
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 20, right: 20),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '${accounts[index]['name']}',
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'Available',
+                                            style: TextStyle(fontSize: 16),
+                                          ),
+                                          Text(
+                                            '\$${accounts[index]['balances']['available']}',
+                                            style: TextStyle(fontSize: 16),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                )),
                           ),
                         ),
                       );
@@ -115,6 +128,10 @@ class _TransactionListPageState extends State<TransactionListPage> {
                               value: transactionDuration,
                               items: [
                                 DropdownMenuItem(
+                                  value: '7',
+                                  child: Text('7 days'),
+                                ),
+                                DropdownMenuItem(
                                   value: '30',
                                   child: Text('30 days'),
                                 ),
@@ -143,54 +160,56 @@ class _TransactionListPageState extends State<TransactionListPage> {
                         ),
                         SizedBox(height: 8),
                         SizedBox(
-                          height: 300,
-                          child: ListView.builder(
-                            itemCount: _transactions.length,
-                            itemBuilder: (context, index) {
-                              return InkWell(
-                                onTap: () => showDialog<String>(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        AlertDialog(
-                                          title: Text('Transaction Details'),
-                                          content: SingleChildScrollView(
-                                            child: ListBody(
-                                              children: [
-                                                Text(
-                                                    'Name: ${_transactions[index]['name']}'),
-                                                Text(
-                                                    'Amount: \$${_transactions[index]['amount']}'),
-                                                Text(
-                                                    'Date: ${_transactions[index]['date']}'),
-                                                Text(
-                                                    'Category: ${_transactions[index]['category'].join(' > ')}'),
-                                                Text(
-                                                    'Merchant Name: ${_transactions[index]['merchant_name']}'),
-                                                Text(
-                                                    'Authorized Date: ${_transactions[index]['authorized_date']}'),
+                            height: 300,
+                            child: Scrollbar(
+                              child: ListView.builder(
+                                itemCount: _transactions.length,
+                                itemBuilder: (context, index) {
+                                  return InkWell(
+                                    onTap: () => showDialog<String>(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            AlertDialog(
+                                              title:
+                                                  Text('Transaction Details'),
+                                              content: SingleChildScrollView(
+                                                child: ListBody(
+                                                  children: [
+                                                    Text(
+                                                        'Name: ${_transactions[index]['name']}'),
+                                                    Text(
+                                                        'Amount: \$${_transactions[index]['amount']}'),
+                                                    Text(
+                                                        'Date: ${_transactions[index]['date']}'),
+                                                    Text(
+                                                        'Category: ${_transactions[index]['category'].join(' > ')}'),
+                                                    Text(
+                                                        'Merchant Name: ${_transactions[index]['merchant_name']}'),
+                                                    Text(
+                                                        'Authorized Date: ${_transactions[index]['authorized_date']}'),
+                                                  ],
+                                                ),
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text('Close'),
+                                                ),
                                               ],
-                                            ),
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              child: Text('Close'),
-                                            ),
-                                          ],
-                                        )),
-                                child: ListTile(
-                                  title: Text(_transactions[index]['name']),
-                                  subtitle: Text(
-                                      'Date: ${_transactions[index]['date']}'),
-                                  trailing: Text(
-                                      '\$${_transactions[index]['amount']}'),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
+                                            )),
+                                    child: ListTile(
+                                      title: Text(_transactions[index]['name']),
+                                      subtitle: Text(
+                                          'Date: ${_transactions[index]['date']}'),
+                                      trailing: Text(
+                                          '\$${_transactions[index]['amount']}'),
+                                    ),
+                                  );
+                                },
+                              ),
+                            )),
                       ],
                     ),
                   ),
