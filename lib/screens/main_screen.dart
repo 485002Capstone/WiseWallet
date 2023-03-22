@@ -7,7 +7,7 @@ import 'package:WiseWallet/screens/home_page.dart';
 import 'package:WiseWallet/screens/home_settings.dart';
 import 'package:WiseWallet/screens/home_tips.dart';
 import 'package:WiseWallet/screens/home_wallet.dart';
-import '../app_theme.dart';
+import '../utils/app_theme.dart';
 import '../plaidService/TransactionList.dart';
 import '../plaidService/plaid_api_service.dart';
 

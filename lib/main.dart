@@ -7,7 +7,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'screens/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:WiseWallet/app_theme.dart';
+import 'package:WiseWallet/utils/app_theme.dart';
 
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 // ignore_for_file: camel_case_types
