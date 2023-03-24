@@ -166,7 +166,7 @@ class _LoginWidgetState extends State<LoginWidget> {
   }
 }
 
-Future signIn(BuildContext context) async {
+Future signIn(BuildContext signInContext) async {
   try {
     await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: emailController.text.trim(),
@@ -176,17 +176,17 @@ Future signIn(BuildContext context) async {
     emailController.clear();
   } on FirebaseException catch (e) {
     if (e.code == 'user-not-found') {
-      return ScaffoldMessenger.of(context)
+      return ScaffoldMessenger.of(signInContext)
           .showSnackBar(SnackBar(content: Text("User not found")));
     } else if (e.code == 'wrong-password') {
-      return ScaffoldMessenger.of(context)
+      return ScaffoldMessenger.of(signInContext)
           .showSnackBar(SnackBar(content: Text("User not found")));
     } else if (e.code == 'unknown') {
-      return ScaffoldMessenger.of(context)
+      return ScaffoldMessenger.of(signInContext)
           .showSnackBar(SnackBar(content: Text("Enter email")));
     }
   } catch (e) {
-    return ScaffoldMessenger.of(context).showSnackBar(
+    return ScaffoldMessenger.of(signInContext).showSnackBar(
         SnackBar(content: Text("Something went wrong. Try again!")));
   }
 }

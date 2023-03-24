@@ -103,7 +103,26 @@ class PlaidApiService {
       throw Exception('Failed to fetch transactions');
     }
   }
+  Future<void> syncTransactions() async {
 
+    final response = await http.post(
+        Uri.parse('$_baseUrl/transactions/refresh'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'client_id': dotenv.env['PLAID_CLIENT_ID'],
+          'secret': dotenv.env['PLAID_SECRET'],
+          'access_token': accessToken,
+        }),
+    );
+
+    if (response.statusCode == 200) {
+      print('Transactions synced successfully.');
+      print(response.body);
+    } else {
+      print('Error syncing transactions: ${response.statusCode}');
+      print(response.body);
+    }
+  }
   Future<List<Map<String, dynamic>>> fetchTransactions() async {
     final startDate = DateTime.now()
         .subtract(Duration(days: 250))

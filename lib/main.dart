@@ -1,4 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, camel_case_types
+import 'dart:typed_data';
+
 import 'package:WiseWallet/utils/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -89,13 +91,26 @@ class _MyAppState extends State<MyApp> {
                 button: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
                 overline: TextStyle(fontSize: 10),
               ),
+              listTileTheme: ListTileThemeData(
+                tileColor: Colors.purple,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
 
+              ),
               // Button
               buttonTheme: ButtonThemeData(
                 buttonColor: Colors.green,
                 textTheme: ButtonTextTheme.primary,
               ),
+              cardTheme: CardTheme(
+                color: Colors.green,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
 
+
+              ),
               // TextField
               inputDecorationTheme: InputDecorationTheme(
                 border: OutlineInputBorder(

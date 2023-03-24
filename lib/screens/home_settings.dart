@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, camel_case_types
 
+import 'package:WiseWallet/screens/main_screen.dart';
 import 'package:WiseWallet/screens/settings/notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -51,6 +52,7 @@ class _HomeSettingsState extends State<Settings> {
     setState(() {
       accessToken = '';
       isConnected = false;
+      currentIndex = 0;
     });
   }
 

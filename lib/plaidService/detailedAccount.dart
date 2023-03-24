@@ -115,44 +115,47 @@ class _DetailedAccountPageState extends State<detailedAccount> {
                                   child: ListView.builder(
                                 itemCount: transactions.length,
                                 itemBuilder: (context, index) {
-                                  return ListTile(
-                                    title: Text(transactions[index]['name']),
-                                    subtitle: Text(transactions[index]['date']),
-                                    trailing: Text(
-                                        '\$${transactions[index]['amount']}'),
-                                    onTap: () => showDialog<String>(
-                                        context: context,
-                                        builder: (BuildContext context) =>
-                                            AlertDialog(
-                                              title:
+                                  return Card (
+                                      child:
+                                      ListTile(
+                                        title: Text(transactions[index]['name']),
+                                        subtitle: Text(transactions[index]['date']),
+                                        trailing: Text(
+                                            '\$${transactions[index]['amount']}'),
+                                        onTap: () => showDialog<String>(
+                                            context: context,
+                                            builder: (BuildContext context) =>
+                                                AlertDialog(
+                                                  title:
                                                   Text('Transaction Details'),
-                                              content: SingleChildScrollView(
-                                                child: ListBody(
-                                                  children: [
-                                                    Text(
-                                                        'Name: ${transactions[index]['name']}'),
-                                                    Text(
-                                                        'Amount: \$${transactions[index]['amount']}'),
-                                                    Text(
-                                                        'Date: ${transactions[index]['date']}'),
-                                                    Text(
-                                                        'Category: ${transactions[index]['category'].join(' > ')}'),
-                                                    Text(
-                                                        'Merchant Name: ${transactions[index]['merchant_name']}'),
-                                                    Text(
-                                                        'Authorized Date: ${transactions[index]['authorized_date']}'),
+                                                  content: SingleChildScrollView(
+                                                    child: ListBody(
+                                                      children: [
+                                                        Text(
+                                                            'Name: ${transactions[index]['name']}'),
+                                                        Text(
+                                                            'Amount: \$${transactions[index]['amount']}'),
+                                                        Text(
+                                                            'Date: ${transactions[index]['date']}'),
+                                                        Text(
+                                                            'Category: ${transactions[index]['category'].join(' > ')}'),
+                                                        Text(
+                                                            'Merchant Name: ${transactions[index]['merchant_name']}'),
+                                                        Text(
+                                                            'Authorized Date: ${transactions[index]['authorized_date']}'),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      child: Text('Close'),
+                                                    ),
                                                   ],
-                                                ),
-                                              ),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: Text('Close'),
-                                                ),
-                                              ],
-                                            )),
+                                                )),
+                                      )
                                   );
                                 },
                               ))),

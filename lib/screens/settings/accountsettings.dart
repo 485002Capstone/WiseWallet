@@ -11,6 +11,7 @@ import 'package:page_transition/page_transition.dart';
 
 import '../home_wallet.dart';
 import '../login_page.dart';
+import '../main_screen.dart';
 
 final passwordController = TextEditingController();
 
@@ -186,16 +187,22 @@ class accountsettings extends StatelessWidget {
                               labelText: 'Password',
                             ),
                           ),
-                          TextButton(
-                            onPressed: () => Navigator.pop(context, 'Cancel'),
-                            child: const Text('Cancel'),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              deleteAccount(context);
-                            },
-                            child: const Text('OK'),
-                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, 'Cancel'),
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  deleteAccount(context);
+                                  currentIndex = 0;
+                                },
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          )
                         ],
                       ),
                     ),
@@ -228,6 +235,7 @@ class accountsettings extends StatelessWidget {
   }
 }
 
+
 Future deleteAccount(BuildContext context) async {
   var user = FirebaseAuth.instance.currentUser!;
   try {
@@ -249,6 +257,11 @@ Future deleteAccount(BuildContext context) async {
         .collection("bankAccountIDs")
         .doc(user.uid)
         .delete();
+    await FirebaseFirestore.instance
+        .collection("Goals")
+        .doc(user.uid)
+        .delete();
+
     await user.delete();
     await FirebaseAuth.instance.signOut();
     ScaffoldMessenger.of(context)

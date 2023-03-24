@@ -18,6 +18,7 @@ class MainScreen extends StatefulWidget {
   State<MainScreen> createState() => _MyWidgetState();
 }
 
+var currentIndex = 0;
 late Future<Map<String, dynamic>> data;
 
 class _MyWidgetState extends State<MainScreen> {
@@ -27,7 +28,6 @@ class _MyWidgetState extends State<MainScreen> {
     super.initState();
   }
 
-  var currentIndex = 0;
 
   Widget buildTabContent(int index) {
     switch (index) {
@@ -36,7 +36,7 @@ class _MyWidgetState extends State<MainScreen> {
       case 1:
         return WalletPage();
       case 2:
-        return const HomeTips();
+        return TipsPage();
       case 3:
         return HomeSettings();
       default:
@@ -89,6 +89,7 @@ class _MyWidgetState extends State<MainScreen> {
           setState(() {
             isConnected = true;
             accessToken = userData['AccessToken'];
+            days = 30;
             data = PlaidApiService()
                 .fetchAccountDetailsAndTransactions(accessToken);
             transactionsFuture =

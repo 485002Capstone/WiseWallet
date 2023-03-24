@@ -78,6 +78,9 @@ class _ThemesState extends State<themesPage> {
                               },
                             ),
                           ),
+                          SizedBox(
+                            height: 10,
+                          ),
                           ListTile(
                             contentPadding: EdgeInsets.zero,
                             title: Text(
@@ -92,6 +95,9 @@ class _ThemesState extends State<themesPage> {
                                 themeProvider.setThemeMode(value!);
                               },
                             ),
+                          ),
+                          SizedBox(
+                            height: 10,
                           ),
                           ListTile(
                             contentPadding: EdgeInsets.zero,

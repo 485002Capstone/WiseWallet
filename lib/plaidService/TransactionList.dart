@@ -35,198 +35,207 @@ class _TransactionListPageState extends State<TransactionListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: FutureBuilder<Map<String, dynamic>>(
-        future: data,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            List<dynamic> accounts = snapshot.data!['accounts'];
-            return Column(
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  height: 100,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: accounts.length,
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        onTap: () {
-                          PlaidApiService().printCountSpentPerCategory();
-                          PlaidApiService().printCountCategory();
-                          Navigator.push(
-                              context,
-                              PageTransition(
-                                  type: PageTransitionType.rightToLeftWithFade,
-                                  duration: Duration(milliseconds: 300),
-                                  reverseDuration: Duration(milliseconds: 300),
-                                  child: detailedAccount(
-                                    account: accounts[index],
-                                  )));
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 0),
-                          child: Card(
-                            child: SizedBox(
-                                width: 350,
-                                child: Padding(
-                                  padding: EdgeInsets.only(left: 20, right: 20),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        '${accounts[index]['name']}',
-                                        style: TextStyle(fontSize: 16),
-                                      ),
-                                      Column(
+    return CustomScrollView(
+      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+      slivers: [
+        SliverToBoxAdapter(
+          child: FutureBuilder<Map<String, dynamic>>(
+            future: data,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else {
+                List<dynamic> accounts = snapshot.data!['accounts'];
+                return Column(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      height: 100,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: accounts.length,
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () {
+                              PlaidApiService().printCountSpentPerCategory();
+                              PlaidApiService().printCountCategory();
+                              Navigator.push(
+                                  context,
+                                  PageTransition(
+                                      type: PageTransitionType.rightToLeftWithFade,
+                                      duration: Duration(milliseconds: 300),
+                                      reverseDuration: Duration(milliseconds: 300),
+                                      child: detailedAccount(
+                                        account: accounts[index],
+                                      )));
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              child: Card(
+                                child: SizedBox(
+                                    width: 350,
+                                    child: Padding(
+                                      padding: EdgeInsets.only(left: 20, right: 20),
+                                      child: Row(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.center,
+                                        CrossAxisAlignment.center,
                                         mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                        MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            'Available',
+                                            '${accounts[index]['name']}',
                                             style: TextStyle(fontSize: 16),
                                           ),
-                                          Text(
-                                            '\$${accounts[index]['balances']['available']}',
-                                            style: TextStyle(fontSize: 16),
-                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                'Available',
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                              Text(
+                                                '\$${accounts[index]['balances']['available']}',
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                            ],
+                                          )
                                         ],
-                                      )
-                                    ],
-                                  ),
-                                )),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                Card(
-                  elevation: 4,
-                  margin: EdgeInsets.all(16),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Transactions$days',
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
+                                      ),
+                                    )),
                               ),
                             ),
-                            DropdownButton<String>(
-                              hint: Text('Select duration'),
-                              value: transactionDuration,
-                              items: [
-                                DropdownMenuItem(
-                                  value: '7',
-                                  child: Text('7 days'),
+                          );
+                        },
+                      ),
+                    ),
+                    Card(
+                      elevation: 4,
+                      margin: EdgeInsets.all(16),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Transactions',
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                                DropdownMenuItem(
-                                  value: '30',
-                                  child: Text('30 days'),
-                                ),
-                                DropdownMenuItem(
-                                  value: '60',
-                                  child: Text('60 days'),
-                                ),
-                                DropdownMenuItem(
-                                  value: '90',
-                                  child: Text('90 days'),
-                                ),
-                                DropdownMenuItem(
-                                  value: '420',
-                                  child: Text('420 days'),
-                                ),
+                                DropdownButton<String>(
+                                  hint: Text('Select duration'),
+                                  value: transactionDuration,
+                                  items: [
+                                    DropdownMenuItem(
+                                      value: '7',
+                                      child: Text('7 days'),
+                                    ),
+                                    DropdownMenuItem(
+                                      value: '30',
+                                      child: Text('30 days'),
+                                    ),
+                                    DropdownMenuItem(
+                                      value: '60',
+                                      child: Text('60 days'),
+                                    ),
+                                    DropdownMenuItem(
+                                      value: '90',
+                                      child: Text('90 days'),
+                                    ),
+                                    DropdownMenuItem(
+                                      value: '420',
+                                      child: Text('420 days'),
+                                    ),
+                                  ],
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      transactionDuration = newValue;
+                                    });
+                                    days = int.parse(newValue!);
+                                    PlaidApiService().syncTransactions();
+                                    getTransactions(accessToken, days);
+                                    transactionsFuture =
+                                        PlaidApiService.getTransactions(
+                                            accessToken, days);
+                                  },
+                                )
                               ],
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  transactionDuration = newValue;
-                                });
-                                days = int.parse(newValue!);
-                                getTransactions(accessToken, days);
-                                transactionsFuture =
-                                    PlaidApiService.getTransactions(
-                                        accessToken, days);
-                              },
-                            )
+                            ),
+                            SizedBox(height: 8),
+                            SizedBox(
+                                height: 300,
+                                child: Scrollbar(
+                                  child: ListView.builder(
+                                    itemCount: _transactions.length,
+                                    itemBuilder: (context, index) {
+                                      return InkWell(
+                                        onTap: () => showDialog<String>(
+                                            context: context,
+                                            builder: (BuildContext context) =>
+                                                AlertDialog(
+                                                  title:
+                                                  Text('Transaction Details'),
+                                                  content: SingleChildScrollView(
+                                                    child: ListBody(
+                                                      children: [
+                                                        Text(
+                                                            'Name: ${_transactions[index]['name']}'),
+                                                        Text(
+                                                            'Amount: \$${_transactions[index]['amount']}'),
+                                                        Text(
+                                                            'Date: ${_transactions[index]['date']}'),
+                                                        Text(
+                                                            'Category: ${_transactions[index]['category'].join(' > ')}'),
+                                                        Text(
+                                                            'Merchant Name: ${_transactions[index]['merchant_name']}'),
+                                                        Text(
+                                                            'Authorized Date: ${_transactions[index]['authorized_date']}'),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      child: Text('Close'),
+                                                    ),
+                                                  ],
+                                                )),
+                                        child: Card(
+                                          child: ListTile(
+                                            title: Text(_transactions[index]['name']),
+                                            subtitle: Text(
+                                                'Date: ${_transactions[index]['date']}'),
+                                            trailing: Text(
+                                                '\$${_transactions[index]['amount']}'),
+                                          )
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                )),
                           ],
                         ),
-                        SizedBox(height: 8),
-                        SizedBox(
-                            height: 300,
-                            child: Scrollbar(
-                              child: ListView.builder(
-                                itemCount: _transactions.length,
-                                itemBuilder: (context, index) {
-                                  return InkWell(
-                                    onTap: () => showDialog<String>(
-                                        context: context,
-                                        builder: (BuildContext context) =>
-                                            AlertDialog(
-                                              title:
-                                                  Text('Transaction Details'),
-                                              content: SingleChildScrollView(
-                                                child: ListBody(
-                                                  children: [
-                                                    Text(
-                                                        'Name: ${_transactions[index]['name']}'),
-                                                    Text(
-                                                        'Amount: \$${_transactions[index]['amount']}'),
-                                                    Text(
-                                                        'Date: ${_transactions[index]['date']}'),
-                                                    Text(
-                                                        'Category: ${_transactions[index]['category'].join(' > ')}'),
-                                                    Text(
-                                                        'Merchant Name: ${_transactions[index]['merchant_name']}'),
-                                                    Text(
-                                                        'Authorized Date: ${_transactions[index]['authorized_date']}'),
-                                                  ],
-                                                ),
-                                              ),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: Text('Close'),
-                                                ),
-                                              ],
-                                            )),
-                                    child: ListTile(
-                                      title: Text(_transactions[index]['name']),
-                                      subtitle: Text(
-                                          'Date: ${_transactions[index]['date']}'),
-                                      trailing: Text(
-                                          '\$${_transactions[index]['amount']}'),
-                                    ),
-                                  );
-                                },
-                              ),
-                            )),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-              ],
-            );
-          }
-        },
-      ),
+                  ],
+                );
+              }
+            },
+          ),
+        )
+      ],
+
     );
   }
 
@@ -251,9 +260,11 @@ class _TransactionListPageState extends State<TransactionListPage> {
 
     if (response.statusCode == 200) {
       final transactionsList = json.decode(response.body);
-      setState(() {
-        _transactions = transactionsList['transactions'];
-      });
+      if(mounted) {
+        setState(() {
+          _transactions = transactionsList['transactions'];
+        });
+      }
     } else {
       throw Exception('Failed to fetch transactions');
     }
