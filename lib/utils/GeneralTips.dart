@@ -28,7 +28,7 @@ class GeneralTips extends StatelessWidget {
               child: Text(
                 'Tips to save money as a broke student',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -61,19 +61,18 @@ class GeneralTips extends StatelessWidget {
                           return const SizedBox.shrink();
                         }
                         return InkWell(
-                            onTap: () async {
-                              Uri url = Uri.parse(data['link']);
-                              if (!await launchUrl(url)) {
-                                throw Exception('Could not launch $url');
-                              }
-                            },
-                           child: Card(
-                              child: ListTile(
-                                title: Text(document.id),
-                              ),
+                          onTap: () async {
+                            Uri url = Uri.parse(data['link']);
+                            if (!await launchUrl(url)) {
+                              throw Exception('Could not launch $url');
+                            }
+                          },
+                          child: Card(
+                            child: ListTile(
+                              title: Text(document.id),
                             ),
+                          ),
                         );
-
                       },
                     );
                   },

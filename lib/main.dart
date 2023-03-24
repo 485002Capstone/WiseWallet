@@ -61,7 +61,8 @@ class _MyAppState extends State<MyApp> {
               // AppBar
               appBarTheme: AppBarTheme(
                 color: Colors.white,
-                iconTheme: IconThemeData(color: Colors.orange),
+                iconTheme:
+                    IconThemeData(color: Color.fromARGB(255, 22, 118, 41)),
                 toolbarTextStyle: TextTheme(
                   headline6: TextStyle(fontSize: 20, color: Colors.white),
                 ).bodyText2,
@@ -92,11 +93,10 @@ class _MyAppState extends State<MyApp> {
                 overline: TextStyle(fontSize: 10),
               ),
               listTileTheme: ListTileThemeData(
-                tileColor: Colors.purple,
+                tileColor: Color.fromARGB(255, 249, 247, 249),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
                 ),
-
               ),
               // Button
               buttonTheme: ButtonThemeData(
@@ -104,12 +104,10 @@ class _MyAppState extends State<MyApp> {
                 textTheme: ButtonTextTheme.primary,
               ),
               cardTheme: CardTheme(
-                color: Colors.green,
+                color: Color.fromARGB(255, 210, 213, 210),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
                 ),
-
-
               ),
               // TextField
               inputDecorationTheme: InputDecorationTheme(

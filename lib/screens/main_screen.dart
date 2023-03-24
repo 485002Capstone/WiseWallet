@@ -24,10 +24,9 @@ late Future<Map<String, dynamic>> data;
 class _MyWidgetState extends State<MainScreen> {
   @override
   void initState() {
-    initializeWalletVariables();
+    //initializeWalletVariables();
     super.initState();
   }
-
 
   Widget buildTabContent(int index) {
     switch (index) {
