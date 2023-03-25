@@ -139,13 +139,34 @@ class _TipsPageFormState extends State<TipsPageForm> {
           SizedBox(
             height: 10,
           ),
-          ElevatedButton(
+          Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children:[
+          Align(
+          alignment: Alignment.bottomLeft,
+          child: ElevatedButton(
+            onPressed: () {
+            Navigator.pop(context);
+            },
+            child: Text('Close'),
+          ),
+          ),
+          SizedBox(width: 20,),
+          Align(
+          alignment: Alignment.bottomRight,
+          child: ElevatedButton(
             onPressed: () {
               try {
                 if (_formKey.currentState?.validate() ?? false) {
                   _formKey.currentState?.save();
                   addGoalsToDataBase(
                       _goalType, _moneySaved!, _selectedGoalsDays);
+                  Navigator.pop(context);
+                  final snackBar = SnackBar(
+                    content: const Text('Your Goal was added!'),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
                 }
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -154,10 +175,14 @@ class _TipsPageFormState extends State<TipsPageForm> {
             },
             child: Text('Submit'),
           ),
+          ),
+        ]),
         ],
       ),
     );
+    
   }
+  
 
   Future<void> addGoalsToDataBase(
       String goalType, int moneySaved, int daysToReachTheGoal) async {
