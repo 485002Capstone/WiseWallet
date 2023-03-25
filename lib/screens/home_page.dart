@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, camel_case_types
 
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import '../PlaidCharts/CategoryChart.dart';
@@ -8,9 +7,7 @@ import '../PlaidCharts/CategoryLineChart.dart';
 import '../PlaidCharts/TransactionBarChart.dart';
 import '../PlaidCharts/TransactionsLineChart.dart';
 import '../plaidService/TransactionList.dart';
-import '../plaidService/plaid_api_service.dart';
 import 'home_wallet.dart';
-import 'package:WiseWallet/screens/main_screen.dart';
 
 class HomePage extends StatefulWidget {
   @override

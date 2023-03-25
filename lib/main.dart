@@ -2,9 +2,11 @@
 
 import 'package:WiseWallet/utils/theme_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'screens/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -12,14 +14,36 @@ import 'package:WiseWallet/utils/app_theme.dart';
 
 late var transactions;
 
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+FlutterLocalNotificationsPlugin();
+
+Future<void> printFcmToken() async {
+  String? token = await FirebaseMessaging.instance.getToken();
+  print('FCM Token: $token');
+}
+
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
   await Firebase.initializeApp();
-  //Auto sign-out when the app is initialized. Uncomment once app is done ba sebi prostu
-  FirebaseAuth auth = FirebaseAuth.instance;
-  await auth.signOut();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
+  const AndroidInitializationSettings initializationSettingsAndroid =
+  AndroidInitializationSettings('@mipmap/ic_launcher');
+  final InitializationSettings initializationSettings =
+  InitializationSettings(android: initializationSettingsAndroid);
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  final messaging = FirebaseMessaging.instance;
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+  printFcmToken();
   runApp(
     ChangeNotifierProvider(
       create: (_) => ThemeProvider(),
@@ -127,4 +151,21 @@ class _MyAppState extends State<MyApp> {
       ),
     );
   }
+
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+
+
+  const AndroidNotificationDetails androidPlatformChannelSpecifics =
+  AndroidNotificationDetails(
+      'channel_id', 'channel_name',
+      importance: Importance.max,
+      priority: Priority.high,
+      showWhen: false);
+  const NotificationDetails platformChannelSpecifics =
+  NotificationDetails(android: androidPlatformChannelSpecifics);
+  await flutterLocalNotificationsPlugin.show(
+      0, message.notification?.title, message.notification?.body, platformChannelSpecifics,
+      payload: 'item x');
 }

@@ -228,24 +228,30 @@ class _TransactionListPageState extends State<TransactionListPage> {
                                                   ],
                                                 )),
                                         child: Card(
-                                            child: ListTile(
-                                              leading: Icon(
-                                                Icons.monetization_on,
-                                                color: amount > 0 ? Colors.red : Colors.green,
-                                              ),
-                                              title: Text(
-                                                transaction['name'],
-                                                style: TextStyle(
+                                          child: Column(
+                                            children: [
+                                              ListTile(
+                                                leading: Icon(
+                                                  Icons.monetization_on,
                                                   color: amount > 0 ? Colors.red : Colors.green,
                                                 ),
-                                              ),
-                                              trailing: Text(
-                                                amount.abs().toString(),
-                                                style: TextStyle(
-                                                  color: amount > 0 ? Colors.red : Colors.green,
+                                                title: Text(
+                                                  transaction['name'],
+                                                  style: TextStyle(
+                                                    color: amount > 0 ? Colors.red : Colors.green,
+                                                  ),
                                                 ),
+                                                trailing: Text(
+                                                  '\$${amount.abs().toString()}',
+                                                  style: TextStyle(
+                                                    color: amount > 0 ? Colors.red : Colors.green,
+                                                  ),
+                                                ),
+                                                subtitle: Text(
+                                                    'Date: ${transactions[index]['date']}'),
                                               ),
-                                            ),
+                                            ],
+                                          )
                                         ),
                                       );
                                     },

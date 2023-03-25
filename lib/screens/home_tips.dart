@@ -51,12 +51,11 @@ class TipsPageForm extends StatefulWidget {
   _TipsPageFormState createState() => _TipsPageFormState();
 }
 
+final _formKey = GlobalKey<FormState>();
+String _goalType = 'Travel';
+late int? _moneySaved;
+int _selectedGoalsDays = 7;
 class _TipsPageFormState extends State<TipsPageForm> {
-  final _formKey = GlobalKey<FormState>();
-  String _goalType = 'Travel';
-  late int? _moneySaved;
-  int _selectedGoalsDays = 7;
-
   @override
   Widget build(BuildContext context) {
     return Form(
