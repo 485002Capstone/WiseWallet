@@ -46,21 +46,19 @@ class GoalsList extends StatelessWidget {
                 onPressed: () => showDialog<String>(
                   context: context,
                   builder: (BuildContext context) => AlertDialog(
-                    title: Text('Add a new goal!'),
-                    content: SizedBox(
-                      height: 270,
-                      width: 400,
-                      child: TipsPageForm(),
-                    )
-                  ),
+                      title: Text('Add a new goal!'),
+                      content: SizedBox(
+                        height: 270,
+                        width: 400,
+                        child: TipsPageForm(),
+                      )),
                 ),
                 child: Text(
                   "Add a goal!",
                   style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black
-                  ),
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
                 ),
               ),
             )

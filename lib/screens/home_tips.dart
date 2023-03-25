@@ -10,24 +10,6 @@ class TipsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          automaticallyImplyLeading: false,
-          elevation: 1,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                'WISEWALLET',
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              Image.asset('assets/images/logofinal.png',
-                  width: 60, height: 50, alignment: Alignment.centerRight),
-            ],
-          )),
       body: CustomScrollView(
         physics: BouncingScrollPhysics(),
         slivers: [

@@ -115,13 +115,18 @@ class _DetailedAccountPageState extends State<detailedAccount> {
                                   child: ListView.builder(
                                 itemCount: transactions.length,
                                 itemBuilder: (context, index) {
+                                  final transaction = transactions[index];
+                                  final amount = transaction['amount'];
                                   return Card (
                                       child:
                                       ListTile(
+                                        tileColor: amount > 0
+                                            ? Colors.red
+                                            : Colors.green,
                                         title: Text(transactions[index]['name']),
                                         subtitle: Text(transactions[index]['date']),
                                         trailing: Text(
-                                            '\$${transactions[index]['amount']}'),
+                                            '\$${amount.abs()}'),
                                         onTap: () => showDialog<String>(
                                             context: context,
                                             builder: (BuildContext context) =>

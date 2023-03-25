@@ -147,23 +147,6 @@ class _LoginWidgetState extends State<LoginWidget> {
         ));
   }
 
-  Future<void> fetchAccessToken() async {
-    var userDocRef = FirebaseFirestore.instance
-        .collection('accessToken')
-        .doc(FirebaseAuth.instance.currentUser?.uid);
-    DocumentSnapshot userDocSnapshot = await userDocRef.get();
-
-    if (userDocSnapshot.exists) {
-      Map<String, dynamic> userData =
-          userDocSnapshot.data() as Map<String, dynamic>;
-      if (userData.containsKey('AccessToken')) {
-        setState(() {
-          isConnected = true;
-          accessToken = userData['AccessToken'];
-        });
-      }
-    }
-  }
 }
 
 Future signIn(BuildContext signInContext) async {

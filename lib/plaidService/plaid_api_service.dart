@@ -59,7 +59,6 @@ class PlaidApiService {
           .doc(FirebaseAuth.instance.currentUser?.uid);
       var doc = await userDocRef.get();
 
-      try {
         if (!doc.exists) {
           return _db
               .collection("accessToken")
@@ -67,15 +66,12 @@ class PlaidApiService {
               .set({
             "AccessToken": data['access_token'],
           });
-        }
-      } catch (e) {
-        throw Exception(e);
+
       }
     } else {
       throw Exception('Failed to exchange public token');
-    }
-    return;
-  }
+    }}
+
 
   static Future<List<dynamic>> getTransactions(
       String accessToken, int days) async {
@@ -104,15 +100,37 @@ class PlaidApiService {
     }
   }
 
-  Future<void> syncTransactions() async {
+
+  Future<Map<String, dynamic>> fetchIncomeData(String accessToken) async {
+    const url = '$_baseUrl/credit/payroll_income/get';
     final response = await http.post(
-      Uri.parse('$_baseUrl/transactions/refresh'),
+      Uri.parse(url),
       headers: {'Content-Type': 'application/json'},
-      body: json.encode({
+      body: jsonEncode({
         'client_id': dotenv.env['PLAID_CLIENT_ID'],
         'secret': dotenv.env['PLAID_SECRET'],
         'access_token': accessToken,
       }),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load income data');
+    }
+  }
+
+
+  Future<void> syncTransactions() async {
+
+    final response = await http.post(
+        Uri.parse('$_baseUrl/transactions/refresh'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'client_id': dotenv.env['PLAID_CLIENT_ID'],
+          'secret': dotenv.env['PLAID_SECRET'],
+          'access_token': accessToken,
+        }),
     );
 
     if (response.statusCode == 200) {
@@ -123,7 +141,6 @@ class PlaidApiService {
       print(response.body);
     }
   }
-
   Future<List<Map<String, dynamic>>> fetchTransactions() async {
     final startDate = DateTime.now()
         .subtract(Duration(days: 250))

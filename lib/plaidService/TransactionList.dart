@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -12,11 +13,15 @@ import 'package:WiseWallet/screens/main_screen.dart';
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, camel_case_types
 
 const _baseUrl = 'https://sandbox.plaid.com';
-const List<String> list = <String>['7', '30', '60', '90', '420'];
+const List<String> list = <String>['7', '30', '60', '90', '10000'];
 
+double totalIncome = 0;
+double totalExpenses = 0;
+List<Map<String, dynamic>> expenseTransactions = [];
 String? transactionDuration = '30';
 int days = 30;
 
+List<dynamic> transactions = [];
 class TransactionListPage extends StatefulWidget {
   const TransactionListPage({Key? key}) : super(key: key);
 
@@ -25,18 +30,18 @@ class TransactionListPage extends StatefulWidget {
 }
 
 class _TransactionListPageState extends State<TransactionListPage> {
-  List<dynamic> _transactions = [];
+  List<Map<String, dynamic>> expenseTransactions = [];
 
   @override
   void initState() {
-    getTransactions(accessToken, days);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
-      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+      physics:
+          const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
       slivers: [
         SliverToBoxAdapter(
           child: FutureBuilder<Map<String, dynamic>>(
@@ -59,30 +64,34 @@ class _TransactionListPageState extends State<TransactionListPage> {
                         itemBuilder: (context, index) {
                           return InkWell(
                             onTap: () {
-                              PlaidApiService().printCountSpentPerCategory();
-                              PlaidApiService().printCountCategory();
+                              // PlaidApiService().printCountSpentPerCategory();
+                              // PlaidApiService().printCountCategory();
                               Navigator.push(
                                   context,
                                   PageTransition(
-                                      type: PageTransitionType.rightToLeftWithFade,
+                                      type: PageTransitionType
+                                          .rightToLeftWithFade,
                                       duration: Duration(milliseconds: 300),
-                                      reverseDuration: Duration(milliseconds: 300),
+                                      reverseDuration:
+                                          Duration(milliseconds: 300),
                                       child: detailedAccount(
                                         account: accounts[index],
                                       )));
                             },
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8),
                               child: Card(
                                 child: SizedBox(
                                     width: 350,
                                     child: Padding(
-                                      padding: EdgeInsets.only(left: 20, right: 20),
+                                      padding:
+                                          EdgeInsets.only(left: 20, right: 20),
                                       child: Row(
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                            CrossAxisAlignment.center,
                                         mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
                                             '${accounts[index]['name']}',
@@ -90,9 +99,9 @@ class _TransactionListPageState extends State<TransactionListPage> {
                                           ),
                                           Column(
                                             crossAxisAlignment:
-                                            CrossAxisAlignment.center,
+                                                CrossAxisAlignment.center,
                                             mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                                MainAxisAlignment.center,
                                             children: [
                                               Text(
                                                 'Available',
@@ -152,16 +161,18 @@ class _TransactionListPageState extends State<TransactionListPage> {
                                       child: Text('90 days'),
                                     ),
                                     DropdownMenuItem(
-                                      value: '420',
+                                      value: '10000',
                                       child: Text('420 days'),
                                     ),
                                   ],
                                   onChanged: (String? newValue) {
                                     setState(() {
                                       transactionDuration = newValue;
+                                      totalExpenses = 0;
+                                      totalIncome = 0;
                                     });
                                     days = int.parse(newValue!);
-                                    PlaidApiService().syncTransactions();
+                                    // PlaidApiService().syncTransactions();
                                     getTransactions(accessToken, days);
                                     transactionsFuture =
                                         PlaidApiService.getTransactions(
@@ -175,50 +186,66 @@ class _TransactionListPageState extends State<TransactionListPage> {
                                 height: 300,
                                 child: Scrollbar(
                                   child: ListView.builder(
-                                    itemCount: _transactions.length,
+                                    itemCount: transactions.length,
                                     itemBuilder: (context, index) {
+                                      final transaction = transactions[index];
+                                      final amount = transaction['amount'];
+
                                       return InkWell(
                                         onTap: () => showDialog<String>(
                                             context: context,
                                             builder: (BuildContext context) =>
                                                 AlertDialog(
-                                                  title:
-                                                  Text('Transaction Details'),
-                                                  content: SingleChildScrollView(
+                                                  title: Text(
+                                                      'Transaction Details'),
+                                                  content:
+                                                      SingleChildScrollView(
                                                     child: ListBody(
                                                       children: [
                                                         Text(
-                                                            'Name: ${_transactions[index]['name']}'),
+                                                            'Name: ${transactions[index]['name']}'),
                                                         Text(
-                                                            'Amount: \$${_transactions[index]['amount']}'),
+                                                            'Amount: \$${transactions[index]['amount']}'),
                                                         Text(
-                                                            'Date: ${_transactions[index]['date']}'),
+                                                            'Date: ${transactions[index]['date']}'),
                                                         Text(
-                                                            'Category: ${_transactions[index]['category'].join(' > ')}'),
+                                                            'Category: ${transactions[index]['category'].join(' > ')}'),
                                                         Text(
-                                                            'Merchant Name: ${_transactions[index]['merchant_name']}'),
+                                                            'Merchant Name: ${transactions[index]['merchant_name']}'),
                                                         Text(
-                                                            'Authorized Date: ${_transactions[index]['authorized_date']}'),
+                                                            'Authorized Date: ${transactions[index]['authorized_date']}'),
                                                       ],
                                                     ),
                                                   ),
                                                   actions: [
                                                     TextButton(
                                                       onPressed: () {
-                                                        Navigator.of(context).pop();
+                                                        Navigator.of(context)
+                                                            .pop();
                                                       },
                                                       child: Text('Close'),
                                                     ),
                                                   ],
                                                 )),
                                         child: Card(
-                                          child: ListTile(
-                                            title: Text(_transactions[index]['name']),
-                                            subtitle: Text(
-                                                'Date: ${_transactions[index]['date']}'),
-                                            trailing: Text(
-                                                '\$${_transactions[index]['amount']}'),
-                                          )
+                                            child: ListTile(
+                                              leading: Icon(
+                                                Icons.monetization_on,
+                                                color: amount > 0 ? Colors.red : Colors.green,
+                                              ),
+                                              title: Text(
+                                                transaction['name'],
+                                                style: TextStyle(
+                                                  color: amount > 0 ? Colors.red : Colors.green,
+                                                ),
+                                              ),
+                                              trailing: Text(
+                                                amount.abs().toString(),
+                                                style: TextStyle(
+                                                  color: amount > 0 ? Colors.red : Colors.green,
+                                                ),
+                                              ),
+                                            ),
                                         ),
                                       );
                                     },
@@ -228,6 +255,37 @@ class _TransactionListPageState extends State<TransactionListPage> {
                         ),
                       ),
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Expanded(
+                            child: Card(
+                          child: ListTile(
+                            title: Text('Expense'),
+                            subtitle: Text(
+                              (totalIncome ?? 0).toStringAsFixed(2),
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        )),
+                        Expanded(
+                            child: Card(
+                              child: ListTile(
+                                title: Text('Income'),
+                                subtitle: Text(
+                                  (totalExpenses ?? 0).toStringAsFixed(2),
+                                  style: TextStyle(
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            )),
+                      ],
+                    ),
                   ],
                 );
               }
@@ -235,11 +293,26 @@ class _TransactionListPageState extends State<TransactionListPage> {
           ),
         )
       ],
-
     );
   }
 
+
+  Widget buildCard(String title, double? amount, Color color) {
+    return Card(
+      child: ListTile(
+        title: Text(title),
+        subtitle: Text(
+          (amount ?? 0).toStringAsFixed(2),
+          style: TextStyle(
+            color: color,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
   Future<void> getTransactions(String accessToken, int days) async {
+    const _baseUrl = 'https://sandbox.plaid.com';
     final startDate = DateTime.now()
         .subtract(Duration(days: days))
         .toIso8601String()
@@ -260,10 +333,24 @@ class _TransactionListPageState extends State<TransactionListPage> {
 
     if (response.statusCode == 200) {
       final transactionsList = json.decode(response.body);
-      if(mounted) {
+      if (mounted) {
         setState(() {
-          _transactions = transactionsList['transactions'];
+          transactions = transactionsList['transactions'];
+          expenseTransactions =
+              transactionsList['transactions'].cast<Map<String, dynamic>>();
         });
+      }
+      for (var transaction in expenseTransactions) {
+        double amount = transaction['amount'].toDouble();
+        if (amount > 0) {
+          setState(() {
+            totalIncome += amount;
+          });
+        } else {
+          setState(() {
+            totalExpenses += amount.abs();
+          });
+        }
       }
     } else {
       throw Exception('Failed to fetch transactions');

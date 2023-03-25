@@ -1,7 +1,8 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, camel_case_types
-import 'dart:typed_data';
 
 import 'package:WiseWallet/utils/theme_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
@@ -15,9 +16,9 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
   await Firebase.initializeApp();
-  //Auto signout when the app is initialized. Uncomment once app is done ba sebi prostu
-  // FirebaseAuth auth = FirebaseAuth.instance;
-  // await auth.signOut();
+  //Auto sign-out when the app is initialized. Uncomment once app is done ba sebi prostu
+  FirebaseAuth auth = FirebaseAuth.instance;
+  await auth.signOut();
 
   runApp(
     ChangeNotifierProvider(
@@ -62,7 +63,7 @@ class _MyAppState extends State<MyApp> {
               appBarTheme: AppBarTheme(
                 color: Colors.white,
                 iconTheme:
-                    IconThemeData(color: Color.fromARGB(255, 22, 118, 41)),
+                IconThemeData(color: Color.fromARGB(255, 22, 118, 41)),
                 toolbarTextStyle: TextTheme(
                   headline6: TextStyle(fontSize: 20, color: Colors.white),
                 ).bodyText2,
