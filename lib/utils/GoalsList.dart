@@ -146,3 +146,65 @@ class GoalsList extends StatelessWidget {
         .delete();
   }
 }
+
+
+class UpcomingGoals extends StatelessWidget {
+  const UpcomingGoals({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<QueryDocumentSnapshot<Map<String, dynamic>>>>(
+      future: getGoalsWithOneDayLeft(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+
+        final goals = snapshot.data;
+
+        if (goals == null || goals.isEmpty) {
+          return Center(child: Text('No goals with 1 day or less to be reached'));
+        }
+
+        return ListView.builder(
+          itemCount: goals.length,
+          itemBuilder: (context, index) {
+            final goal = goals[index].data();
+
+            return Card(
+              child: ListTile(
+                title: Text('${goal['goalType']} - \$${goal['moneySaved']}'),
+
+                // Add other details if needed
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getGoalsWithOneDayLeft() async {
+    final userGoalsRef = FirebaseFirestore.instance.collection('Goals').doc(FirebaseAuth.instance.currentUser?.uid).collection('goals');
+    final querySnapshot = await userGoalsRef.get();
+    final now = DateTime.now();
+    final oneDayLeftGoals = querySnapshot.docs.where((doc) {
+      final goalData = doc.data();
+      final createdAt = (goalData['createdAt'] as Timestamp).toDate();
+      final daysToReachGoal = goalData['TimeToReachGoal'];
+
+      final goalEndTime = createdAt.add(Duration(days: daysToReachGoal));
+      final remainingDays = goalEndTime.difference(now).inDays;
+
+      return remainingDays <= 1;
+    }).toList();
+
+    return oneDayLeftGoals;
+  }
+
+
+}

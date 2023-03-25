@@ -22,6 +22,7 @@ String? transactionDuration = '30';
 int days = 30;
 
 List<dynamic> transactions = [];
+
 class TransactionListPage extends StatefulWidget {
   const TransactionListPage({Key? key}) : super(key: key);
 
@@ -64,8 +65,6 @@ class _TransactionListPageState extends State<TransactionListPage> {
                         itemBuilder: (context, index) {
                           return InkWell(
                             onTap: () {
-                              // PlaidApiService().printCountSpentPerCategory();
-                              // PlaidApiService().printCountCategory();
                               Navigator.push(
                                   context,
                                   PageTransition(
@@ -228,31 +227,27 @@ class _TransactionListPageState extends State<TransactionListPage> {
                                                   ],
                                                 )),
                                         child: Card(
-                                          child: Column(
-                                            children: [
-                                              ListTile(
-                                                leading: Icon(
-                                                  Icons.monetization_on,
-                                                  color: amount > 0 ? Colors.red : Colors.green,
-                                                ),
-                                                title: Text(
-                                                  transaction['name'],
-                                                  style: TextStyle(
-                                                    color: amount > 0 ? Colors.red : Colors.green,
-                                                  ),
-                                                ),
-                                                trailing: Text(
-                                                  '\$${amount.abs().toString()}',
-                                                  style: TextStyle(
-                                                    color: amount > 0 ? Colors.red : Colors.green,
-                                                  ),
-                                                ),
-                                                subtitle: Text(
-                                                    'Date: ${transactions[index]['date']}'),
+                                            child: Column(
+                                          children: [
+                                            ListTile(
+                                              title: Text(
+                                                transaction['name'],
                                               ),
-                                            ],
-                                          )
-                                        ),
+                                              trailing: Text(
+                                                amount < 0
+                                                    ? '+\$${amount.abs().toString()}'
+                                                    : '\$${amount.abs().toString()}',
+                                                style: TextStyle(
+                                                  color: amount < 0
+                                                      ? Colors.green
+                                                      : Colors.black,
+                                                ),
+                                              ),
+                                              subtitle: Text(
+                                                  'Date: ${transactions[index]['date']}'),
+                                            ),
+                                          ],
+                                        )),
                                       );
                                     },
                                   ),
@@ -279,17 +274,17 @@ class _TransactionListPageState extends State<TransactionListPage> {
                         )),
                         Expanded(
                             child: Card(
-                              child: ListTile(
-                                title: Text('Income'),
-                                subtitle: Text(
-                                  (totalExpenses ?? 0).toStringAsFixed(2),
-                                  style: TextStyle(
-                                    color: Colors.green,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                          child: ListTile(
+                            title: Text('Income'),
+                            subtitle: Text(
+                              (totalExpenses ?? 0).toStringAsFixed(2),
+                              style: TextStyle(
+                                color: Colors.green,
+                                fontWeight: FontWeight.bold,
                               ),
-                            )),
+                            ),
+                          ),
+                        )),
                       ],
                     ),
                   ],
@@ -301,7 +296,6 @@ class _TransactionListPageState extends State<TransactionListPage> {
       ],
     );
   }
-
 
   Widget buildCard(String title, double? amount, Color color) {
     return Card(
@@ -317,6 +311,7 @@ class _TransactionListPageState extends State<TransactionListPage> {
       ),
     );
   }
+
   Future<void> getTransactions(String accessToken, int days) async {
     const _baseUrl = 'https://sandbox.plaid.com';
     final startDate = DateTime.now()

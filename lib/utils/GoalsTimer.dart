@@ -10,9 +10,9 @@ class CountdownTimer extends StatefulWidget {
   _CountdownTimerState createState() => _CountdownTimerState();
 }
 
-Duration timeLeft = Duration.zero;
 class _CountdownTimerState extends State<CountdownTimer> {
   late Timer _timer;
+  Duration timeLeft = Duration.zero;
 
   @override
   void initState() {

@@ -120,13 +120,21 @@ class _DetailedAccountPageState extends State<detailedAccount> {
                                   return Card (
                                       child:
                                       ListTile(
-                                        tileColor: amount > 0
-                                            ? Colors.red
-                                            : Colors.green,
-                                        title: Text(transactions[index]['name']),
-                                        subtitle: Text(transactions[index]['date']),
+                                        title: Text(
+                                          transaction['name'],
+                                        ),
                                         trailing: Text(
-                                            '\$${amount.abs()}'),
+                                          amount < 0
+                                              ? '+\$${amount.abs().toString()}'
+                                              : '\$${amount.abs().toString()}',
+                                          style: TextStyle(
+                                            color: amount < 0
+                                                ? Colors.green
+                                                : Colors.black,
+                                          ),
+                                        ),
+                                        subtitle: Text(
+                                            'Date: ${transactions[index]['date']}'),
                                         onTap: () => showDialog<String>(
                                             context: context,
                                             builder: (BuildContext context) =>

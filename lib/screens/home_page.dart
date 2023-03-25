@@ -1,12 +1,14 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, camel_case_types
 
-
+import 'package:WiseWallet/screens/settings/giveusfeedback.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import '../PlaidCharts/CategoryChart.dart';
 import '../PlaidCharts/CategoryLineChart.dart';
 import '../PlaidCharts/TransactionBarChart.dart';
 import '../PlaidCharts/TransactionsLineChart.dart';
 import '../plaidService/TransactionList.dart';
+import '../utils/GoalsList.dart';
 import 'home_wallet.dart';
 
 class HomePage extends StatefulWidget {
@@ -44,95 +46,170 @@ class _HomePageState extends State<HomePage> {
     // My Wisewallet + logo
     return Scaffold(
         body: !isConnected
-        ? CircularProgressIndicator()
-        : CustomScrollView(
-            physics: const BouncingScrollPhysics(
-                parent: AlwaysScrollableScrollPhysics()),
-            slivers: [
-              SliverToBoxAdapter(
-                  child: Card(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Text(
-                        'Recent Transactions',
-                        style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    ...recentTransactions
-                        .map((transaction) =>
-                            homePageRecentTransactions(transaction))
-                        .toList(),
-                  ],
-                ),
-              )),
-              SliverToBoxAdapter(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Flexible(
-                      fit: FlexFit.loose,
-                      child: Card(
-                          child: Column(
+            ? CircularProgressIndicator()
+            : CustomScrollView(
+                physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics()),
+                slivers: [
+                    SliverToBoxAdapter(
+                        child: Card(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    left: 10, top: 10, right: 10),
-                                child: Text(
-                                  'Charts',
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              DropdownButton<String>(
-                                hint: Text('Select duration'),
-                                value: chartIndex,
-                                items: [
-                                  DropdownMenuItem(
-                                    value: '1',
-                                    child: Text('Category Pie Chart'),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: '2',
-                                    child: Text('Category Line Chart'),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: '3',
-                                    child: Text('Transactions Bar Chart'),
-                                  ),
-                                  DropdownMenuItem(
-                                    value: '4',
-                                    child: Text('Transactions Line Chart'),
-                                  ),
-                                ],
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    chartIndex = newValue!;
-                                  });
-                                },
-                              )
-                            ],
-                          ),
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: chartContent(chartIndex),
+                            padding: EdgeInsets.all(10),
+                            child: Text(
+                              'Recent Transactions',
+                              style: TextStyle(
+                                  fontSize: 24, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          ...recentTransactions
+                              .map((transaction) =>
+                                  homePageRecentTransactions(transaction))
+                              .toList(),
+                        ],
+                      ),
+                    )),
+                    SliverToBoxAdapter(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Flexible(
+                            fit: FlexFit.loose,
+                            child: Card(
+                                child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 10, top: 10, right: 10),
+                                      child: Text(
+                                        'Charts',
+                                        style: TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    DropdownButton<String>(
+                                      hint: Text('Select duration'),
+                                      value: chartIndex,
+                                      items: [
+                                        DropdownMenuItem(
+                                          value: '1',
+                                          child: Text('Category Pie Chart'),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: '2',
+                                          child: Text('Category Line Chart'),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: '3',
+                                          child: Text('Transactions Bar Chart'),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: '4',
+                                          child:
+                                              Text('Transactions Line Chart'),
+                                        ),
+                                      ],
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          chartIndex = newValue!;
+                                        });
+                                      },
+                                    )
+                                  ],
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: chartContent(chartIndex),
+                                ),
+                              ],
+                            )),
                           ),
                         ],
-                      )),
+                      ),
                     ),
-                  ],
-                ),
-              ),
-            ]));
+                    SliverToBoxAdapter(
+                        child: Card(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            'Upcoming Goals',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(
+                              height: 200, width: 400, child: UpcomingGoals())
+                        ],
+                      ),
+                    )),
+                    SliverToBoxAdapter(
+                        child: Center(
+                            child: Column(
+                      children: [
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Icon(
+                          Icons.record_voice_over,
+                          size: 60,
+                        ),
+                        Text(
+                          'We would like to hear from you',
+                          style: TextStyle(
+                            fontSize: 24,
+                          ),
+                        ),
+                        Text(
+                          'We are looking for ways to improve',
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        MaterialButton(
+                          minWidth: 50,
+                          height: 50,
+                          color: Colors.green,
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20)),
+                              side: BorderSide(
+                                  width: 100, style: BorderStyle.none)),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    type:
+                                        PageTransitionType.rightToLeftWithFade,
+                                    duration: Duration(milliseconds: 300),
+                                    reverseDuration:
+                                        Duration(milliseconds: 300),
+                                    child: feedback()));
+                          },
+                          child: Text(
+                            "Give Us Feedback",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )))
+                  ]));
   }
 
   Widget homePageRecentTransactions(Map<String, dynamic> transaction) {
@@ -142,22 +219,18 @@ class _HomePageState extends State<HomePage> {
         child: Column(
       children: [
         ListTile(
-          leading: Icon(
-            Icons.monetization_on,
-            color: amount > 0 ? Colors.red : Colors.green,
-          ),
           title: Text(
             transaction['name'],
-            style: TextStyle(
-              color: amount > 0 ? Colors.red : Colors.green,
-            ),
           ),
           trailing: Text(
-            '\$${amount.abs().toString()}',
+            amount < 0
+                ? '+\$${amount.abs().toString()}'
+                : '\$${amount.abs().toString()}',
             style: TextStyle(
-              color: amount > 0 ? Colors.red : Colors.green,
+              color: amount < 0 ? Colors.green : Colors.black,
             ),
           ),
+          subtitle: Text('Date: ${transaction['date']}'),
         ),
       ],
     ));
