@@ -9,16 +9,36 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:page_transition/page_transition.dart';
 
+import '../../plaidService/TransactionList.dart';
 import '../home_wallet.dart';
 import '../login_page.dart';
 import '../main_screen.dart';
 
 final passwordController = TextEditingController();
 
-class accountsettings extends StatelessWidget {
-  accountsettings({super.key});
+
+class accountSettings extends StatefulWidget {
+  const accountSettings({Key? key}) : super(key: key);
+
+  @override
+  _AccountSettingsState createState() => _AccountSettingsState();
+}
+
+
+class _AccountSettingsState extends State<accountSettings> {
 
   var user = FirebaseAuth.instance.currentUser;
+
+
+  void setAccessTokenToNull() {
+    setState(() {
+      accessToken = '';
+      isConnected = false;
+      currentIndex = 0;
+      totalExpenses = 0;
+      totalIncome = 0;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

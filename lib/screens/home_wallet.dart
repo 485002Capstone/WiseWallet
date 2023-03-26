@@ -161,11 +161,7 @@ class _HomeWalletState extends State<HomeWallet> {
     }
   }
 
-  Future<void> connectBankAccount() async {
-    await setLinkToken();
-    await _createLinkTokenConfiguration();
-    await PlaidLink.open(configuration: _configuration!);
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -203,7 +199,7 @@ class _HomeWalletState extends State<HomeWallet> {
                                             .spaceBetween,
                                         children: [
                                           Text(
-                                            'Account name',
+                                            'Checking',
                                             style:
                                             TextStyle(fontSize: 16),
                                           ),
@@ -219,7 +215,7 @@ class _HomeWalletState extends State<HomeWallet> {
                                                     fontSize: 16),
                                               ),
                                               Text(
-                                                'Balance',
+                                                '\$2000',
                                                 style: TextStyle(
                                                     fontSize: 16),
                                               ),
@@ -262,38 +258,82 @@ class _HomeWalletState extends State<HomeWallet> {
                               ],
                             ),
                             SizedBox(height: 8),
-                            SizedBox(
-                                height: 300,
+                            Card(
                                 child: Column(
                                   children: [
                                     ListTile(
-                                      title: Text('Transaction name'),
-                                      subtitle: Text('Date'),
-                                      trailing: Text('Price'),
+                                      title: Text('Uber'),
+                                      trailing: Text(
+                                        '\$25',
+                                      ),
+                                      subtitle: Text('Date: 2023-03-14'),
                                     ),
                                     ListTile(
-                                      title: Text('Transaction name'),
-                                      subtitle: Text('Date'),
-                                      trailing: Text('Price'),
+                                      title: Text('Uber'),
+                                      trailing: Text(
+                                        '\$25',
+                                      ),
+                                      subtitle: Text('Date: 2023-03-14'),
                                     ),
                                     ListTile(
-                                      title: Text('Transaction name'),
-                                      subtitle: Text('Date'),
-                                      trailing: Text('Price'),
+                                      title: Text('McDonald\'s'),
+                                      trailing: Text(
+                                        '\$15.2',
+                                      ),
+                                      subtitle: Text('Date: 2023-03-14'),
                                     ),
                                     ListTile(
-                                      title: Text('Transaction name'),
-                                      subtitle: Text('Date'),
-                                      trailing: Text('Price'),
-                                    )
+                                      title: Text('Wage'),
+                                      trailing: Text(
+                                        '\$+850',
+                                        style: TextStyle(
+                                          color: Colors.green,
+                                        ),
+                                      ),
+                                      subtitle: Text('Date: 2023-03-14'),
+                                    ),
                                   ],
-                                )),
+                                ))
                           ],
                         ),
                       ),
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Expanded(
+                            child: Card(
+                              child: ListTile(
+                                title: Text('Expense'),
+                                subtitle: Text(
+                                  '\$3000',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            )),
+                        Expanded(
+                            child: Card(
+                              child:
+                              ListTile(
+                                title: Text('Income'),
+                                subtitle: Text(
+                                  '\$1200',
+                                  style: TextStyle(
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+
+
+                            )),
+                      ],
+                    ),
                   ],
-                )
+                ),
             )
           ],
 
@@ -301,4 +341,9 @@ class _HomeWalletState extends State<HomeWallet> {
     )
     );
 }
+  Future<void> connectBankAccount() async {
+    await setLinkToken();
+    await _createLinkTokenConfiguration();
+    await PlaidLink.open(configuration: _configuration!);
+  }
 }

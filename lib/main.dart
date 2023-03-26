@@ -3,10 +3,11 @@
 import 'package:WiseWallet/utils/theme_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
+import 'package:hexcolor/hexcolor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 import 'screens/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -15,7 +16,7 @@ import 'package:WiseWallet/utils/app_theme.dart';
 late var transactions;
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-FlutterLocalNotificationsPlugin();
+    FlutterLocalNotificationsPlugin();
 
 Future<void> printFcmToken() async {
   String? token = await FirebaseMessaging.instance.getToken();
@@ -29,9 +30,9 @@ Future main() async {
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   const AndroidInitializationSettings initializationSettingsAndroid =
-  AndroidInitializationSettings('@mipmap/ic_launcher');
+      AndroidInitializationSettings('@mipmap/ic_launcher');
   final InitializationSettings initializationSettings =
-  InitializationSettings(android: initializationSettingsAndroid);
+      InitializationSettings(android: initializationSettingsAndroid);
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   final messaging = FirebaseMessaging.instance;
   NotificationSettings settings = await messaging.requestPermission(
@@ -63,6 +64,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -79,14 +81,14 @@ class _MyAppState extends State<MyApp> {
               primarySwatch: Colors.green,
               accentColor: Colors.green,
               canvasColor: Colors.white,
-              backgroundColor: Colors.white,
+              backgroundColor: Colors.green,
               scaffoldBackgroundColor: Colors.white,
               errorColor: Colors.lightBlue,
               // AppBar
               appBarTheme: AppBarTheme(
                 color: Colors.white,
                 iconTheme:
-                IconThemeData(color: Color.fromARGB(255, 22, 118, 41)),
+                    IconThemeData(color: Color.fromARGB(90, 134, 255, 130)),
                 toolbarTextStyle: TextTheme(
                   headline6: TextStyle(fontSize: 20, color: Colors.white),
                 ).bodyText2,
@@ -117,7 +119,7 @@ class _MyAppState extends State<MyApp> {
                 overline: TextStyle(fontSize: 10),
               ),
               listTileTheme: ListTileThemeData(
-                tileColor: Color.fromARGB(255, 249, 247, 249),
+                tileColor: HexColor('#e1f2e9'),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
                 ),
@@ -128,7 +130,7 @@ class _MyAppState extends State<MyApp> {
                 textTheme: ButtonTextTheme.primary,
               ),
               cardTheme: CardTheme(
-                color: Color.fromARGB(255, 210, 213, 210),
+                color: Color.fromARGB(255, 255, 255, 255),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
                 ),
@@ -150,21 +152,15 @@ class _MyAppState extends State<MyApp> {
       ),
     );
   }
-
 }
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-
-
   const AndroidNotificationDetails androidPlatformChannelSpecifics =
-  AndroidNotificationDetails(
-      'channel_id', 'channel_name',
-      importance: Importance.max,
-      priority: Priority.high,
-      showWhen: false);
+      AndroidNotificationDetails('channel_id', 'channel_name',
+          importance: Importance.max, priority: Priority.high, showWhen: false);
   const NotificationDetails platformChannelSpecifics =
-  NotificationDetails(android: androidPlatformChannelSpecifics);
-  await flutterLocalNotificationsPlugin.show(
-      0, message.notification?.title, message.notification?.body, platformChannelSpecifics,
+      NotificationDetails(android: androidPlatformChannelSpecifics);
+  await flutterLocalNotificationsPlugin.show(0, message.notification?.title,
+      message.notification?.body, platformChannelSpecifics,
       payload: 'item x');
 }

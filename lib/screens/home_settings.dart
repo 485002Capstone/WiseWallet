@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, camel_case_types
 
+import 'package:WiseWallet/plaidService/TransactionList.dart';
 import 'package:WiseWallet/screens/main_screen.dart';
 import 'package:WiseWallet/screens/settings/notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -35,6 +36,8 @@ class _HomeSettingsState extends State<Settings> {
       accessToken = '';
       isConnected = false;
       currentIndex = 0;
+      totalExpenses = 0;
+      totalIncome = 0;
     });
   }
 
@@ -65,7 +68,7 @@ class _HomeSettingsState extends State<Settings> {
                         type: PageTransitionType.rightToLeftWithFade,
                         duration: Duration(milliseconds: 300),
                         reverseDuration: Duration(milliseconds: 300),
-                        child: accountsettings()));
+                        child: accountSettings()));
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -167,7 +167,12 @@ class UpcomingGoals extends StatelessWidget {
         final goals = snapshot.data;
 
         if (goals == null || goals.isEmpty) {
-          return Center(child: Text('No goals with 1 day or less to be reached'));
+          return Card(
+            child: ListTile(
+              title: Text('No upcoming goals to show'),
+              // Add other details if needed
+            ),
+          );
         }
 
         return ListView.builder(

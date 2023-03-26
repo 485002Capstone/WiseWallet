@@ -12,11 +12,11 @@ import 'package:WiseWallet/screens/main_screen.dart';
 
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, camel_case_types
 
+double totalIncome = 0;
+double totalExpenses = 0;
 const _baseUrl = 'https://sandbox.plaid.com';
 const List<String> list = <String>['7', '30', '60', '90', '10000'];
 
-double totalIncome = 0;
-double totalExpenses = 0;
 List<Map<String, dynamic>> expenseTransactions = [];
 String? transactionDuration = '30';
 int days = 30;
@@ -264,7 +264,7 @@ class _TransactionListPageState extends State<TransactionListPage> {
                           child: ListTile(
                             title: Text('Expense'),
                             subtitle: Text(
-                              (totalIncome ?? 0).toStringAsFixed(2),
+                              '\$${(totalIncome ?? 0).toStringAsFixed(2)}',
                               style: TextStyle(
                                 color: Colors.red,
                                 fontWeight: FontWeight.bold,
@@ -274,16 +274,19 @@ class _TransactionListPageState extends State<TransactionListPage> {
                         )),
                         Expanded(
                             child: Card(
-                          child: ListTile(
-                            title: Text('Income'),
-                            subtitle: Text(
-                              (totalExpenses ?? 0).toStringAsFixed(2),
-                              style: TextStyle(
-                                color: Colors.green,
-                                fontWeight: FontWeight.bold,
+                          child:
+                            ListTile(
+                              title: Text('Income'),
+                              subtitle: Text(
+                                '\$${(totalExpenses ?? 0).toStringAsFixed(2)}',
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
-                          ),
+
+
                         )),
                       ],
                     ),
