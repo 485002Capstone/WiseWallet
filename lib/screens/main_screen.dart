@@ -25,16 +25,19 @@ class MainScreen extends StatefulWidget {
 var currentIndex = 0;
 late Future<Map<String, dynamic>> data;
 int pageIndex = 0;
+
 class _MyWidgetState extends State<MainScreen> {
   final PageController pageController = PageController();
+
   @override
   void initState() {
-    initializeWalletVariables().then((_){
-      getTransactions(accessToken, days);
+    initializeWalletVariables().then((_) {
+      if (accessToken != '') {
+        getTransactions(accessToken, days);
+      }
     });
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +76,6 @@ class _MyWidgetState extends State<MainScreen> {
           HomeSettings(),
         ],
       ),
-
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
         onTap: (pageIndex) {
@@ -86,7 +88,6 @@ class _MyWidgetState extends State<MainScreen> {
             curve: Curves.ease,
           );
         },
-
         selectedItemColor:
             isDarkMode ? Colors.orangeAccent : Color.fromARGB(255, 52, 114, 93),
         unselectedItemColor: isDarkMode ? Colors.orange[200] : Colors.grey,
@@ -120,10 +121,12 @@ class _MyWidgetState extends State<MainScreen> {
             isConnected = true;
             accessToken = userData['AccessToken'];
             days = 30;
-            data = PlaidApiService()
-                .fetchAccountDetailsAndTransactions(accessToken);
-            transactionsFuture =
-                PlaidApiService.getTransactions(accessToken, days);
+            if (accessToken != '') {
+              data = PlaidApiService()
+                  .fetchAccountDetailsAndTransactions(accessToken);
+              transactionsFuture =
+                  PlaidApiService.getTransactions(accessToken, days);
+            }
           });
         }
       }
