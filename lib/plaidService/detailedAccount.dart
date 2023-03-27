@@ -84,6 +84,13 @@ class _DetailedAccountPageState extends State<detailedAccount> {
             ),
           ),
           SliverToBoxAdapter(
+            child: Text('Transactions',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                )),
+          ),
+          SliverToBoxAdapter(
             child: FutureBuilder<List<dynamic>>(
               future: _transactionsFuture,
               builder: (context, snapshot) {
@@ -101,14 +108,6 @@ class _DetailedAccountPageState extends State<detailedAccount> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Transactions',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 8),
                           SizedBox(
                               height: 350,
                               child: Scrollbar(
@@ -117,59 +116,58 @@ class _DetailedAccountPageState extends State<detailedAccount> {
                                 itemBuilder: (context, index) {
                                   final transaction = transactions[index];
                                   final amount = transaction['amount'];
-                                  return Card (
-                                      child:
-                                      ListTile(
-                                        title: Text(
-                                          transaction['name'],
-                                        ),
-                                        trailing: Text(
-                                          amount < 0
-                                              ? '+\$${amount.abs().toString()}'
-                                              : '\$${amount.abs().toString()}',
-                                          style: TextStyle(
-                                            color: amount < 0
-                                                ? Colors.green
-                                                : Colors.black,
-                                          ),
-                                        ),
-                                        subtitle: Text(
-                                            'Date: ${transactions[index]['date']}'),
-                                        onTap: () => showDialog<String>(
-                                            context: context,
-                                            builder: (BuildContext context) =>
-                                                AlertDialog(
-                                                  title:
+                                  return Card(
+                                      child: ListTile(
+                                    title: Text(
+                                      transaction['name'],
+                                    ),
+                                    trailing: Text(
+                                      amount < 0
+                                          ? '+\$${amount.abs().toString()}'
+                                          : '\$${amount.abs().toString()}',
+                                      style: TextStyle(
+                                        color: amount < 0
+                                            ? Colors.green
+                                            : Colors.black,
+                                      ),
+                                    ),
+                                    subtitle: Text(
+                                        'Date: ${transactions[index]['date']}'),
+                                    onTap: () => showDialog<String>(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            AlertDialog(
+                                              title:
                                                   Text('Transaction Details'),
-                                                  content: SingleChildScrollView(
-                                                    child: ListBody(
-                                                      children: [
-                                                        Text(
-                                                            'Name: ${transactions[index]['name']}'),
-                                                        Text(
-                                                            'Amount: \$${transactions[index]['amount']}'),
-                                                        Text(
-                                                            'Date: ${transactions[index]['date']}'),
-                                                        Text(
-                                                            'Category: ${transactions[index]['category'].join(' > ')}'),
-                                                        Text(
-                                                            'Merchant Name: ${transactions[index]['merchant_name']}'),
-                                                        Text(
-                                                            'Authorized Date: ${transactions[index]['authorized_date']}'),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () {
-                                                        Navigator.of(context).pop();
-                                                      },
-                                                      child: Text('Close'),
-                                                    ),
+                                              content: SingleChildScrollView(
+                                                child: ListBody(
+                                                  children: [
+                                                    Text(
+                                                        'Name: ${transactions[index]['name']}'),
+                                                    Text(amount < 0
+                                                        ? 'Amount: +\$${amount.abs().toString()}'
+                                                        : 'Amount: \$${amount.abs().toString()}'),
+                                                    Text(
+                                                        'Date: ${transactions[index]['date']}'),
+                                                    Text(
+                                                        'Category: ${transactions[index]['category'].join(' > ')}'),
+                                                    Text(
+                                                        'Merchant Name: ${transactions[index]['merchant_name']}'),
+                                                    Text(
+                                                        'Authorized Date: ${transactions[index]['authorized_date']}'),
                                                   ],
-                                                )),
-                                      )
-                                  );
+                                                ),
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text('Close'),
+                                                ),
+                                              ],
+                                            )),
+                                  ));
                                 },
                               ))),
                         ],

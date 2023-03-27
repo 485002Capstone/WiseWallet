@@ -5,8 +5,8 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import '../plaidService/TransactionList.dart';
 import '../screens/main_screen.dart';
 
-class CategoryTransactionCountLineChart extends StatefulWidget {
-  const CategoryTransactionCountLineChart({super.key});
+class CategoryLineChart extends StatefulWidget {
+  const CategoryLineChart({super.key});
 
   @override
   _CategoryTransactionCountLineChartState createState() =>
@@ -14,7 +14,7 @@ class CategoryTransactionCountLineChart extends StatefulWidget {
 }
 
 class _CategoryTransactionCountLineChartState
-    extends State<CategoryTransactionCountLineChart> {
+    extends State<CategoryLineChart> {
   @override
   void initState() {
     super.initState();
@@ -33,7 +33,7 @@ class _CategoryTransactionCountLineChartState
             return SfCartesianChart(
               primaryXAxis: CategoryAxis(),
               title: ChartTitle(
-                  text: 'Category Transactions Count Line Chart ${days}D'),
+                  text: 'Category Line Chart'),
               tooltipBehavior: TooltipBehavior(enable: true),
               series: <LineSeries>[
                 LineSeries<CategoryCountData, String>(

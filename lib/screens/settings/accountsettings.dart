@@ -37,6 +37,7 @@ class _AccountSettingsState extends State<accountSettings> {
       currentIndex = 0;
       totalExpenses = 0;
       totalIncome = 0;
+      transactionDuration = '30';
     });
   }
 

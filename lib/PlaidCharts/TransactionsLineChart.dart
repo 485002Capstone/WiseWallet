@@ -1,20 +1,19 @@
-import 'package:WiseWallet/plaidService/plaid_api_service.dart';
+
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-import '../plaidService/TransactionList.dart';
 import '../screens/main_screen.dart';
 
-class CategoryTransactionsLineChart extends StatefulWidget {
-  const CategoryTransactionsLineChart({super.key});
+class TransactionsLineChart extends StatefulWidget {
+  const TransactionsLineChart({super.key});
 
   @override
-  _CategoryTransactionsLineChartState createState() =>
-      _CategoryTransactionsLineChartState();
+  _TransactionsLineChartState createState() =>
+      _TransactionsLineChartState();
 }
 
-class _CategoryTransactionsLineChartState
-    extends State<CategoryTransactionsLineChart> {
+class _TransactionsLineChartState
+    extends State<TransactionsLineChart> {
   @override
   void initState() {
     super.initState();
@@ -29,11 +28,10 @@ class _CategoryTransactionsLineChartState
           if (snapshot.hasData) {
             final transactions = snapshot.data!;
             final categoryData = _buildCategoryData(transactions);
-
             return SfCartesianChart(
               primaryXAxis: CategoryAxis(),
               title:
-                  ChartTitle(text: 'Category Transactions Line Chart ${days}D'),
+                  ChartTitle(text: 'Transactions Line Chart'),
               tooltipBehavior: TooltipBehavior(enable: true),
               series: <LineSeries>[
                 LineSeries<CategoryData, String>(
@@ -62,9 +60,14 @@ class _CategoryTransactionsLineChartState
       final amount = transaction['amount'].toDouble(); // Add .toDouble() here
 
       if (categoryAmountMap.containsKey(category)) {
-        categoryAmountMap[category] = categoryAmountMap[category]! + amount;
+        if(amount > 0) {
+          categoryAmountMap[category] = categoryAmountMap[category]! + amount;
+        }
       } else {
-        categoryAmountMap[category] = amount;
+        if(amount > 0) {
+          categoryAmountMap[category] = amount;
+
+        }
       }
     }
 

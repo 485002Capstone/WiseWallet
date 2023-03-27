@@ -38,6 +38,7 @@ class _HomeSettingsState extends State<Settings> {
       currentIndex = 0;
       totalExpenses = 0;
       totalIncome = 0;
+      transactionDuration = '30';
     });
   }
 

@@ -37,15 +37,15 @@ class _HomePageState extends State<HomePage> {
   Widget chartContent(String listIndex) {
     switch (listIndex) {
       case '1':
-        return CategoryTransactionCountPieChart();
+        return CategoryPieChart();
       case '2':
-        return CategoryTransactionCountLineChart();
+        return CategoryLineChart();
       case '3':
-        return CategoryTransactionsChart();
+        return CategoryTransactionsBarChart();
       case '4':
-        return CategoryTransactionsLineChart();
+        return TransactionsLineChart();
       default:
-        return CategoryTransactionsLineChart();
+        return TransactionsLineChart();
     }
   }
 

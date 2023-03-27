@@ -1,13 +1,16 @@
 import 'dart:async';
+import 'dart:convert';
 
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 // ignore_for_file: camel_case_types
 
+import 'package:http/http.dart' as http;
 import 'package:WiseWallet/plaidService/TransactionList.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:plaid_flutter/plaid_flutter.dart';
 import 'package:WiseWallet/plaidService/plaid_api_service.dart';
 
@@ -70,9 +73,9 @@ class _HomeWalletState extends State<HomeWallet> {
   void _onEvent(LinkEvent event) {
     final name = event.name;
     final metadata = event.metadata.description();
-    if (kDebugMode) {
-      print("onEvent: $name, metadata: $metadata");
-    }
+    // if (kDebugMode) {
+    //   print("onEvent: $name, metadata: $metadata");
+    // }
   }
 
   late String publicToken;
@@ -80,9 +83,9 @@ class _HomeWalletState extends State<HomeWallet> {
   void _onSuccess(LinkSuccess event) async {
     token = event.publicToken;
     final metadata = event.metadata.description();
-    if (kDebugMode) {
-      print("onSuccess: $token, metadata: $metadata");
-    }
+    // if (kDebugMode) {
+    //   print("onSuccess: $token, metadata: $metadata");
+    // }
     setState(() {
       _successObject = event;
       publicToken = token;
@@ -90,11 +93,15 @@ class _HomeWalletState extends State<HomeWallet> {
 
     await PlaidApiService.getAccessToken(publicToken);
     await fetchAccessToken();
-    data = PlaidApiService().fetchAccountDetailsAndTransactions(accessToken);
 
+    data = PlaidApiService().fetchAccountDetailsAndTransactions(accessToken);
+    getTransactions(accessToken, days);
     List<String> accountIds =
         event.metadata.accounts.map((account) => account.id).toList();
     await PlaidApiService().storeAccountIds(accountIds);
+    transactionsFuture =
+        PlaidApiService.getTransactions(
+            accessToken, days);
     if (accessToken == '') {
       _onBankAccountConnected(accessToken);
     }
@@ -345,5 +352,51 @@ class _HomeWalletState extends State<HomeWallet> {
     await setLinkToken();
     await _createLinkTokenConfiguration();
     await PlaidLink.open(configuration: _configuration!);
+  }
+
+  Future<void> getTransactions(String accessToken, int days) async {
+    const _baseUrl = 'https://sandbox.plaid.com';
+    final startDate = DateTime.now()
+        .subtract(Duration(days: days))
+        .toIso8601String()
+        .substring(0, 10);
+    final endDate = DateTime.now().toIso8601String().substring(0, 10);
+
+    final response = await http.post(
+      Uri.parse('$_baseUrl/transactions/get'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'client_id': dotenv.env['PLAID_CLIENT_ID'],
+        'secret': dotenv.env['PLAID_SECRET'],
+        'access_token': accessToken,
+        'start_date': startDate,
+        'end_date': endDate,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final transactionsList = json.decode(response.body);
+      if (mounted) {
+        setState(() {
+          transactions = transactionsList['transactions'];
+          expenseTransactions =
+              transactionsList['transactions'].cast<Map<String, dynamic>>();
+        });
+      }
+      for (var transaction in expenseTransactions) {
+        double amount = transaction['amount'].toDouble();
+        if (amount > 0) {
+          setState(() {
+            totalIncome += amount;
+          });
+        } else {
+          setState(() {
+            totalExpenses += amount.abs();
+          });
+        }
+      }
+    } else {
+      throw Exception('Failed to fetch transactions');
+    }
   }
 }

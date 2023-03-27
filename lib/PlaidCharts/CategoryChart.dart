@@ -4,8 +4,8 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import '../plaidService/TransactionList.dart';
 import '../screens/main_screen.dart';
 
-class CategoryTransactionCountPieChart extends StatefulWidget {
-  const CategoryTransactionCountPieChart({super.key});
+class CategoryPieChart extends StatefulWidget {
+  const CategoryPieChart({super.key});
 
   @override
   _CategoryTransactionCountPieChartState createState() =>
@@ -13,7 +13,7 @@ class CategoryTransactionCountPieChart extends StatefulWidget {
 }
 
 class _CategoryTransactionCountPieChartState
-    extends State<CategoryTransactionCountPieChart> {
+    extends State<CategoryPieChart> {
   @override
   void initState() {
     super.initState();
@@ -31,7 +31,7 @@ class _CategoryTransactionCountPieChartState
 
             return SfCircularChart(
               title: ChartTitle(
-                  text: 'Category Transactions Count Pie Chart ${days}D'),
+                  text: 'Category Pie Chart'),
               legend: Legend(isVisible: true),
               tooltipBehavior: TooltipBehavior(enable: true),
               series: <CircularSeries>[

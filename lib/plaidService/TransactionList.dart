@@ -12,16 +12,16 @@ import 'package:WiseWallet/screens/main_screen.dart';
 
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, camel_case_types
 
-double totalIncome = 0;
-double totalExpenses = 0;
-const _baseUrl = 'https://sandbox.plaid.com';
 const List<String> list = <String>['7', '30', '60', '90', '10000'];
 
 List<Map<String, dynamic>> expenseTransactions = [];
-String? transactionDuration = '30';
-int days = 30;
 
+double totalIncome = 0;
+double totalExpenses = 0;
 List<dynamic> transactions = [];
+
+String transactionDuration = '30';
+int days = 30;
 
 class TransactionListPage extends StatefulWidget {
   const TransactionListPage({Key? key}) : super(key: key);
@@ -166,7 +166,7 @@ class _TransactionListPageState extends State<TransactionListPage> {
                                   ],
                                   onChanged: (String? newValue) {
                                     setState(() {
-                                      transactionDuration = newValue;
+                                      transactionDuration = newValue!;
                                       totalExpenses = 0;
                                       totalIncome = 0;
                                     });
@@ -204,7 +204,9 @@ class _TransactionListPageState extends State<TransactionListPage> {
                                                         Text(
                                                             'Name: ${transactions[index]['name']}'),
                                                         Text(
-                                                            'Amount: \$${transactions[index]['amount']}'),
+                                                          amount < 0
+                                                              ? 'Amount: +\$${amount.abs().toString()}'
+                                                              : 'Amount: \$${amount.abs().toString()}'),
                                                         Text(
                                                             'Date: ${transactions[index]['date']}'),
                                                         Text(
@@ -264,7 +266,7 @@ class _TransactionListPageState extends State<TransactionListPage> {
                           child: ListTile(
                             title: Text('Expense'),
                             subtitle: Text(
-                              '\$${(totalIncome ?? 0).toStringAsFixed(2)}',
+                              '\$${(totalIncome).toStringAsFixed(2)}',
                               style: TextStyle(
                                 color: Colors.red,
                                 fontWeight: FontWeight.bold,
@@ -274,19 +276,16 @@ class _TransactionListPageState extends State<TransactionListPage> {
                         )),
                         Expanded(
                             child: Card(
-                          child:
-                            ListTile(
-                              title: Text('Income'),
-                              subtitle: Text(
-                                '\$${(totalExpenses ?? 0).toStringAsFixed(2)}',
-                                style: TextStyle(
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                          child: ListTile(
+                            title: Text('Income'),
+                            subtitle: Text(
+                              '\$${(totalExpenses).toStringAsFixed(2)}',
+                              style: TextStyle(
+                                color: Colors.green,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-
-
+                          ),
                         )),
                       ],
                     ),

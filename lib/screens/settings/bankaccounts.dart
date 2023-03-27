@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../../plaidService/TransactionList.dart';
+
 class bankaccounts extends StatefulWidget {
   const bankaccounts({Key? key}) : super(key: key);
 
@@ -19,6 +21,9 @@ class _BankAccountsState extends State<bankaccounts> {
     setState(() {
       accessToken = '';
       isConnected = false;
+      totalExpenses = 0;
+      totalIncome = 0;
+      transactionDuration = '30';
     });
   }
 

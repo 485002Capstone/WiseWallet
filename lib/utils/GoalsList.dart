@@ -183,9 +183,9 @@ class UpcomingGoals extends StatelessWidget {
             return Card(
               child: ListTile(
                 title: Text('${goal['goalType']} - \$${goal['moneySaved']}'),
-
                 // Add other details if needed
               ),
+
             );
           },
         );
