@@ -38,9 +38,16 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  page_transition: "^2.0.9"
+  page_transition: ^2.0.9
   email_validator: ^2.0.1
   plaid_flutter: ^3.1.0
+  flutter_dotenv: ^5.0.2
+  get: ^4.6.5
+  provider: ^6.0.1
+  fl_chart: ^0.61.0
+  syncfusion_flutter_charts: ^21.1.35
+  intl: ^0.17.0
+  hexcolor: ^3.0.1
 
   #Firebase
   firebase_core: ^2.7.0
@@ -49,6 +56,7 @@ dependencies:
   flutter_local_notifications: ^13.0.0
   http: ^0.13.5
   firebase_messaging: ^14.2.5
+  firebase_database: ^10.0.16
 
 dev_dependencies:
   flutter_test:
@@ -81,6 +89,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - .env
 
   # To add assets to your application, add an assets section, like this:
   # assets:

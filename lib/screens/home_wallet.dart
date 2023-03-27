@@ -1,13 +1,42 @@
-// ignore_for_file: prefer_const_constructors
 import 'dart:async';
+import 'dart:convert';
 
-import 'package:WiseWallet/screens/wallet/google_sheets_api.dart';
-import 'package:WiseWallet/screens/wallet/loading_circle.dart';
-import 'package:WiseWallet/screens/wallet/plus_button.dart';
-import 'package:WiseWallet/screens/wallet/top_card.dart';
-import 'package:WiseWallet/screens/wallet/transaction.dart';
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+// ignore_for_file: camel_case_types
+
+import 'package:http/http.dart' as http;
+import 'package:WiseWallet/plaidService/TransactionList.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:gsheets/gsheets.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:plaid_flutter/plaid_flutter.dart';
+import 'package:WiseWallet/plaidService/plaid_api_service.dart';
+
+import 'main_screen.dart';
+
+bool isConnected = false;
+String accessToken = '';
+late var token;
+var userDocRef = FirebaseFirestore.instance
+    .collection('accessToken')
+    .doc(FirebaseAuth.instance.currentUser?.uid);
+
+Future main() async {
+  runApp(const WalletPage());
+}
+
+class WalletPage extends StatelessWidget {
+  const WalletPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body:HomeWallet(),
+    );
+  }
+}
 
 class HomeWallet extends StatefulWidget {
   const HomeWallet({Key? key}) : super(key: key);
@@ -17,186 +46,357 @@ class HomeWallet extends StatefulWidget {
 }
 
 class _HomeWalletState extends State<HomeWallet> {
-  // collect user input
-  final _textcontrollerAMOUNT = TextEditingController();
-  final _textcontrollerITEM = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
-  bool _isIncome = false;
+  late String linkToken;
 
-  // enter the new transaction into the spreadsheet
-  void _enterTransaction() {
-    GoogleSheetsAPI.insert(
-      _textcontrollerITEM.text,
-      _textcontrollerAMOUNT.text,
-      _isIncome,
-    );
-    setState(() {});
-  }
+  LinkConfiguration? _configuration;
+  StreamSubscription<LinkEvent>? _streamEvent;
+  StreamSubscription<LinkExit>? _streamExit;
+  StreamSubscription<LinkSuccess>? _streamSuccess;
+  LinkObject? _successObject;
 
-  // new transaction
-  void _newTransaction() {
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return StatefulBuilder(
-            builder: (BuildContext context, setState) {
-              return AlertDialog(
-                title: Text('N E W  T R A N S A C T I O N'),
-                content: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text('Expense'),
-                          Switch(
-                            value: _isIncome,
-                            onChanged: (newValue) {
-                              setState(() {
-                                _isIncome = newValue;
-                              });
-                            },
-                          ),
-                          Text('Income'),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Form(
-                              key: _formKey,
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintText: 'Amount?',
-                                ),
-                                validator: (text) {
-                                  if (text == null || text.isEmpty) {
-                                    return 'Enter an amount';
-                                  }
-                                  return null;
-                                },
-                                controller: _textcontrollerAMOUNT,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                hintText: 'For what?',
-                              ),
-                              controller: _textcontrollerITEM,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                actions: <Widget>[
-                  MaterialButton(
-                    child:
-                        Text('Cancel'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  MaterialButton(
-                    child: Text('Enter'),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _enterTransaction();
-                        Navigator.of(context).pop();
-                      }
-                    },
-                  )
-                ],
-              );
-            },
-          );
-        });
-  }
-
-  // wait for the data to be fetched from google sheets
-  bool timerHasStarted = false;
-  void startLoading() {
-    timerHasStarted = true;
-    Timer.periodic(Duration(seconds: 1), (timer) {
-      if (GoogleSheetsAPI.loading == false) {
-        setState(() {});
-        timer.cancel();
-      }
-    });
+  @override
+  void initState() {
+    _streamEvent = PlaidLink.onEvent.listen(_onEvent);
+    _streamExit = PlaidLink.onExit.listen(_onExit);
+    _streamSuccess = PlaidLink.onSuccess.listen(_onSuccess);
+    super.initState();
   }
 
   @override
-  Widget build(BuildContext context) {
-    // start loading until the data arrives
-    if (GoogleSheetsAPI.loading == true && timerHasStarted == false) {
-      startLoading();
-    }
+  void dispose() {
+    _streamEvent?.cancel();
+    _streamExit?.cancel();
+    _streamSuccess?.cancel();
+    super.dispose();
+  }
 
+  void _onEvent(LinkEvent event) {
+    final name = event.name;
+    final metadata = event.metadata.description();
+    // if (kDebugMode) {
+    //   print("onEvent: $name, metadata: $metadata");
+    // }
+  }
+
+  late String publicToken;
+
+  void _onSuccess(LinkSuccess event) async {
+    token = event.publicToken;
+    final metadata = event.metadata.description();
+    // if (kDebugMode) {
+    //   print("onSuccess: $token, metadata: $metadata");
+    // }
+    setState(() {
+      _successObject = event;
+      publicToken = token;
+    });
+
+    await PlaidApiService.getAccessToken(publicToken);
+    await fetchAccessToken();
+
+    data = PlaidApiService().fetchAccountDetailsAndTransactions(accessToken);
+    getTransactions(accessToken, days);
+    List<String> accountIds =
+        event.metadata.accounts.map((account) => account.id).toList();
+    await PlaidApiService().storeAccountIds(accountIds);
+    transactionsFuture =
+        PlaidApiService.getTransactions(
+            accessToken, days);
+    if (accessToken == '') {
+      _onBankAccountConnected(accessToken);
+    }
+  }
+
+  void _onExit(LinkExit event) {
+    final metadata = event.metadata.description();
+    final error = event.error?.description();
+    if (kDebugMode) {
+      print("onExit metadata: $metadata, error: $error");
+    }
+  }
+
+  Future<void> setLinkToken() async {
+    String linkToken2 = '';
+    try {
+      linkToken2 = await PlaidApiService.getLinkToken();
+
+      if (kDebugMode) {
+        print('Link Token: $linkToken');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+    setState(() {
+      linkToken = linkToken2;
+    });
+  }
+
+  Future<void> _createLinkTokenConfiguration() async {
+    setState(() {
+      _configuration = LinkTokenConfiguration(
+        token: linkToken,
+      );
+    });
+  }
+
+  void _onBankAccountConnected(String accessToken) async {
+    setState(() {
+      isConnected = true;
+      accessToken = accessToken;
+    });
+  }
+
+  Future<void> fetchAccessToken() async {
+    var userDocRef = FirebaseFirestore.instance
+        .collection('accessToken')
+        .doc(FirebaseAuth.instance.currentUser?.uid);
+    DocumentSnapshot userDocSnapshot = await userDocRef.get();
+
+    if (userDocSnapshot.exists) {
+      Map<String, dynamic> userData =
+          userDocSnapshot.data() as Map<String, dynamic>;
+      if (userData.containsKey('AccessToken')) {
+        if (mounted) {
+          setState(() {
+            isConnected = true;
+            accessToken = userData['AccessToken'];
+          });
+        }
+      }
+    }
+  }
+
+
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(25.0),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 30,
-            ),
-            TopNeuCard(
-              balance: (GoogleSheetsAPI.calculateIncome() -
-                      GoogleSheetsAPI.calculateExpense())
-                  .toString(),
-              income: GoogleSheetsAPI.calculateIncome().toString(),
-              expense: GoogleSheetsAPI.calculateExpense().toString(),
-            ),
-            Expanded(
-              child: Center(
+        body: isConnected
+            ? TransactionListPage()
+            : CustomScrollView(
+          physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+          slivers: [
+            SliverToBoxAdapter(
                 child: Column(
                   children: [
-                    SizedBox(
-                      height: 20,
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      height: 100,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 2,
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 0),
+                              child: Card(
+                                child: SizedBox(
+                                    width: 350,
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 20, right: 20),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                        MainAxisAlignment
+                                            .spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Checking',
+                                            style:
+                                            TextStyle(fontSize: 16),
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                'Available',
+                                                style: TextStyle(
+                                                    fontSize: 16),
+                                              ),
+                                              Text(
+                                                '\$2000',
+                                                style: TextStyle(
+                                                    fontSize: 16),
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    )),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                    Expanded(
-                      child: GoogleSheetsAPI.loading == true
-                          ? LoadingCircle()
-                          : ListView.builder(
-                              itemCount:
-                                  GoogleSheetsAPI.currentTransactions.length,
-                              itemBuilder: (context, index) {
-                                return MyTransaction(
-                                  transactionName: GoogleSheetsAPI
-                                      .currentTransactions[index][0],
-                                  money: GoogleSheetsAPI
-                                      .currentTransactions[index][1],
-                                  expenseOrIncome: GoogleSheetsAPI
-                                      .currentTransactions[index][2],
-                                );
-                              }),
-                    )
+                    Card(
+                      elevation: 4,
+                      margin: EdgeInsets.all(16),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Transactions',
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    await connectBankAccount();
+                                  },
+                                  child: Text('Connect Bank Account'),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 8),
+                            Card(
+                                child: Column(
+                                  children: [
+                                    ListTile(
+                                      title: Text('Uber'),
+                                      trailing: Text(
+                                        '\$25',
+                                      ),
+                                      subtitle: Text('Date: 2023-03-14'),
+                                    ),
+                                    ListTile(
+                                      title: Text('Uber'),
+                                      trailing: Text(
+                                        '\$25',
+                                      ),
+                                      subtitle: Text('Date: 2023-03-14'),
+                                    ),
+                                    ListTile(
+                                      title: Text('McDonald\'s'),
+                                      trailing: Text(
+                                        '\$15.2',
+                                      ),
+                                      subtitle: Text('Date: 2023-03-14'),
+                                    ),
+                                    ListTile(
+                                      title: Text('Wage'),
+                                      trailing: Text(
+                                        '\$+850',
+                                        style: TextStyle(
+                                          color: Colors.green,
+                                        ),
+                                      ),
+                                      subtitle: Text('Date: 2023-03-14'),
+                                    ),
+                                  ],
+                                ))
+                          ],
+                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Expanded(
+                            child: Card(
+                              child: ListTile(
+                                title: Text('Expense'),
+                                subtitle: Text(
+                                  '\$3000',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            )),
+                        Expanded(
+                            child: Card(
+                              child:
+                              ListTile(
+                                title: Text('Income'),
+                                subtitle: Text(
+                                  '\$1200',
+                                  style: TextStyle(
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+
+
+                            )),
+                      ],
+                    ),
                   ],
                 ),
-              ),
-            ),
-            PlusButton(
-              function: _newTransaction,
-            ),
+            )
           ],
-        ),
-      ),
+
+
+    )
     );
+}
+  Future<void> connectBankAccount() async {
+    await setLinkToken();
+    await _createLinkTokenConfiguration();
+    await PlaidLink.open(configuration: _configuration!);
+  }
+
+  Future<void> getTransactions(String accessToken, int days) async {
+    const _baseUrl = 'https://sandbox.plaid.com';
+    final startDate = DateTime.now()
+        .subtract(Duration(days: days))
+        .toIso8601String()
+        .substring(0, 10);
+    final endDate = DateTime.now().toIso8601String().substring(0, 10);
+
+    final response = await http.post(
+      Uri.parse('$_baseUrl/transactions/get'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'client_id': dotenv.env['PLAID_CLIENT_ID'],
+        'secret': dotenv.env['PLAID_SECRET'],
+        'access_token': accessToken,
+        'start_date': startDate,
+        'end_date': endDate,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final transactionsList = json.decode(response.body);
+      if (mounted) {
+        setState(() {
+          transactions = transactionsList['transactions'];
+          expenseTransactions =
+              transactionsList['transactions'].cast<Map<String, dynamic>>();
+        });
+      }
+      for (var transaction in expenseTransactions) {
+        double amount = transaction['amount'].toDouble();
+        if (amount > 0) {
+          setState(() {
+            totalIncome += amount;
+          });
+        } else {
+          setState(() {
+            totalExpenses += amount.abs();
+          });
+        }
+      }
+    } else {
+      throw Exception('Failed to fetch transactions');
+    }
   }
 }
