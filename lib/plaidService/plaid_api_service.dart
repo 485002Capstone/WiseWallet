@@ -27,7 +27,7 @@ class PlaidApiService {
         'secret': dotenv.env['PLAID_SECRET'],
         'client_name': 'Wise Wallet',
         'country_codes': ['US'],
-        'language': 'ro',
+        'language': 'en',
         'user': {'client_user_id': 'User ID'},
         'products': ['auth', 'transactions'],
       }),
@@ -59,19 +59,18 @@ class PlaidApiService {
           .doc(FirebaseAuth.instance.currentUser?.uid);
       var doc = await userDocRef.get();
 
-        if (!doc.exists) {
-          return _db
-              .collection("accessToken")
-              .doc(FirebaseAuth.instance.currentUser?.uid)
-              .set({
-            "AccessToken": data['access_token'],
-          });
-
+      if (!doc.exists) {
+        return _db
+            .collection("accessToken")
+            .doc(FirebaseAuth.instance.currentUser?.uid)
+            .set({
+          "AccessToken": data['access_token'],
+        });
       }
     } else {
       throw Exception('Failed to exchange public token');
-    }}
-
+    }
+  }
 
   static Future<List<dynamic>> getTransactions(
       String accessToken, int days) async {
@@ -100,7 +99,6 @@ class PlaidApiService {
     }
   }
 
-
   Future<Map<String, dynamic>> fetchIncomeData(String accessToken) async {
     const url = '$_baseUrl/credit/payroll_income/get';
     final response = await http.post(
@@ -120,17 +118,15 @@ class PlaidApiService {
     }
   }
 
-
   Future<void> syncTransactions() async {
-
     final response = await http.post(
-        Uri.parse('$_baseUrl/transactions/refresh'),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'client_id': dotenv.env['PLAID_CLIENT_ID'],
-          'secret': dotenv.env['PLAID_SECRET'],
-          'access_token': accessToken,
-        }),
+      Uri.parse('$_baseUrl/transactions/refresh'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'client_id': dotenv.env['PLAID_CLIENT_ID'],
+        'secret': dotenv.env['PLAID_SECRET'],
+        'access_token': accessToken,
+      }),
     );
 
     if (response.statusCode == 200) {
@@ -141,6 +137,7 @@ class PlaidApiService {
       print(response.body);
     }
   }
+
   Future<List<Map<String, dynamic>>> fetchTransactions() async {
     final startDate = DateTime.now()
         .subtract(Duration(days: 250))

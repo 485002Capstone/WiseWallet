@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, camel_case_types
 
+import 'dart:async';
+import 'dart:io';
 import 'package:WiseWallet/utils/theme_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -12,6 +14,7 @@ import 'package:provider/provider.dart';
 import 'screens/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:WiseWallet/utils/app_theme.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 late var transactions;
 
@@ -27,7 +30,8 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
   await Firebase.initializeApp();
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  /* FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -44,7 +48,8 @@ Future main() async {
     provisional: false,
     sound: true,
   );
-  printFcmToken();
+  printFcmToken(); */
+
   runApp(
     ChangeNotifierProvider(
       create: (_) => ThemeProvider(),
@@ -58,7 +63,6 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-// Test Comment - SP
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
